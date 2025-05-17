@@ -1,0 +1,12 @@
+---
+import Basic from '@src/layouts/Basic.astro'
+import CvComponent from '@src/pages/cv/_components/CvComponent.astro'
+
+export function getStaticPaths() {
+  return [{ params: { lang: '[en]' } }]
+}
+---
+
+<Basic title="Franco-Moloche-[en]" allowIndexing={false}>
+  <CvComponent lang="en" />
+</Basic>

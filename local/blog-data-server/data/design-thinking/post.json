@@ -1,0 +1,376 @@
+{
+  "title": "Design Thinking",
+  "categories": [
+    "edu",
+    "biz"
+  ],
+  "creationDate": "2020-07-01T17:00:00.000Z",
+  "lastUpdate": "2024-05-06T22:35:30.289Z",
+  "isPinned": true,
+  "container": [
+    {
+      "type": "MarkdownBlock",
+      "text": "*Notas del curso \"Design Thinking\" que ofrece la UPC*"
+    },
+    {
+      "type": "GiphyBlock",
+      "text": "VbEuHLBUPQm55MyqJg$%&"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "---"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# Innovación"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Es la habilidad de crear nuevas ideas o mejorar otras con un fin útil y que sea impactante.\nMejorar ideas es conectarlas con experiencias previas."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "*\"El genio es 1% inspiración y 99% transpiración\" - Thomas Edison*"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "La motivación genera la creatividad pero es necesario más trabajo que inspiración"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Ejemplo: Usar un clip para colgar fotos con un chinche en la pared.\n\nThomas Edison: El genio es 1% inspiración y 99% transpiración\n(La motivación genera la creatividad pero es necesario más trabajo que inspiración)"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Tipos de innovación:\n- Nuevas ofertas + Nuevos usuarios: Disruptiva\n- Nuevas ofertas + Usuarios actuales: Evolutiva\n- Ofertas actuales + Nuevos usuarios: Evolutiva\n- Ofertas actuales + Usuarios actuales: Incremental"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "---"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# Design thinking / Pensamiento de diseño"
+    },
+    {
+      "type": "LinkBlock",
+      "text": "{\"url\":\"https://www.adamalqui.com/wp-content/uploads/2020/07/Captura-1.png\",\"type\":\"image\"}"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Es una metodología ágil de innovación centrada en las personas."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Un proceso intencionado para llegar a nuevas soluciones **(directas, impactantes  y sencillas)** para la vida de las personas y sus valores. Si no soluciona problemas, el producto está muerto."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Es pensar como lo hace un diseñador y se alimenta de las diferentes perspectivas en la `colaboración`. Necesita de mucho `optimismo`. Equivocarse está bien sólo si aprendes, ya que, es un proceso `experimental` en el que se trabaja con prototipos y pivotes (retroceder para mejorar o cambiar). Tener el producto es necesario, no solo hablar acerca de él."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "¿Cuándo utilizarlo?\n- Cuando se busca explorar y descubrir\n- Cuando hay incertidumbre"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Se diseña o rediseña propuestas de valor desde el enfoque del usuario"
+    },
+    {
+      "type": "LinkBlock",
+      "text": "{\"url\":\"https://www.adamalqui.com/wp-content/uploads/2020/07/foto2.png\",\"type\":\"image\"}"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "---"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# Pasos pre-solución"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Antes de buscar soluciones se necesita establecer un rango de acciones:\n\n- `CONCRETO`  Empatía: Que necesitan los usuarios o que desean hacer, cuales son sus motivaciones y que necesitan resolver.\n  - Círculo de oro:\n"
+    },
+    {
+      "type": "LinkBlock",
+      "text": "{\"url\":\"https://www.capazita.com/wp-content/uploads/2022/05/Copia-de-Modelo-de-la-red-como-objetivo-728x550-1.jpg\",\"type\":\"image\"}"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "- `ABSTRACTO` Definir: Analizar entrevista\n- `ABSTRACTO` Idear: Pensar fuera de la caja y ver cómo mejorar las alternativas existentes, mirar todos los aspectos diferentes del problema. Hacer brainstorming.\n- `ABSTRACTO` Prototipar: Seleccionar la mejor propuesta, experimentar y hacer las ideas tangibles. Utilizar prueba y error (si falla rápido, fallas barato).\n- `CONCRETO`  Evaluar: Analizar feedback y de ser necesario reiniciar proceso teniendo en cuenta lo aprendido."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Lo concreto es retroalimentación del usuario, lo abstracto es lo que se realiza a partir de esa información."
+    },
+    {
+      "type": "LinkBlock",
+      "text": "{\"type\":\"image\",\"url\":\"https://image.slidesharecdn.com/tallerdesignthinkingwitperu-180622153508/75/antes-del-design-thinking-de-la-empata-a-la-definicin-del-problema-13-2048.jpg?cb=1668886857\"}"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "---"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# Origen del problema"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Origen del problema:\n- Una limitante\n- Una necesidad existente\n- Una oportunidad no aprovechada"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "El problema consta de las `causas` y las `consecuencias` que ocasiona. Va de la mano con una `hipótesis de cambio`: una declaración que describe cómo se espera que una solución propuesta resuelva un problema específico."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "- Círculo de control: Causas en las que se tiene influencia y sirven para la formulación de los objetivos específicos del marco lógico.\n\n- Círculo de preocupación: Causas en las que se necesita una alianza estratégica con una organización para poder enfrentar el problema.\n"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "## Árbol de problemas"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Pasos para la construcción:\n1. Identificar problemas (brainstorming)\n2. Identificar problema central\n3. Identificar causas\n4. Diferencias entre causas principales y secundarias\n5. Definir efectos del problema central\n6. Identificar efectos principales y secundarios\n7. Revisar la consistencia lógica del árbol de problemas."
+    },
+    {
+      "type": "LinkBlock",
+      "text": "{\"type\":\"image\",\"url\":\"https://twind.io/co/wp-content/uploads/2023/08/arbol-de-causas.webp\"}"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "---"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# Investigación creativa"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Registros:\n- Registro Visual: Imágenes o videos de las personas, el ambiente o detalles visuales.\n- Registro Narrativo: Historia, anécdotas o respuestas de las personas.\n"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "La `observación` es un proceso consciente en el que se usan los sentidos para adquirir información."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Momentos de observación:\n- Previo: Actividades de las personas\n- Durante: Comportamientos que describen el problema\n- Después: Consecuencias"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Preparación de la observación\n- Identificar el lugar donde se lleva a cabo la observación\n- Identificar el público\n- Preparar guía de preguntas (que se responden a través de la información) para cada momento de la observación (línea de tiempo)\n"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "## Entrevista (validar el problema)"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Busca conocer: Emociones, motivaciones, pensamientos y experiencias del usuario.\n\n- Sugerir respuestas o hacer preguntas neutrales puede condicionar al entrevistado\n- El entrevistado puede reflexionar un tiempo para profundizar la respuesta\n- Las preguntas de si o no dan poca información\n- Si se hace 2 preguntas a la vez el 20% de entrevistados contesta la primera y 80% contesta la segunda\n- Usar más de 10 preguntas confunde al entrevistado\n- Se pueden hacer preguntas para conocer al usuario. Ejemplo: ¿Sabes utilizar youtube?\n"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Pasos para la entrevista:\n- Presentarse como entrevistador\n- Hablar del proyecto\n- Construir relación con el entrevistado y el tema\n- Escuchar sus historias\n- Explorar emociones\n- Cuestionar afirmaciones\n- Agradecer y acabar entrevista"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "## Empatía"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Es el proceso de entendimiento profundo de las emociones, sentimientos y pensamientos de otra persona.\n\n- Ponerse en los zapatos de otra persona: Conocer el camino el cual ha recorrido.\n- Todos somos empáticos.\n- Nadie es 100% empático con otra persona.\n- Las neuronas espejo: los mecanismos de la empatía emocional."
+    },
+    {
+      "type": "LinkBlock",
+      "text": "{\"type\":\"image\",\"url\":\"https://media.nngroup.com/media/editor/2017/12/14/screen-shot-2017-12-14-at-55525-pm.png\"}"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "- `Says`: Entrevista del usuario\n- `Does`: Observaciones\n- `Thinks & Feels`: Entrevista del usuario y observaciones"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Una vez desarrollado, es posible encontrar insights.\n\n`Insight`: Conexión emocional, profunda, entre el usuario y el problema. Hechos que los usuarios no saben que conocen."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "## Preguntas (Questioning)"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Think out of the box: Extrapolar el pensamiento, tener en cuenta que algo obvio podría ser un límite autoimpuesto."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Ejemplo del helado:\n\n`USUARIO + NECESIDAD + INSIGHT`"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "- `USUARIO`: Consumidores de helado\n- `+`: NECESITA\n- `NECESIDAD`: Poder transportar y tomar su helado sin ensuciarse (generar menos estrés al tomar un helado).\n- `+`: PORQUE\n- `INSIGHT`: Es incomodo tener las manos melosas."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Al solucionarlo: El usuario no tendría miedo de manchar su ropa o ensuciar el piso."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Preguntas potenciales:\n- ¿Cómo podríamos crear un nuevo cono de helado para que sea más transportable?\n- ¿Cómo podríamos inventar una fórmula de helado que no gotee?\n- ¿Cómo podemos lograr que tomar helado sea más divertido?\n- ¿Cómo podríamos innovar o adaptar el diseño de cono que ya existe?"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "---"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# Brainstorming"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "En un brainstorming la `cantidad` es importante. No se discute, solo se generan ideas."
+    },
+    {
+      "type": "GiphyBlock",
+      "text": "V5B6CKCf2KIQRYZS0Y$%&"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Una vez se concluya una ronda de ideas, será necesario categorizarlas para extraer ideas centrales."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "`Remix`: Se pueden escoger diferentes categorías y formar soluciones creativas.\n"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "También se puede mezclar ideas con otras que ya se utilizan por otras empresas."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "---"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# Concepto creativo"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Un concepto creativo es una frase original, novedosa, emotiva e inmersiva."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Un concepto es la abstracción mental que representa la interacción de las personas con su entorno. Sintetiza la forma en la que una necesidad se satisface. Es la consecuencia inmediata de un `insight`."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "En un producto creativo, lo importante no es solo el producto en sí mismo, sino el concepto que justifica su existencia (distinguirse)."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Procesamiento creativo de información:\n- Símil (lógico): Afinidad al comparar.\n- Analogía: Análisis y representación.\n- Metáfora (analógico): Conceptos simbólicos.\n- Deterioro: Significado inconsistente, novedoso."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "3 Preguntas para llegar al concepto creativo:\n- ¿Cuáles son las soluciones?\n- ¿Cómo son las soluciones?\n- Concepto. ¿Cuál es la frase que genera una emoción en el usuario?"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "## Ejemplo: detergente Ariel"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "- Necesidad: Ropa limpia\n- Valor diferencial: Ariel deja la ropa más limpia\n- Metáfora: Brillante como un foco\n- Concepto: Ariel deja la ropa brillante"
+    },
+    {
+      "type": "ImageBlock",
+      "text": "/ariel.png"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "---"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# Experimentar / Prototipar"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Un prototipo es un primer molde en que se fabrica un producto o servicio."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Se inicia con **prototipos de baja fidelidad**:\n- Económicos\n- Rápidos de construir\n- Rápidos de arreglar y rehacer\n- No precisan de técnicos expertos"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Y se llega a un **prototipo de alta fidelidad**:\n- Más caros\n- Ofrecen mayor detalle y précisions\n- Requiere expertos y herramientas especiales en su elaboración"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Para conocer la factibilidad de los prototipos es necesario un testeo:\n- Recoger retroalimentación del usuario\n- Determinar si la solución cumplió con sus objetivos\n- Discutir lo que se podría mejorar\n- Documentar la experiencia"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "---"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# Evolución"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Se refiere a un proceso mediante el cual una situación, teoría, sentimiento, conducta, actitud o cosa pasa de un estado a otro. Se transforma o cambia la `solución` para alcanzar un nuevo estado que, usualmente, es `superior a la anterior`."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "## Línea de tiempo"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Interrogantes:\n- ¿Qué lecciones hemos aprendido en todo el proceso?\n- ¿Qué acciones, actividades, ideas, etc. hemos dejado atrás y podemos incorporar en el futuro?\n- ¿De qué forma podemos incorporarlas?\n"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "De esta forma, por cada cambio realizado se pueden clasificar en filas de:\n- Tiempo: ¿Cuándo empezó a aplicarse?\n- Aprendizaje: ¿Qué se puede volver a utilizar?\n- Aplicación: ¿Cómo puede usarse?"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "## Escenario"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Escenificar el posible futuro del proyecto."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Posibles escenarios:\n- No hay aceptación por los usuarios.\n- Las grandes compañías no permiten la realización.\n- Etc..."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Por cada escenario es factible realizar:\n- `Boceto`: (conceptualización visual).\n- `Anotar`: detalles relevantes para tomar decisiones.\n- `Describir`: acciones de cada miembro involucrado."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "---"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# Fin"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Adicionalmente dejo un ensayo que hice durante el curso."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "*Tiempo improductivo en los niños y adolescentes durante la cuarentena*:"
+    },
+    {
+      "type": "EmbedBlock",
+      "text": "https://docs.google.com/document/d/e/2PACX-1vRN_xK5lthCVee_9p_R9dyS0uCFdoy-weB2PvJmEFPc68R8FltPIVnuIM1Er1nUZmQv6C7J3s2s7hm5/pub?embedded=true$eb-sep$extra-large$eb-sep$full"
+    }
+  ]
+}

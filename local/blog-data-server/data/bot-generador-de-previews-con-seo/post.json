@@ -1,0 +1,112 @@
+{
+  "title": "Bot: Generador de previews con SEO",
+  "categories": [
+    "tech",
+    "edu"
+  ],
+  "creationDate": "2024-03-29T10:57:11.164Z",
+  "lastUpdate": "2024-11-19T19:37:47.273Z",
+  "isPinned": false,
+  "container": [
+    {
+      "type": "MarkdownBlock",
+      "text": "Los `bots` son herramientas que ayudan a automatizar procesos repetitivos. Hoy se implementará un bot que genere previews basados en los `meta tags` de una URL y los publique en Mastodon."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Antes de empezar, se usará de guía la implementación de backend del siguiente post:\n\n- [Backend con Typescript y ESBuild](/blog/backend-con-typescript-y-esbuild)"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "---"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# Obtener datos de la URL"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "El blog genera `meta tags` de open-graph y twitter por cada post. Hay para escoger, de momento será suficiente con `open-graph-scraper`."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Para utilizarlo basta con enviarle la URL del recurso:\n\n```ts\nimport ogs from 'open-graph-scraper'\n\nconst { result } = await ogs({\n  url: 'https://example.com/blog/oneko'\n})\n```"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "`result`:\n\n```ts\n{\n  ogTitle: 'Oneko',\n  ogDescription: 'Tags: tech, art, culture, ent.',\n  ogUrl: 'https://example.com/blog/oneko',\n  twitterTitle: 'Oneko',\n  twitterDescription: 'Tags: tech, art, culture, ent.',\n  ogImage: [\n    {\n      url: 'https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif',\n      type: 'gif'\n    }\n  ],\n  twitterImage: [ { url: 'https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif' } ],\n  ogLocale: 'es',\n  favicon: '/favicon.svg',\n  charset: 'utf-8',\n  requestUrl: 'https://example.com/blog/oneko',\n  success: true\n}\n```"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Para trabajar de forma más limpia, se puede mapear a un tipado específico:\n\n```ts\ntype Post = {\n  title: string\n  description: string\n  url: string\n  image: string\n  categories: string[]\n}\n```"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Resultado mapeado:\n\n```ts\n{\n  title: 'Oneko',\n  description: 'Tags: tech, art, culture, ent.',\n  url: 'https://example.com/blog/oneko',\n  image: 'https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif',\n  categories: [ 'tech', 'art', 'culture', 'ent' ]\n}\n```"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# Generar preview"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Se tiene lo necesario para generar el preview. Generar imágenes es algo que puede requerir de dependencias muy pesadas, por suerte encontré `jimp`."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Esta parte puede ser innecesaria de explicar, su documentación es bastante clara. Puedes echarle un vistazo:\n\nhttps://www.npmjs.com/package/jimp"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Este sería el resultado de la función que genera el preview:"
+    },
+    {
+      "type": "ImageBlock",
+      "text": "/temp.jpg"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Se dejó con baja resolución intencionalmente para darle un toque distintivo. Si ya es difícil editar imágenes, imagínense a través de código 🥲"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# Publicar en Mastodon"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Mastodon es una red social descentralizada. Hoy, lo importante es que ofrece una API que permite hacer publicaciones (toots). Para la implementación se usó `mastodon-api` y me guié del siguiente tutorial:\n\nhttps://youtube.com/playlist?list=PLRqwX-V7Uu6byiVX7_Z1rclitVhMBmNFQ&si=va6EJWho2TbWHOTp"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "El bot solo tendría que llamar a la siguiente función para generar el preview y hacer la publicación:\n\n```ts\nasync function postFromUrl(url: string) {\n  const post = await getPostFromOg(url)\n\n  let message = 'Recién horneado! 👨‍🍳'\n  message += '\\n\\n' + post.title\n  message += '\\n\\n' + post.url\n  message += '\\n\\n' + post.categories.map((c) => `#${c}`).join(' ')\n\n  const imagePath = await getImageFromPost(post)\n  const mediaId = await tootMedia(imagePath, `Portada del post: ${post.title}`)\n  const tootUrl = await tootPost(message, mediaId)\n\n  console.log(tootUrl)\n}\n```"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "---"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# Resultados"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "https://tkz.one/@moloxe/112181090681071131"
+    },
+    {
+      "type": "ImageBlock",
+      "text": "/bd4b175a-c503-4088-ab56-02824ff018ae.jpeg"
+    },
+    {
+      "type": "GiphyBlock",
+      "text": "l3vRlT2k2L35Cnn5C$%&Listo!"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Menos chamba 🙂"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Se puede cuestionar la naturaleza del bot, tengo que hacer un proceso manual para ejecutarlo. Pero, en su definición está que automatiza procesos y es lo que hace al generar los previews 🤖"
+    }
+  ]
+}

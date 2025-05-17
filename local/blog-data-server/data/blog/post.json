@@ -1,0 +1,104 @@
+{
+  "title": "Blog",
+  "categories": [
+    "tech",
+    "biz"
+  ],
+  "creationDate": "2019-06-01T17:00:00.000Z",
+  "lastUpdate": "2024-04-28T17:25:52.342Z",
+  "isPinned": false,
+  "container": [
+    {
+      "type": "MarkdownBlock",
+      "text": "Originalmente el blog era una plataforma de posts llamada Ruta18, en el que cualquier persona podía registrarse."
+    },
+    {
+      "type": "ImageBlock",
+      "text": "/fjjth.jpg"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Ahora lo reservo como blog personal."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Partes del blog se encuentren en spanglish. Ahora la meta es que todo esté en español (a excepción de algunos posts)."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "El blog ha pasado por tantas tecnologías, hasta el punto que el código es prácticamente distinto al de las primeras versiones (como el barco de Teseo)."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Entre las tecnologías que se han utilizado (y probablemente ya no se usan) están:\n```\nVue (ahora a través de Nuxt), MaterialUI, Typescript, i18n, Firebase (Auth, Firestore, Storage, Analytics...), Compressor.js, Unsplash API, Giphy API, Axios, Google Maps API, Marked.js, DOMPurify, Tailwind, Fuse.js, etc...\n```"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Para poder filtrar los posts, estos pueden tener varias categorías. El buscador (construido con fuse.js) considera las categorías como términos de búsqueda."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# Editor"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Inspirado en Jupyter notebook, el editor está basado bloques de distintos tipos:"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "## MarkdownBlock"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "*\"The optimal line length, or number of characters per line (CPL) in typography is around 55 to 75.\"*\n\nhttps://blog.usejournal.com/your-body-text-is-too-small-5e02d36dc902\n"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "## ImageBlock"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Pueden ser imágenes subidas localmente o alguna opción disponible en el buscador de Unsplash integrado."
+    },
+    {
+      "type": "ImageBlock",
+      "text": "/f89765bb736144eff9c9816ba025fe982d09fedbr1-820-526v2_uhq.jpg"
+    },
+    {
+      "type": "GiphyBlock",
+      "text": "qTpK7CsOq6T84$%&GiphyBlock"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "## EmbedBlock"
+    },
+    {
+      "type": "EmbedBlock",
+      "text": "https://www.youtube.com/embed/2jNUeUyVDqQ$eb-sep$base"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "## MapBlock"
+    },
+    {
+      "type": "MapBlock",
+      "text": "-12.1036421570772,-76.96323350966992"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "## LiveCodeBlock"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Código disponible en:\n\nhttps://editor.p5js.org/moloxe/sketches/h3M1_5ivv"
+    },
+    {
+      "type": "LiveCodeBlock",
+      "text": "{\"html\":\"<!DOCTYPE html>\\n<html>\\n  <head>\\n    <script src=\\\"https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.js\\\"></script>\\n    <script src=\\\"https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.dom.min.js\\\"></script>\\n    <script src=\\\"https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.sound.min.js\\\"></script>\\n    <meta charset=\\\"utf-8\\\" />\\n\\n  </head>\\n  <body>\\n  </body>\\n</html>\\n\",\"js\":\"let points;\\nfunction setup() {\\n  createCanvas(320, 320);\\n  points = [];\\n  let nPoints = 3 + 10 * random();\\n  for (let i = 0; i < nPoints; i++) {\\n    const x = random(width);\\n    const y = random(height);\\n    const dx = random(1, 4);\\n    const dy = random(1, 4);\\n    points.push({ x, y, dx, dy });\\n  }\\n  colorMode(HSB, 1, 1, 1, 1);\\n  background(1);\\n}\\n\\nfunction draw() {\\n  background(1, 0.1);\\n\\n  stroke(0);\\n  noFill();\\n  beginShape();\\n  for (let i = -1; i < points.length; i++) {\\n    const { x, y } = points.at(i);\\n    vertex(x, y);\\n    if (i === -1) continue;\\n    if (x < 0 || x > width) points[i].dx *= -1;\\n    if (y < 0 || y > height) points[i].dy *= -1;\\n    const { dx, dy } = points.at(i);\\n    points[i].x = x + dx;\\n    points[i].y = y + dy;\\n  }\\n  endShape();\\n}\\n\\nlet flag = true;\\nfunction mouseClicked() {\\n  if (flag) {\\n    flag = false;\\n    noLoop();\\n  } else {\\n    flag = true;\\n    loop();\\n  }\\n}\\n\",\"css\":\"html, body {\\n  margin: 0;\\n  padding: 0;\\n}\\ncanvas {\\n  display: block;\\n  margin: auto;\\n}\\n\"}"
+    },
+    {
+      "type": "ImageBlock",
+      "text": "/tkhus.jpg"
+    }
+  ]
+}

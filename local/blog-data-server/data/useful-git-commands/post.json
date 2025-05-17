@@ -1,0 +1,87 @@
+{
+  "title": "Useful git commands",
+  "categories": [
+    "tech"
+  ],
+  "creationDate": "2024-01-04T16:30:44.351Z",
+  "lastUpdate": "2024-09-02T05:06:53.481Z",
+  "isPinned": true,
+  "container": [
+    {
+      "text": "*Disclaimer: sería bueno que verifiques cómo funcionan los comandos antes de ejecutarlos, chatgpt es una buena opción btw.*",
+      "type": "MarkdownBlock"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# Add changes\n```sh\ngit add *\ngit commit -m \"description\"\ngit push\n```"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# Undo last commit keeping changes\n```sh\ngit reset --soft HEAD~1\n```"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# Undo last commit without keeping changes\n```sh\ngit reset --hard HEAD~1\n```"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# Show changes\n```sh\ngit status\n```"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# Show commit history\n```sh\ngit log\n```"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# Show current branch\n```sh\ngit branch\n```"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# Show remote repository\n```sh\ngit remote -v\n```"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# Create branch\n```sh\ngit checkout -b \"some_branch\"\n```"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# Clone remote branch\n```sh\ngit checkout --track origin/some_branch\n```"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# Get last version of master\n```sh\ngit pull origin master\n```"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# Show all branches\n```sh\ngit branch -a\n```"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# Delete local branch\n```sh\ngit branch -d \"some_branch\"\n```"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# Force delete local branch\n```sh\ngit branch -D \"some_branch\"\n```"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# Delete remote branch\n```sh\ngit push origin --delete \"branch\"\n```"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# Move to master\n```sh\ngit checkout master\ngit pull\n```"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# Push to master branch in an existing repository\n```sh\ngit remote add origin https://url.git\ngit push -u origin master\n```"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# Pull from another branch\n```sh\ngit pull origin \"some-branch\"\n```"
+    },
+    {
+      "text": "# Merge with another branch\n```sh\ngit merge \"some-branch\"\n```",
+      "type": "MarkdownBlock"
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "title": "Tina - p5js shader helper",
+  "creationDate": "2024-08-21T03:25:29.805Z",
+  "lastUpdate": "2024-09-19T18:43:44.056Z",
+  "categories": [
+    "tech",
+    "games",
+    "art"
+  ],
+  "container": [
+    {
+      "text": "Recientemente estoy en una prueba de concepto (POC: proof-of-concept) de una forma de construir shaders en p5js. Dado a que algunas veces shadertoy tiene caídas, esto no me deja continuar usando mis shaders.",
+      "type": "MarkdownBlock"
+    },
+    {
+      "text": "No es un reclamo ni nada, la plataforma es genial. Pero, si es incómodo prescindir de su disponibilidad. La idea era algo lo suficientemente similar para tener una 2da opción en caso sea necesaria.",
+      "type": "MarkdownBlock"
+    },
+    {
+      "text": "Pero me di cuenta que tener un proceso principal da mucha ayuda. Sumado a todo el set de herramientas que ofrece p5js. De momento aún sigo subiendo ejemplos, pero crear interacción es más sencillo en comparación a shadertoy (claramente por p5js).",
+      "type": "MarkdownBlock"
+    },
+    {
+      "text": "---",
+      "type": "MarkdownBlock"
+    },
+    {
+      "text": "*Update: Desde el 7 de Sep. ya no es solo una POC!*",
+      "type": "MarkdownBlock"
+    },
+    {
+      "text": "\n[<p style=\"font-size:1.5rem;font-family:monospace;font-weight:bold;\">Tina</p>](/tina)\n",
+      "type": "MarkdownBlock"
+    },
+    {
+      "text": "/tina/scene-noisy-retro$eb-sep$large$eb-sep$full",
+      "type": "EmbedBlock"
+    },
+    {
+      "text": "Dejaré la última versión del POC archivada: https://editor.p5js.org/moloxe/sketches/Mmk8d_crf",
+      "type": "MarkdownBlock"
+    }
+  ],
+  "isPinned": true
+}

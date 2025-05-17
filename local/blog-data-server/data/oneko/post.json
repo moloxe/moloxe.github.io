@@ -1,0 +1,64 @@
+{
+  "title": "Oneko",
+  "categories": [
+    "tech",
+    "art"
+  ],
+  "creationDate": "2024-03-01T14:02:54.453Z",
+  "lastUpdate": "2024-06-05T17:50:31.470Z",
+  "isPinned": false,
+  "container": [
+    {
+      "type": "MarkdownBlock",
+      "text": "```md\n# UPDATE\n\nRemoví parte del funcionamiento, ahora es un easter egg.\n\n// Añadir uno por uno:\n// - (Ctrl o Command) + Shift + X\n// - Double tap\n\n// Ocultarlos desde el último:\n// - (Ctrl o Command) + Shift + Z\n// - Triple tap\n```"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "---"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "No soy otaku."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Hace unos días disociando por hackernews encontré este *Show HN (https://news.ycombinator.com/item?id=39504715)* en el que muestran un hosting de webs retro."
+    },
+    {
+      "type": "GiphyBlock",
+      "text": "MDJ9IbxxvDUQM$%&"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "La web en cuestión es: https://nekoweb.org/"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Al entrar encontré a este muchacho (Oneko) siguiendo el cursor. Fue tan divertido que simplemente quise ponerlo en mi blog."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Basándome en este proyecto https://github.com/adryd325/oneko.js, añadí Oneko a esta web generada con Nuxt."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# No fue suficiente"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Oneko es adictivo, pero que es mejor que 1 dosis? Exacto, 2 dosis... y así sucesivamente."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Si empiezas a navegar por otras rutas de esta web, notarás que cada vez se añade un Oneko que persigue al anterior."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Estoy tentado a hacerle una extensión para Chrome..."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "No soy otaku."
+    }
+  ]
+}

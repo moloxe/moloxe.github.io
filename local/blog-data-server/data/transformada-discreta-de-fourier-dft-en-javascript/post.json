@@ -1,0 +1,365 @@
+{
+  "title": "Transformada discreta de Fourier (DFT) en JavaScript",
+  "categories": [
+    "tech",
+    "art",
+    "edu"
+  ],
+  "creationDate": "2024-03-22T15:07:34.041Z",
+  "lastUpdate": "2025-02-25T20:44:54.197Z",
+  "isPinned": true,
+  "container": [
+    {
+      "type": "MarkdownBlock",
+      "text": "Este post explica cómo implementar la *\"Transformada discreta de Fourier\"* (DFT)."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "La implementación está basada en los siguiente recursos:\n\nhttps://www.youtube.com/watch?v=MY4luNgGfms"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "En el video la transformada discreta adelanta los cálculos de la inversa y se ordenan las transformadas por amplitudes. En esta implementación se hará por separado."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Puntos aparte, existen versiones más preparadas de esta implementación como:\n\n- https://www.jezzamon.com/fourier/es.html\n- https://bestiariotopologico.blogspot.com/2020/05/la-orbita-de-homero-simpson-una.html"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Sin embargo, esta implementación está más enfocada en el código."
+    },
+    {
+      "type": "LiveCodeBlock",
+      "text": "{\"html\":\"<html>\\n  <head>\\n    <script src=\\\"https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.2/p5.js\\\"></script>\\n    <meta charset=\\\"utf-8\\\" />\\n  </head>\\n  <body>\\n  </body>\\n</html>\",\"js\":\"function dft(X) {\\n  const transfumada = []\\n  const N = X.length\\n  for (let k = 0; k < N; k++) {\\n    let a = 0\\n    let bi = 0\\n    for (let n = 0; n < N; n++) {\\n      const angle = (2 * PI * k * n) / N\\n      a += X[n] * cos(angle)\\n      bi += -(X[n] * sin(angle))\\n    }\\n    transfumada.push({\\n      a,\\n      bi,\\n    })\\n  }\\n  return transfumada\\n}\\n\\nfunction epicycle(x, y, transfumada, rotation) {\\n  const N = transfumada.length\\n  for (let i = 0; i < N; i++) {\\n    let prevX = x\\n    let prevY = y\\n    let { a, bi } = transfumada[i]\\n    const f = i\\n    const A = sqrt(a ** 2 + bi ** 2)\\n    const hPhase = atan2(bi, a)\\n    x += A * cos(f * time + hPhase + rotation) * 1 / N\\n    y += A * sin(f * time + hPhase + rotation) * 1 / N\\n    let radius = A * 1 / N\\n  }\\n  return createVector(x, y)\\n}\\n\\nlet dataX = []\\nlet dataY = []\\nlet transfumadaX = []\\nlet transfumadaY = []\\nlet time = 0\\n\\nfunction setup() {\\n  createCanvas(320, 320)\\n\\n  const SZ = 100\\n  \\n  const shift = width / 2\\n  const r = width / 3\\n\\n  // head\\n  for (let i = 0; i < SZ; i++) {\\n    dataX.push(r * cos((i / SZ) * TWO_PI) + shift)\\n    dataY.push(r * sin((i / SZ) * TWO_PI) + shift)\\n  }\\n\\n  // smile\\n  let first = null\\n  for (let i = 0; i < SZ / 2; i++) {\\n    const x = (r/2.5) * cos((i / SZ) * TWO_PI) + shift\\n    const y = (r/2.5) * sin((i / SZ) * TWO_PI) + shift * 1.2\\n    if (!first) first = { x, y }\\n    dataX.push(x)\\n    dataY.push(y)\\n  }\\n  dataX.push(first.x)\\n  dataY.push(first.y)\\n\\n  // eyes: l -> r\\n  for (let i = 0; i < SZ; i++) {\\n    dataX.push((r/4) * cos((i / SZ) * TWO_PI) + shift*0.75)\\n    dataY.push((r/4) * sin((i / SZ) * TWO_PI) + shift*0.9)\\n  }\\n  for (let i = 0; i < SZ; i++) {\\n    dataX.push((r/4) * cos((i / SZ) * TWO_PI) + shift*1.25)\\n    dataY.push((r/4) * sin((i / SZ) * TWO_PI) + shift*0.9)\\n  }\\n\\n  transfumadaX = dft(dataX)\\n  transfumadaY = dft(dataY)\\n  background(0)\\n}\\n\\nlet prevV = null\\nfunction draw() {\\n  background('#00000009')\\n\\n  const vx = epicycle(0, 0, transfumadaX, 0)\\n  const vy = epicycle(vx.x, vx.y, transfumadaY, PI / 2)\\n  const v = createVector(vx.x, vy.y)\\n  \\n  if(prevV !== null) {\\n    stroke('yellow')\\n    strokeWeight(3)\\n    line(prevV.x, prevV.y, v.x, v.y)\\n  }\\n  prevV = v\\n\\n  const dt = TWO_PI / transfumadaX.length\\n  time += dt\\n  if (time > TWO_PI) {\\n    prevV = null\\n    time = 0\\n  }\\n}\\n\",\"css\":\"html, body {\\n  margin: 0;\\n  padding: 0;\\n  background: black;\\n}\\ncanvas {\\n  display: block;\\n  margin: auto;\\n}\\n\"}"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Empecemos..."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "---"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# Transformada"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "La fórmula para la DFT es la siguiente:"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "<img\nalt=\"discrete fourier transform\"\nstyle=\"background:white\"\nsrc=\"https://wikimedia.org/api/rest_v1/media/math/render/svg/dac5d83db38d0284477c382e26bbc94d167b597b\"\n/>"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "*TRANQUI*, la intención es transformar eso a código. Es complicada, no entiendo a la perfección el funcionamiento (honestidad). Pero, si se divide en partes pequeñas, cobra sentido."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "No se puede explicar de izquierda a derecha, pero sí de adentro hacia afuera."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Iré rápido. Si la intención es dibujar caritas, no veo tan grave saltarse algunas cosas."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "`e**( -(2 * PI * i) / N * k * n)`"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Gracias a Euler, esta parte equivale a:\n"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "`cos( (2 * PI * k * n) / N ) - i * sin( (2 * PI * k * n) / N )`"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Ahora, esta es una fórmula que trabaja con ángulos. Precisamente es la parte que se repite, por lo que sirve más darle un nombre:"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "`const angle = (2 * PI * k * n) / N`"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Finalmente se reduce a:"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "`cos(angle) - i * sin(angle)`"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# IMPORTANTE"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Por qué son necesarios todos estos cálculos? El problema es `i`, es necesario mantenerlo para poder salir del plano complejo. Si no entiendes esto, no te preocupes! es como teletransportarse, llegar de un lugar a otro de una forma inexplicable: `sqrt(-1)`."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Con estos cambios, la fórmula sería equivalente a:"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# Xk = Σ Xn * (cos(angle) - i * sin(angle))"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "2 cosas en cuenta:\n- Aún no me acerco 100% a código.\n- La Σ sería de 0 a N-1, ya no desde 1, ya que los `arrays` se indexan desde 0."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Si llegaste hasta este punto, puedes sentirte más relajado. Ahora es más sencillo explicar las:"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# Variables"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "- `X`: Es la serie de datos, en otros términos es un `array` de números.\n- `k`: Es la posición que representa el índice en la transformada.\n- `Xk`: Representa la transformada en `k`.\n- `k`: Es la posición que representa el índice en X (la serie de datos).\n- `Xn`: Es el valor de la serie `X` en la posición `n`.\n- `angle`: Esta parte podría complicar la explicación, de momento es eso, un ángulo.\n- `i`: Es la raíz de -1 y de mis problemas."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# Entrada"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "La entrada será la variable `X`. En el código `X[n]` representará a `Xn`."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# Salida"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Aquí es donde puede haber confusiones, no se puede llamar `X` a la entrada y a la salida. Se representará los valores de `Xk` con `transform[k]`."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "`transform[k] = Σ X[n] * (cos(angle) - i * sin(angle))`"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "---"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# Algoritmo"
+    },
+    {
+      "type": "LiveCodeBlock",
+      "text": "{\"html\":\"<!DOCTYPE html>\\n<html lang=\\\"en\\\">\\n  <head>\\n    <script src=\\\"https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.2/p5.js\\\"></script>\\n    <meta charset=\\\"utf-8\\\" />\\n\\n  </head>\\n  <body>\\n  </body>\\n</html>\\n\",\"js\":\"function dft(X) {\\n  const transfumada = []\\n  const N = X.length\\n  for (let k = 0; k < N; k++) {\\n    let a = 0\\n    let bi = 0\\n    for (let n = 0; n < N; n++) {\\n      const angle = (2 * PI * k * n) / N\\n      a += X[n] * cos(angle)\\n      bi += -(X[n] * sin(angle))\\n    }\\n    const f = k\\n    const A = sqrt(a ** 2 + bi ** 2)\\n    const hPhase = atan2(bi, a)\\n    transfumada.push({\\n      f,\\n      A,\\n      hPhase,\\n    })\\n  }\\n  return transfumada\\n}\\n\\n\\nfunction epicycle(x, y, fourier, rotation) {\\n  const N = fourier.length\\n  for (let i = 0; i < N; i++) {\\n    let prevX = x\\n    let prevY = y\\n    let { A, f, hPhase } = fourier[i]\\n    x += A * cos(f * time + hPhase + rotation) * 1 / N\\n    y += A * sin(f * time + hPhase + rotation) * 1 / N\\n    let radius = A * 1 / N\\n    stroke(\\\"#ffffff50\\\")\\n    noFill()\\n    ellipse(prevX, prevY, radius * 2)\\n    line(prevX, prevY, x, y)\\n  }\\n  return createVector(x, y)\\n}\\n\\nlet fourierX = []\\nlet fourierY = []\\nlet path = []\\nlet time = 0\\n\\nfunction setup() {\\n  createCanvas(300, 300)\\n\\n  let dataX = []\\n  let dataY = []\\n  const SZ = 200\\n\\n  // head\\n  for (let i = 0; i < SZ; i++) {\\n    dataX.push(60 * cos((i / SZ) * TWO_PI) + 150)\\n    dataY.push(60 * sin((i / SZ) * TWO_PI) + 150)\\n  }\\n\\n  // smile\\n  let first = null\\n  for (let i = SZ / 2; i < SZ; i++) {\\n    const x = 20 * cos((i / SZ) * TWO_PI) + 150\\n    const y = 20 * sin((i / SZ) * TWO_PI) + 180\\n    if (!first) first = { x, y }\\n    dataX.push(x)\\n    dataY.push(y)\\n  }\\n  dataX.push(first.x)\\n  dataY.push(first.y)\\n\\n  // eyes: l -> r\\n  for (let i = 0; i < SZ; i++) {\\n    dataX.push(15 * cos((i / SZ) * TWO_PI) + 125)\\n    dataY.push(15 * sin((i / SZ) * TWO_PI) + 140)\\n  }\\n  for (let i = 0; i < SZ; i++) {\\n    dataX.push(15 * cos((i / SZ) * TWO_PI) + 175)\\n    dataY.push(15 * sin((i / SZ) * TWO_PI) + 140)\\n  }\\n\\n  fourierX = dft(dataX)\\n  fourierY = dft(dataY)\\n  fourierX.sort((a, b) => b.A - a.A)\\n  fourierY.sort((a, b) => b.A - a.A)\\n}\\n\\nfunction draw() {\\n  background(0)\\n\\n  const vx = epicycle(0, 0, fourierX, 0)\\n  const vy = epicycle(vx.x, vx.y, fourierY, PI / 2)\\n  const v = createVector(vx.x, vy.y)\\n  path.unshift(v)\\n\\n  beginShape()\\n  stroke('yellow')\\n  noFill()\\n  for (let i = 0; i < path.length; i++)\\n    vertex(path[i].x, path[i].y)\\n  endShape()\\n\\n  const dt = (TWO_PI / fourierX.length)\\n  time += dt\\n  if (time > TWO_PI) {\\n    time = 0\\n    path = []\\n  }\\n\\n  fill('red')\\n  stroke('red')\\n  ellipse(v.x, v.y, 5)\\n}\\n\",\"css\":\"html, body {\\n  margin: 0;\\n  padding: 0;\\n  background: black;\\n}\\ncanvas {\\n  display: block;\\n  margin: auto;\\n}\\n\"}"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Empezemos con `angle`:\n\n`const angle = (2 * PI * k * n) / N`"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Algo a notar es que `k` y `n` son índices, el código sería el siguiente:"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "```js\nfunction dft(X) {\n  const N = X.length\n  for (let k = 0; k < N; k++) {\n    for (let n = 0; n < N; n++) {\n      const angle = (2 * PI * k * n) / N\n    }\n  }\n}\n```"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Ahora la parte complicada (compleja 👉 👉). Un número complejo se puede representar de la siguiente forma: `a + bi`, donde `a` es la parte real y `bi` es la parte imaginaria."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Entonces aquí está la magia: Se almacena el producto (la parte imaginaria) en una variable llamada `bi`. Se va suponer que es el producto de `b * i` pero en una sola variable."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "```\na = Σ X[n] * cos(angle)\nbi = Σ -(X[n] * sin(angle))\n```"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Este sería el código hasta calcular `a` y `bi`:"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "```js\nfunction dft(X) {\n  const N = X.length\n  for (let k = 0; k < N; k++) {\n    // a + b*i\n    let a = 0\n    let bi = 0\n    for (let n = 0; n < N; n++) {\n      const angle = (2 * PI * k * n) / N\n      a += X[n] * cos(angle)\n      bi += -(X[n] * sin(angle))\n    }\n  }\n}\n```"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Ahora faltaría almacenar los valores en `transform[k]`. "
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Ya no es necesario el término de la sumatoria `Σ`, ahora está representado por las sumas en segundo bucle:"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "```js\nfunction dft(X) {\n  const transform = []\n  const N = X.length\n  for (let k = 0; k < N; k++) {\n    // transform[k] = Σ X[n] * cos(angle) - i * sin(angle)\n    // transform[k] = a + b*i\n    let a = 0\n    let bi = 0\n    for (let n = 0; n < N; n++) {\n      const angle = (2 * PI * k * n) / N\n      a += X[n] * cos(angle)\n      bi += -(X[n] * sin(angle))\n    }\n    transform.push({\n      a,\n      bi,\n    })\n  }\n  return transform\n}\n```"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Listo! Eso es *casi* todo."
+    },
+    {
+      "type": "LiveCodeBlock",
+      "text": "{\"html\":\"<html>\\n  <head>\\n    <script src=\\\"https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.2/p5.js\\\"></script>\\n    <meta charset=\\\"utf-8\\\" />\\n  </head>\\n  <body>\\n  </body>\\n</html>\",\"js\":\"function dft(X) {\\n  const transfumada = []\\n  const N = X.length\\n  for (let k = 0; k < N; k++) {\\n    // transfumada[k] = Σ X[n] * cos(angle) - i * sin(angle)\\n    // transfumada[k] = a + b*i\\n    let a = 0\\n    let bi = 0\\n    for (let n = 0; n < N; n++) {\\n      const angle = (2 * PI * k * n) / N\\n      a += X[n] * cos(angle)\\n      bi += -(X[n] * sin(angle))\\n    }\\n    transfumada.push({\\n      a,\\n      bi,\\n    })\\n  }\\n  return transfumada\\n}\\n\\nfunction epicycle(x, y, transfumada, rotation) {\\n  const N = transfumada.length;\\n  const circles = []\\n  for (let k = 0; k < N; k++) {\\n    let prevX = x;\\n    let prevY = y;\\n    let { a, bi } = transfumada[k];\\n    const f = k;\\n    const A = sqrt(a ** 2 + bi ** 2);\\n    const hPhase = atan2(bi, a);\\n    x += (A * cos(f * time + hPhase + rotation) * 1) / N;\\n    y += (A * sin(f * time + hPhase + rotation) * 1) / N;\\n    const radius = (A * 1) / N;\\n    stroke(\\\"#ffffff50\\\");\\n    noFill();\\n    ellipse(prevX, prevY, radius * 2);\\n    line(prevX, prevY, x, y);\\n  }\\n  return { x, y };\\n}\\n\\nlet fourierX = []\\nlet fourierY = []\\nlet fourierZ = []\\nlet path = []\\nlet pathXY = []\\nlet pathZY = []\\nlet time = 0\\n\\nfunction setup() {\\n  createCanvas(320, 320, WEBGL)\\n\\n  let dataX = []\\n  let dataY = []\\n  let dataZ = []\\n  const SZ = 100\\n\\n  // head\\n  for (let i = 0; i < SZ; i++) {\\n    dataX.push(60 * cos((i / SZ) * TWO_PI) + 150)\\n    dataY.push(60 * sin((i / SZ) * TWO_PI) + 150)\\n    dataZ.push(100)\\n  }\\n\\n  // smile\\n  let first = null\\n  for (let i = SZ / 2; i < SZ; i++) {\\n    const x = 20 * cos((i / SZ) * TWO_PI) + 150\\n    const y = 20 * sin((i / SZ) * TWO_PI) + 180\\n    if (!first) first = { x, y }\\n    dataX.push(x)\\n    dataY.push(y)\\n    dataZ.push(100)\\n  }\\n  dataX.push(first.x)\\n  dataY.push(first.y)\\n  dataZ.push(100)\\n\\n  // eyes: l -> r\\n  for (let i = 0; i < SZ; i++) {\\n    dataX.push(15 * cos((i / SZ) * TWO_PI) + 125)\\n    dataY.push(15 * sin((i / SZ) * TWO_PI) + 140)\\n    dataZ.push(100)\\n  }\\n  for (let i = 0; i < SZ; i++) {\\n    dataX.push(15 * cos((i / SZ) * TWO_PI) + 175)\\n    dataY.push(15 * sin((i / SZ) * TWO_PI) + 140)\\n    dataZ.push(100)\\n  }\\n\\n  fourierX = dft(dataX)\\n  fourierY = dft(dataY)\\n  fourierZ = dft(dataZ)\\n}\\n\\nfunction drawXY() {\\n  const vx = epicycle(0, 0, fourierX, 0)\\n  const vy = epicycle(vx.x, vx.y, fourierY, PI / 2)\\n  const v = createVector(vx.x, vy.y)\\n  line(vx.x, vx.y, v.x, v.y)\\n  line(vy.x, vy.y, v.x, v.y)\\n  fill('red')\\n  stroke('red')\\n  ellipse(v.x, v.y, 6)\\n  pathXY.unshift(v)\\n  return v\\n}\\n\\nfunction drawZY() {\\n  rotateY(-PI/2);\\n  const vz = epicycle(0, 0, fourierZ, 0)\\n  const vy = epicycle(vz.x, vz.y, fourierY, PI / 2)\\n  const v = createVector(vz.x, vy.y)\\n  line(vz.x, vz.y, v.x, v.y)\\n  line(vy.x, vy.y, v.x, v.y)\\n  fill('red')\\n  stroke('red')\\n  ellipse(v.x, v.y, 6)\\n  pathZY.unshift(v)\\n  rotateY(PI/2);\\n  return v\\n}\\n\\nfunction drawPath() {\\n  beginShape()\\n  noFill()\\n  stroke('yellow')\\n  for(let i = 0; i < path.length; i++) {\\n    const { x, y, z } = path[i]\\n    vertex(x, y, z)\\n  }\\n  endShape()\\n}\\n\\nconst R = 20\\nfunction draw() {\\n  background(0)\\n  translate(0, -80, -300)\\n  rotateY(-PI/4);\\n  \\n  const vxy = drawXY()\\n  const vzy = drawZY()\\n  stroke(255)\\n  \\n  const Ax = vxy.x\\n  const Ay = vxy.y\\n  const Az = vzy.x\\n  const Bx = vzy.x\\n  const By = vzy.y\\n  const Bz = vxy.x\\n  \\n  path.push({\\n    x: Ax,\\n    y: Ay,\\n    z: Az,\\n  })\\n  \\n  translate(0, 0, Az)\\n  point(Ax, Ay)\\n  line(Ax, Ay, 0, Ay)\\n  translate(0, 0, -Az)\\n  \\n  rotateY(-PI/2);\\n  translate(0, 0, -Bz)\\n  line(Bx, By, 0, By)\\n  translate(0, 0, Bz)\\n  rotateY(PI/2);\\n  \\n  drawPath()\\n\\n  const dt = (TWO_PI / fourierX.length)\\n  time += dt\\n  if (time > TWO_PI) {\\n    time = 0\\n    pathXY = []\\n    pathZY = []\\n    path = []\\n  }\\n}\\n\",\"css\":\"html, body {\\n  background: black;\\n  margin: 0;\\n  padding: 0;\\n  display: flex;\\n  min-height: 100vh;\\n  align-items: center;\\n  justify-content: center;\\n}\\ncanvas {\\n  display: block;\\n}\\n\"}"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "*Spoiler: Se puede hacer 3d.*"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "---"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# Transformada inversa"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "<img\nstyle=\"background:white\"\nalt=\"inverse discrete fourier transform\"\nsrc=\"https://wikimedia.org/api/rest_v1/media/math/render/svg/8d45a3d2e50f6f705b31782a1dc0f1e1d0f9c086\"\n/>"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "No se explicará la implementación de esta formula, es prácticamente el mismo procedimiento. Se los dejo de tarea, pero este sería el código:"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "```js\nfunction idft(transform) {\n  const iTransform = []\n  const N = transform.length\n  for (let n = 0; n < N; n++) {\n    // X[n] = Σ transform[k] * cos(angle) + i * sin(angle)\n    let x = 0\n    let y = 0\n    for (let k = 0; k < N; k++) {\n      const { a, bi } = transform[k]\n      const f = k\n      const A = sqrt(a ** 2 + bi ** 2)\n      const hPhase = atan2(bi, a)\n      const angle = -f * ((2 * PI * n) / N) + hPhase\n      x += (A * cos(angle)) / N\n      y += (A * sin(angle)) / N\n    }\n    iTransform.push({ x, y })\n  }\n  return iTransform\n}\n```"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# Nota"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Si se desea trabajar con varios ejes (y sí se desea) es necesario rotarlo en el eje correspondiente. Lo único necesario sería pasar un parámetro `rotation` a la función `idft` y sumarlo al ángulo:\n\n`const angle = -f * ((2 * PI * n) / N) + hPhase + rotation`"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Simple! 🥲"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "---"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# Epicycle"
+    },
+    {
+      "type": "LiveCodeBlock",
+      "text": "{\"html\":\"<html>\\n  <head>\\n    <script src=\\\"https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.2/p5.js\\\"></script>\\n    <meta charset=\\\"utf-8\\\" />\\n  </head>\\n  <body>\\n  </body>\\n</html>\",\"js\":\"function dft(X) {\\n  const transfumada = []\\n  const N = X.length\\n  for (let k = 0; k < N; k++) {\\n    let a = 0\\n    let bi = 0\\n    for (let n = 0; n < N; n++) {\\n      const angle = (2 * PI * k * n) / N\\n      a += X[n] * cos(angle)\\n      bi += -(X[n] * sin(angle))\\n    }\\n    const f = k\\n    const A = sqrt(a ** 2 + bi ** 2)\\n    const hPhase = atan2(bi, a)\\n    transfumada.push({\\n      f,\\n      A,\\n      hPhase,\\n    })\\n  }\\n  return transfumada\\n}\\n\\n\\nfunction epicycle(x, y, fourier, rotation) {\\n  const N = fourier.length\\n  for (let i = 0; i < N; i++) {\\n    let prevX = x\\n    let prevY = y\\n    let { A, f, hPhase } = fourier[i]\\n    x += A * cos(f * time + hPhase + rotation) * 1 / N\\n    y += A * sin(f * time + hPhase + rotation) * 1 / N\\n    let radius = A * 1 / N\\n    // Esto dibuja los círculos\\n    stroke(\\\"#ffffff50\\\")\\n    noFill()\\n    ellipse(prevX, prevY, radius * 2)\\n    line(prevX, prevY, x, y)\\n  }\\n  return createVector(x, y)\\n}\\n\\nlet fourierX = []\\nlet fourierY = []\\nlet path = []\\nlet time = 0\\n\\nfunction setup() {\\n  createCanvas(320, 320, WEBGL)\\n\\n  let dataX = []\\n  let dataY = []\\n  const SZ = 200\\n\\n  // head\\n  for (let i = 0; i < SZ; i++) {\\n    dataX.push(60 * cos((i / SZ) * TWO_PI) + 150)\\n    dataY.push(60 * sin((i / SZ) * TWO_PI) + 150)\\n  }\\n\\n  // smile\\n  let first = null\\n  for (let i = SZ / 2; i < SZ; i++) {\\n    const x = 20 * cos((i / SZ) * TWO_PI) + 150\\n    const y = 20 * sin((i / SZ) * TWO_PI) + 180\\n    if (!first) first = { x, y }\\n    dataX.push(x)\\n    dataY.push(y)\\n  }\\n  dataX.push(first.x)\\n  dataY.push(first.y)\\n\\n  // eyes: l -> r\\n  for (let i = 0; i < SZ; i++) {\\n    dataX.push(15 * cos((i / SZ) * TWO_PI) + 125)\\n    dataY.push(15 * sin((i / SZ) * TWO_PI) + 140)\\n  }\\n  for (let i = 0; i < SZ; i++) {\\n    dataX.push(15 * cos((i / SZ) * TWO_PI) + 175)\\n    dataY.push(15 * sin((i / SZ) * TWO_PI) + 140)\\n  }\\n\\n  fourierX = dft(dataX)\\n  fourierY = dft(dataY)\\n  fourierX.sort((a, b) => b.A - a.A)\\n  fourierY.sort((a, b) => b.A - a.A)\\n}\\n\\nconst R = 20\\nfunction draw() {\\n  background(0)\\n  translate(0, -60, -500)\\n  const f = frameCount * 0.03\\n  // const x = R * cos(f)\\n  // const z = R * sin(f + 1.5 * PI)\\n  // rotateX(x);\\n  rotateY(f);\\n\\n  const vx = epicycle(0, 0, fourierX, 0)\\n  const vy = epicycle(vx.x, vx.y, fourierY, PI / 2)\\n  const v = createVector(vx.x, vy.y)\\n  path.unshift(v)\\n\\n  beginShape()\\n  stroke('yellow')\\n  noFill()\\n  for (let i = 0; i < path.length; i++)\\n    vertex(path[i].x, path[i].y)\\n  endShape()\\n\\n  const dt = (TWO_PI / fourierX.length)\\n  time += dt\\n  if (time > TWO_PI) {\\n    time = 0\\n    path = []\\n  }\\n\\n  fill('red')\\n  stroke('red')\\n  ellipse(v.x, v.y, 5)\\n}\\n\",\"css\":\"html, body {\\n  background: black;\\n  margin: 0;\\n  padding: 0;\\n  display: flex;\\n  min-height: 100vh;\\n  align-items: center;\\n  justify-content: center;\\n}\\ncanvas {\\n  display: block;\\n}\\n\"}"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Así se llaman los círculos que dibujan el rostro. Para lograr esto se tiene que modificar la función inversa (`idft`) para no calcular todo el rostro, solo una parte evaluada e ir trazando cada epiciclo."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "```js\nfunction epicycle(x, y, transform, rotation) {\n  const N = transform.length;\n  for (let k = 0; k < N; k++) {\n    const prevX = x;\n    const prevY = y;\n    const { a, bi } = transform[k];\n    const f = k;\n    const A = sqrt(a ** 2 + bi ** 2);\n    const hPhase = atan2(bi, a);\n    x += (A * cos(f * time + hPhase + rotation)) / N;\n    y += (A * sin(f * time + hPhase + rotation)) / N;\n    // Esto dibuja cada epicycle\n    const radius = A / N;\n    stroke(\"#ffffff50\");\n    noFill();\n    ellipse(prevX, prevY, radius * 2);\n    line(prevX, prevY, x, y);\n  }\n  return { x, y };\n}\n```"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Es posible tener 4 transformadas, 2 para el plano `XY` y uno para el plano `ZY`. Podría ser cualquiera, pero no voy a mentir que esto explota la mente."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Puedes mover la perspectiva arrastrando con el mouse/touch, así se pueden percibir mejor las 3 dimensiones."
+    },
+    {
+      "type": "LiveCodeBlock",
+      "text": "{\"html\":\"<html>\\n  <head>\\n    <script src=\\\"https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.2/p5.js\\\"></script>\\n    <meta charset=\\\"utf-8\\\" />\\n  </head>\\n  <body>\\n  </body>\\n</html>\",\"js\":\"function dft(X) {\\n  const transfumada = [];\\n  const N = X.length;\\n  for (let k = 0; k < N; k++) {\\n    let a = 0;\\n    let bi = 0;\\n    for (let n = 0; n < N; n++) {\\n      const angle = (2 * PI * k * n) / N;\\n      a += X[n] * cos(angle);\\n      bi += -(X[n] * sin(angle));\\n    }\\n    const A = sqrt(a ** 2 + bi ** 2);\\n    const hPhase = atan2(bi, a);\\n    transfumada.push({\\n      a,\\n      bi,\\n      f: k,\\n      A,\\n      hPhase,\\n    });\\n  }\\n  return transfumada;\\n}\\n\\nfunction epicycle(x, y, transfumada, rotation) {\\n  const N = transfumada.length;\\n  noFill();\\n  stroke(\\\"#ffffff50\\\");\\n  for (let i = 0; i < N; i++) {\\n    const prevX = x;\\n    const prevY = y;\\n    const { a, bi, f, A, hPhase } = transfumada[i];\\n    x += (A * cos(f * time + hPhase + rotation)) / N;\\n    y += (A * sin(f * time + hPhase + rotation)) / N;\\n    const radius = A / N;\\n    if (f === 0) continue;\\n    ellipse(prevX, prevY, radius * 2);\\n    line(prevX, prevY, x, y);\\n  }\\n  return { x, y };\\n}\\n\\nlet fourierX = [];\\nlet fourierY = [];\\nlet fourierZ = [];\\nlet path = [];\\nlet time = 0;\\n\\nfunction setup() {\\n  createCanvas(320, 320, WEBGL);\\n\\n  let dataX = [];\\n  let dataY = [];\\n  let dataZ = [];\\n  const SZ = 200;\\n\\n  const r = 50;\\n  for (let i = 0; i <= SZ; i++) {\\n    const a = r * cos(10 * ((PI * i) / SZ) + PI / 4) + 100;\\n    const b = r * sin(10 * ((PI * i) / SZ) + PI / 4) + 100;\\n    dataX.push(a);\\n    dataY.push((SZ - i) * 1.8 * 0.5);\\n    dataZ.push(b);\\n  }\\n\\n  fourierX = dft(dataX);\\n  fourierY = dft(dataY);\\n  fourierZ = dft(dataZ);\\n\\n  fourierX = fourierX.toSorted((a, b) => {\\n    return b.A - a.A;\\n  });\\n  fourierY = fourierY.toSorted((a, b) => {\\n    return b.A - a.A;\\n  });\\n  fourierZ = fourierZ.toSorted((a, b) => {\\n    return b.A - a.A;\\n  });\\n\\n  // saveGif('f-3d', 5);\\n  // ortho();\\n}\\n\\nfunction drawXY() {\\n  const vx = epicycle(0, 0, fourierX, 0);\\n  const vy = epicycle(vx.x, vx.y, fourierY, PI / 2);\\n  const v = createVector(vx.x, vy.y);\\n  line(vx.x, vx.y, v.x, v.y);\\n  line(vy.x, vy.y, v.x, v.y);\\n  return v;\\n}\\n\\nfunction drawZY() {\\n  rotateY(-PI / 2);\\n  const vz = epicycle(0, 0, fourierZ, 0);\\n  const vy = epicycle(vz.x, vz.y, fourierY, PI / 2);\\n  const v = createVector(vz.x, vy.y);\\n  line(vz.x, vz.y, v.x, v.y);\\n  line(vy.x, vy.y, v.x, v.y);\\n  rotateY(PI / 2);\\n  return v;\\n}\\n\\nfunction drawPath() {\\n  beginShape();\\n  noFill();\\n  for (let i = 0; i < path.length; i++) {\\n    const h = Math.floor((360 * i) / fourierX.length);\\n    stroke(`hsl(${h},100%,50%)`);\\n    const { x, y, z } = path[i];\\n    vertex(x, y, z);\\n  }\\n  endShape();\\n}\\n\\nconst R = 20;\\nfunction draw() {\\n  background(0);\\n\\n  orbitControl();\\n  translate(0, -120, -100);\\n  rotateX(-PI / 8);\\n  rotateY(-PI / 4);\\n\\n  const vxy = drawXY();\\n  const vzy = drawZY();\\n  stroke(255);\\n\\n  const Ax = vxy.x;\\n  const Ay = vxy.y;\\n  const Az = vzy.x;\\n\\n  const Bx = vzy.x;\\n  const By = vzy.y;\\n  const Bz = vxy.x;\\n\\n  path.push({\\n    x: Ax,\\n    y: Ay,\\n    z: Az,\\n  });\\n\\n  translate(0, 0, Az);\\n  point(Ax, Ay);\\n  line(Ax, Ay, 0, Ay);\\n  translate(0, 0, -Az);\\n\\n  rotateY(-PI / 2);\\n  translate(0, 0, -Bz);\\n  line(Bx, By, 0, By);\\n  translate(0, 0, Bz);\\n  rotateY(PI / 2);\\n\\n  const dt = TWO_PI / fourierX.length;\\n  time += dt;\\n\\n  // if (time > TWO_PI) {\\n  //   drawPath()\\n  //   noLoop()\\n  //   saveCanvas()\\n  //   return\\n  // }\\n\\n  if (time > TWO_PI) {\\n    time = 0;\\n    path = [];\\n  }\\n\\n  drawPath();\\n}\\n\",\"css\":\"html, body {\\n  background: black;\\n  margin: 0;\\n  padding: 0;\\n  display: flex;\\n  min-height: 100vh;\\n  align-items: center;\\n  justify-content: center;\\n}\\ncanvas {\\n  display: block;\\n}\\n\"}"
+    },
+    {
+      "type": "GiphyBlock",
+      "text": "3BRDkVjKikYW4$%&Peor que probar cosas cuestionables"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "También es posible utilizar sólo 3 transformadas, 2 transformadas se proyectarían en el plano `XY` y 1 en el plano `XZ`."
+    },
+    {
+      "type": "LiveCodeBlock",
+      "text": "{\"html\":\"<html>\\n  <head>\\n    <script src=\\\"https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.2/p5.js\\\"></script>\\n    <meta charset=\\\"utf-8\\\" />\\n  </head>\\n  <body>\\n  </body>\\n</html>\",\"js\":\"function dft(X) {\\n  const transfumada = [];\\n  const N = X.length;\\n  for (let k = 0; k < N; k++) {\\n    let a = 0;\\n    let bi = 0;\\n    for (let n = 0; n < N; n++) {\\n      const angle = (2 * PI * k * n) / N;\\n      a += X[n] * cos(angle);\\n      bi += -(X[n] * sin(angle));\\n    }\\n    const A = sqrt(a ** 2 + bi ** 2);\\n    const hPhase = atan2(bi, a);\\n    transfumada.push({\\n      a,\\n      bi,\\n      f: k,\\n      A,\\n      hPhase,\\n    });\\n  }\\n  return transfumada;\\n}\\n\\nfunction epicycle(x, y, transfumada, rotation) {\\n  const N = transfumada.length;\\n  noFill();\\n  stroke(\\\"#fff5\\\");\\n  for (let i = 0; i < N; i++) {\\n    const prevX = x;\\n    const prevY = y;\\n    const { a, bi, f, A, hPhase } = transfumada[i];\\n    x += (A * cos(f * time + hPhase + rotation)) / N;\\n    y += (A * sin(f * time + hPhase + rotation)) / N;\\n    const radius = A / N;\\n    if (f > 0) {\\n      ellipse(prevX, prevY, radius * 2);\\n    }\\n    line(prevX, prevY, x, y);\\n  }\\n  return { x, y };\\n}\\n\\nlet fourierX = [];\\nlet fourierY = [];\\nlet fourierZ = [];\\nlet path = [];\\nlet time = 0;\\n\\nfunction setup() {\\n  createCanvas(320, 320, WEBGL);\\n\\n  let dataX = [];\\n  let dataY = [];\\n  let dataZ = [];\\n  const SZ = 200;\\n\\n  const r = 50;\\n  for (let i = 0; i <= SZ; i++) {\\n    const a = r * cos(10 * ((PI * i) / SZ) + PI / 4) + 100;\\n    const b = r * sin(10 * ((PI * i) / SZ) + PI / 4) + 100;\\n    dataX.push(a);\\n    dataY.push((SZ - i) * 1.8 * 0.5);\\n    dataZ.push(b);\\n  }\\n\\n  fourierX = dft(dataX);\\n  fourierY = dft(dataY);\\n  fourierZ = dft(dataZ);\\n\\n  fourierX = fourierX.toSorted((a, b) => {\\n    return b.A - a.A;\\n  });\\n  fourierY = fourierY.toSorted((a, b) => {\\n    return b.A - a.A;\\n  });\\n  fourierZ = fourierZ.toSorted((a, b) => {\\n    return b.A - a.A;\\n  });\\n}\\n\\nfunction drawXYZ() {\\n  const vx = epicycle(0, 0, fourierX, 0);\\n  const vy = epicycle(vx.x, vx.y, fourierY, PI / 2);\\n  push();\\n  translate(vx.x, vy.y, 0);\\n  rotateX(PI / 2);\\n  const vz = epicycle(0, 0, fourierZ, PI / 2, true);\\n  const v = createVector(vx.x, vy.y, vz.y);\\n  pop();\\n\\n  line(vx.x, vx.y, v.x, v.y);\\n  line(vy.x, vy.y, v.x, v.y);\\n\\n  return v;\\n}\\n\\nfunction drawPath() {\\n  beginShape();\\n  noFill();\\n  for (let i = 0; i < path.length; i++) {\\n    const h = Math.floor((360 * i) / fourierX.length);\\n    stroke(`hsl(${h},100%,50%)`);\\n    const { x, y, z } = path[i];\\n    vertex(x, y, z);\\n  }\\n  endShape();\\n}\\n\\nconst R = 20;\\nfunction draw() {\\n  background(0);\\n\\n  orbitControl();\\n  translate(0, -130, 0);\\n  rotateX(-PI / 4);\\n  rotateY(-PI / 4);\\n\\n  const v = drawXYZ();\\n  stroke(255);\\n\\n  path.push(v);\\n\\n  const dt = TWO_PI / fourierX.length;\\n  time += dt;\\n\\n  if (time > TWO_PI) {\\n    time = 0;\\n    path = [];\\n  }\\n\\n  drawPath();\\n}\\n\",\"css\":\"html, body {\\n  background: black;\\n  margin: 0;\\n  padding: 0;\\n  display: flex;\\n  min-height: 100vh;\\n  align-items: center;\\n  justify-content: center;\\n}\\ncanvas {\\n  display: block;\\n}\\n\"}"
+    },
+    {
+      "text": "---",
+      "type": "MarkdownBlock"
+    },
+    {
+      "text": "# Usando el plano complejo",
+      "type": "MarkdownBlock"
+    },
+    {
+      "text": "Es posible ajustar la trayectoria de la transformada para realizar trazos 2D sin la necesidad de realizar 2 transformadas. Para ello la serie tiene que ser de números complejos, en el que la parte real es un eje y la parte imaginaria el otro eje.",
+      "type": "MarkdownBlock"
+    },
+    {
+      "text": "El único cambio es en el cálculo de la transformada, ya que en la inversa ya se calcula un eje `y`.",
+      "type": "MarkdownBlock"
+    },
+    {
+      "text": "```js\nfunction dft(X) {\n  const fourier = [];\n  const N = X.length;\n  for (let k = 0; k < N; k++) {\n    const Xk = { a: 0, bi: 0, f: k };\n    for (let n = 0; n < N; n++) {\n      const angle = (2 * PI * k * n) / N;\n      const a = X[n].x;\n      const bi = X[n].y;\n      const c = cos(angle);\n      const di = -sin(angle);\n      // FOIL: (a + bi) * (c + di) = (ac - bd) + (ad + bc)i\n      Xk.a += a * c - bi * di;\n      Xk.bi += a * di + bi * c;\n    }\n    Xk.A = sqrt(Xk.a ** 2 + Xk.bi ** 2);\n    fourier.push(Xk);\n  }\n\n  // Ordenar las amplitudes ayuda a la visualización de los epiciclos\n  fourier.sort((f1, f2) => f2.A - f1.A);\n\n  return fourier;\n}\n```",
+      "type": "MarkdownBlock"
+    },
+    {
+      "text": "Ejemplo del rostro utilizando una sola transformada:",
+      "type": "MarkdownBlock"
+    },
+    {
+      "text": "{\"html\":\"<html>\\n  <head>\\n    <script src=\\\"https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.2/p5.js\\\"></script>\\n    <meta charset=\\\"utf-8\\\" />\\n  </head>\\n  <body>\\n  </body>\\n</html>\",\"js\":\"function dft(X) {\\n  const fourier = [];\\n  const N = X.length;\\n  for (let k = 0; k < N; k++) {\\n    const Xk = { a: 0, bi: 0, f: k };\\n    for (let n = 0; n < N; n++) {\\n      const angle = (2 * PI * k * n) / N;\\n      const a = X[n].x;\\n      const bi = X[n].y;\\n      const c = cos(angle);\\n      const di = -sin(angle);\\n      // FOIL: (a + bi) * (c + di) = (ac - bd) + (ad + bc)i\\n      Xk.a += a * c - bi * di;\\n      Xk.bi += a * di + bi * c;\\n    }\\n    Xk.A = sqrt(Xk.a ** 2 + Xk.bi ** 2);\\n    fourier.push(Xk);\\n  }\\n\\n  fourier.sort((f1, f2) => f2.A - f1.A);\\n\\n  return fourier;\\n}\\n\\nfunction epicycle(x, y, fourier, rotation) {\\n  const K = fourier.length;\\n  for (let k = 0; k < K; k++) {\\n    let prevX = x;\\n    let prevY = y;\\n    let { a, bi, f } = fourier[k];\\n    const A = sqrt(a ** 2 + bi ** 2);\\n    const hPhase = atan2(bi, a);\\n    x += (A * cos(f * time + hPhase + rotation) * 1) / K;\\n    y += (A * sin(f * time + hPhase + rotation) * 1) / K;\\n    let radius = A / K;\\n    // Esto dibuja los círculos\\n    stroke(\\\"#ffffff50\\\");\\n    noFill();\\n    ellipse(prevX, prevY, radius * 2);\\n    line(prevX, prevY, x, y);\\n  }\\n  return createVector(x, y);\\n}\\n\\nlet data = [];\\nlet fourier = [];\\nlet path = [];\\nlet time = 0;\\n\\nfunction setup() {\\n  createCanvas(300, 300);\\n\\n  const SZ = 200;\\n\\n  // head\\n  for (let i = 0; i < SZ; i++) {\\n    const x = 60 * cos((i / SZ) * TWO_PI) + 150;\\n    const y = 60 * sin((i / SZ) * TWO_PI) + 150;\\n    data.push({ x, y });\\n  }\\n\\n  // smile\\n  let first = null;\\n  for (let i = SZ / 2; i < SZ; i++) {\\n    const x = 20 * cos((i / SZ) * TWO_PI) + 150;\\n    const y = 20 * sin((i / SZ) * TWO_PI) + 180;\\n    if (!first) first = { x, y };\\n    data.push({ x, y });\\n  }\\n  data.push(first);\\n\\n  // eyes: l -> r\\n  for (let i = 0; i < SZ; i++) {\\n    const x = 15 * cos((i / SZ) * TWO_PI) + 125;\\n    const y = 15 * sin((i / SZ) * TWO_PI) + 140;\\n    data.push({ x, y });\\n  }\\n  for (let i = 0; i < SZ; i++) {\\n    const x = 15 * cos((i / SZ) * TWO_PI) + 175;\\n    const y = 15 * sin((i / SZ) * TWO_PI) + 140;\\n    data.push({ x, y });\\n  }\\n\\n  fourier = dft(data);\\n}\\n\\nfunction draw() {\\n  background(0);\\n\\n  const v = epicycle(0, 0, fourier, 0);\\n  path.unshift(v);\\n\\n  beginShape();\\n  stroke(\\\"yellow\\\");\\n  noFill();\\n  for (let i = 0; i < path.length; i++) vertex(path[i].x, path[i].y);\\n  endShape();\\n\\n  const dt = TWO_PI / fourier.length;\\n  time += dt;\\n  if (time > TWO_PI) {\\n    time = 0;\\n    path = [];\\n  }\\n\\n  fill(\\\"red\\\");\\n  stroke(\\\"red\\\");\\n  ellipse(v.x, v.y, 5);\\n}\\n\",\"css\":\"html, body {\\n  background: black;\\n  margin: 0;\\n  padding: 0;\\n  display: flex;\\n  min-height: 100vh;\\n  align-items: center;\\n  justify-content: center;\\n}\\ncanvas {\\n  display: block;\\n}\\n\"}",
+      "type": "LiveCodeBlock"
+    },
+    {
+      "text": "---",
+      "type": "MarkdownBlock"
+    },
+    {
+      "text": "# FFT",
+      "type": "MarkdownBlock"
+    },
+    {
+      "text": "*Fast Fourier Transform* permite calcular la transformada con menos operaciones (reduciendo la complejidad de `O(N^2)` a `O(N log(N))`.",
+      "type": "MarkdownBlock"
+    },
+    {
+      "text": "Un caso específico en el que es útil (que hay miles) es el interactuar con la formula en tiempo real.",
+      "type": "MarkdownBlock"
+    },
+    {
+      "text": "/fft-asset.jpg",
+      "type": "ImageBlock"
+    },
+    {
+      "text": " En este ejemplo se pasa una imagen a un dominio de frecuencias y se realiza un *`shift`* para poner las frecuencias más \"relevantes\" al centro. Si solo se consideran las del centro, se obtiene una imagen comprimida (una representación con menos datos).",
+      "type": "MarkdownBlock"
+    },
+    {
+      "text": "{\"html\":\"<html>\\n  <head>\\n    <script src=\\\"https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.2/p5.js\\\"></script>\\n\\n    <script src=\\\"https://cdn.jsdelivr.net/gh/nicolaspanel/numjs@0.15.1/dist/numjs.min.js\\\"></script>\\n    <meta charset=\\\"utf-8\\\" />\\n  </head>\\n  <body>\\n  </body>\\n</html>\",\"js\":\"let img;\\nlet data;\\nlet fft;\\nlet slider;\\n\\nfunction preload() {\\n  img = loadImage(\\\"/blog/transformada-discreta-de-fourier-dft-en-javascript/img/fft-asset.jpg\\\");\\n}\\n\\nfunction setup() {\\n  createCanvas(320, 320);\\n  slider = createSlider(1, 80, 25, 1);\\n  slider.id(\\\"slider\\\");\\n  slider.position(10, 10);\\n\\n  image(img, width / 2, 0, width / 2, height / 2);\\n  data = [];\\n  for (let r = 0; r < height / 2; r++) {\\n    data.push([]);\\n    for (let c = width / 2; c < width; c++) {\\n      const x = c;\\n      const y = r;\\n      const pixel = get(x, y);\\n      const R = red(pixel);\\n      const G = green(pixel);\\n      const B = blue(pixel);\\n      const v = round((R + G + B) / 3);\\n      data[r].push([v, 0]);\\n      set(x, y, v);\\n    }\\n  }\\n\\n  data = nj.array(data);\\n  fft = nj.fft(data);\\n\\n  for (let r = 0; r < height / 2; r++) {\\n    for (let c = 0; c < width / 2; c++) {\\n      let k = r;\\n      let l = c - width / 2;\\n      l = (l + height / 4) % (height / 2);\\n      k = (k + width / 4) % (width / 2);\\n      const a = fft.get(k, l, 0);\\n      const bi = fft.get(k, l, 1);\\n      const v = mod(a, bi);\\n      const x = c;\\n      const y = r;\\n      set(x, y, v);\\n    }\\n  }\\n}\\n\\nfunction mod(a, bi) {\\n  return sqrt(a ** 2 + bi ** 2) / 200;\\n}\\n\\nlet prevMaxD = -1;\\nfunction draw() {\\n  const maxD = slider.value();\\n  if (maxD === prevMaxD) return;\\n  prevMaxD = maxD;\\n\\n  const [imgH, imgW] = data.shape;\\n\\n  let M = new Array(imgH).fill(0).map((r) => new Array(imgW));\\n  const cx = imgW / 2;\\n  const cy = imgH / 2;\\n  for (let r = 0; r < imgH; r++) {\\n    for (let c = 0; c < imgW; c++) {\\n      const k = (c + width / 4) % (width / 2);\\n      const l = (r + height / 4) % (height / 2);\\n      const d = sqrt((k - cx) ** 2 + (l - cy) ** 2);\\n      if (d < maxD) M[r][c] = [1, 1];\\n      else M[r][c] = [0, 0];\\n    }\\n  }\\n  M = nj.array(M);\\n  const fftM = fft.multiply(M);\\n\\n  for (let r = height / 2; r < height; r++) {\\n    for (let c = 0; c < width / 2; c++) {\\n      let k = r - height / 2;\\n      let l = c;\\n      l = (l + height / 4) % (height / 2);\\n      k = (k + width / 4) % (width / 2);\\n      const a = fftM.get(k, l, 0);\\n      const bi = fftM.get(k, l, 1);\\n      const v = mod(a, bi);\\n      const x = c;\\n      const y = r;\\n      set(x, y, v);\\n    }\\n  }\\n\\n  const out = nj.ifft(fftM);\\n\\n  for (let r = height / 2; r < height; r++) {\\n    for (let c = width / 2; c < width; c++) {\\n      const n = r - height / 2;\\n      const m = c - width / 2;\\n      const v = out.get(n, m, 0);\\n      const x = c;\\n      const y = r;\\n      set(x, y, v);\\n    }\\n  }\\n\\n  updatePixels();\\n\\n  noFill();\\n  stroke(255);\\n  circle(width/4, 3*height/4, maxD*2);\\n}\\n\",\"css\":\"html, body {\\n  background: black;\\n  margin: 0;\\n  padding: 0;\\n  display: flex;\\n  min-height: 100vh;\\n  align-items: center;\\n  justify-content: center;\\n}\\ncanvas {\\n  display: block;\\n}\\n\"}",
+      "type": "LiveCodeBlock"
+    },
+    {
+      "text": "El algoritmo de la `FFT` tiene una implementación diferente, en este ejemplo se usó la de:\n- https://github.com/nicolaspanel/numjs/?tab=readme-ov-file#fast-fourier-transform-fft",
+      "type": "MarkdownBlock"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "---"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# Fin"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Al principio buscaba implementaciones para entenderla, pero no lo logré hasta tratar directamente con la fórmula. Lo cierto es que la expresión resume bastante todos los cálculos, así son las mates."
+    }
+  ]
+}
