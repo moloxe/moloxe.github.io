@@ -7,9 +7,9 @@
     "dev": "sh scripts/dev.sh",
     "start": "astro dev",
     "build": "sh scripts/build.sh",
+    "deploy": "sh scripts/deploy.sh",
     "preview": "astro preview",
     "astro": "astro",
-    "deploy": "bunx wrangler pages deploy ./dist --project-name=moloxeio",
     "post": "cd local/post-tooter && pnpm run start"
   },
   "dependencies": {
