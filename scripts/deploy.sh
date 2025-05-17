@@ -12,6 +12,9 @@ echo "Copying files to gh-pages branch"
 rm -rf *
 cp -r ../../dist/* .
 
+# Jekyll ignores files and folders that start with an underscore or a dot
+touch .nojekyll
+
 echo "Adding new files to gh-pages branch"
 git add .
 git commit -m "Deploying to gh-pages"
