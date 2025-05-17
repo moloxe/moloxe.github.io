@@ -19,8 +19,7 @@ if (!post) throw new Error('Post not found.')
 const imageURL = (() => {
   let url = getPosterFromPost(post) as string
   const isRelativePath = url && url.startsWith('/')
-  // TODO: Replace when domain is ready
-  if (isRelativePath) url = `https://moloxeio.pages.dev${url}`
+  if (isRelativePath) url = `https://moloxe.github.io${url}`
   return url
 })()
 ---

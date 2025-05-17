@@ -8,7 +8,7 @@ hljs.registerLanguage('javascript', javascript)
 const parseSketch = (
   code: string
 ) => `const lib = document.createElement("script");
-lib.src = "https://moloxeio.pages.dev/tina/lib.js";
+lib.src = "https://moloxe.github.io/tina/lib.js";
 document.head.appendChild(lib);
 
 ${code}`
