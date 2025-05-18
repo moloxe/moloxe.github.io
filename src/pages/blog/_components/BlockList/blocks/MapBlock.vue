@@ -12,7 +12,7 @@
 import type { Block } from '@src/pages/blog/_types/Blocks'
 import { computed } from 'vue'
 
-// const GOOGLE_MAPS_API_KEY = 'AIzaSyB16lpG2RNWCoHDP2YFp0nuonUw6K3kVHo'
+// const GOOGLE_MAPS_API_KEY = ''
 
 type Props = {
   editMode: boolean
@@ -32,7 +32,9 @@ const props = defineProps<Props>()
 
 const gmLink = computed(() => {
   const [lat, lng] = props.block.text.split(',')
-  return `https://google.com/maps/@${lat},${lng},16z`
+  let coords = ''
+  if (!!lat && !!lng) coords = `@${lat},${lng},16z`
+  return `https://google.com/maps/${coords}`
 })
 
 // const getCoords = async () => {
