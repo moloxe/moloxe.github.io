@@ -51,6 +51,16 @@ vec2 toCartesian(vec2 polar) {
   return vec2(x, y);
 }
 
+float getAngularDist(float angle1, float angle2) {
+  float angle = angle1 - angle2;
+  if (angle > PI) {
+    angle -= 2.0 * PI;
+  } else if (angle <= -PI) {
+    angle += 2.0 * PI;
+  }
+  return angle;
+}
+
 // https://iquilezles.org/articles/distfunctions/
 
 float dot2(in vec2 v) {
@@ -687,10 +697,11 @@ struct PointLight {
   float shadowness;
 };
 
-${POINT_LIGHTS > 0
+${
+  POINT_LIGHTS > 0
     ? /* glsl */ `uniform PointLight pointLights[${POINT_LIGHTS}];`
     : ''
-  }
+}
 
 vec3 applyPointLight(
   Material material,
@@ -805,8 +816,9 @@ SceneLightning calcSceneLightning(vec3 ro, vec3 rd) {
   vec3 viewDir = -rd;
   Material material = materials[rm.materialIndex];
 
-  ${POINT_LIGHTS > 0
-    ? /* glsl */ `
+  ${
+    POINT_LIGHTS > 0
+      ? /* glsl */ `
   for(int i = 0; i < pointLights.length(); i++) {
     PointLight pl = pointLights[i];
     bool lightIsInside = false;
@@ -821,7 +833,7 @@ SceneLightning calcSceneLightning(vec3 ro, vec3 rd) {
     );
     totalLightning = mix(totalLightning, lightning, .5);
   }`
-    : /* glsl */ `
+      : /* glsl */ `
     PointLight pl = PointLight(ro, vec3(1.), 0., false, 0., 0.);
     totalLightning = applyPointLight(
       material, pos, normal, pl, viewDir, false, 0.
@@ -839,7 +851,7 @@ function PointLight({
   power = 1,
   computeShadows = false,
   offsetRadius = 0,
-  shadowness = 1.
+  shadowness = 1,
 }) {
   this.pos = pos
   this.color = color
@@ -901,8 +913,8 @@ function FragBuilder(tina) {
 
     void main() {
       #ifdef USE_INTERLACING
-      int y = int(uv.y * height);
-      if(y % 2 == frameCount % 2) {
+      int _pixel_y = int(uv.y * height);
+      if(_pixel_y % 2 == frameCount % 2) {
         fragColor =  vec4(0.);
         return;
       }
@@ -914,9 +926,7 @@ function FragBuilder(tina) {
   }
 }
 
-function Tina(width, height, {
-  useInterlacing,
-} = {}) {
+function Tina(width, height, { useInterlacing } = {}) {
   this.width = width
   this.height = height
   this.useInterlacing = useInterlacing ?? false
