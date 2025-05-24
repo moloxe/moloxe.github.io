@@ -3,11 +3,10 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev:win": "concurrently --kill-others --success=first \"bun --watch local/blog-data-server/index.ts --dev\" \"astro dev\"",
-    "dev": "sh scripts/dev.sh",
+    "dev": "concurrently --kill-others --success=first \"bun --watch local/blog-data-server/index.ts --dev\" \"astro dev\"",
+    "build": "concurrently --kill-others --success=first \"bun --watch local/blog-data-server/index.ts --dev\" \"astro check && astro build\"",
+    "deploy": "sh deploy.sh",
     "start": "astro dev",
-    "build": "sh scripts/build.sh",
-    "deploy": "sh scripts/deploy.sh",
     "preview": "astro preview",
     "astro": "astro",
     "post": "cd local/post-tooter && pnpm run start"

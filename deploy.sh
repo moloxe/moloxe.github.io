@@ -1,16 +1,16 @@
 echo "Deploying to gh-pages"
 
 echo "Preparing gh-pages branch"
-rm -rf scripts/temp-deploy
-mkdir scripts/temp-deploy
-cd scripts/temp-deploy
+rm -rf .temp-deploy
+mkdir .temp-deploy
+cd .temp-deploy
 
 echo "Cloning gh-pages branch"
 git clone --branch gh-pages https://github.com/moloxe/moloxe.github.io.git .
 
 echo "Copying files to gh-pages branch"
 rm -rf *
-cp -r ../../dist/* .
+cp -r ../dist/* .
 
 # Jekyll ignores files and folders that start with an underscore or a dot
 touch .nojekyll
@@ -21,7 +21,7 @@ git commit -m "Deploying to gh-pages"
 git push origin gh-pages
 
 echo "Cleaning up"
-cd ../../
-rm -rf scripts/temp-deploy
+cd ../
+rm -rf .temp-deploy
 
 echo "Deployment complete"

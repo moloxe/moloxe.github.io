@@ -28,4 +28,4 @@ tina/
 # src/pages/tina
 !tina
 
-scripts/temp-deploy
+.temp-deploy/
