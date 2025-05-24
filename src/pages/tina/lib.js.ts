@@ -27,9 +27,6 @@ const SCRIPT = [
 ].join('\n')
 
 export const GET: APIRoute = async () => {
-  const res = await fetch('http://localhost:8887', {
-    method: 'GET',
-  })
   return new Response(SCRIPT, {
     headers: { 'Content-Type': 'application/javascript' },
   })
