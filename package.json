@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev:win": "concurrently --kill-others --success=first \"bun --watch local/blog-data-server/index.ts --dev\" \"bun --watch tina/index.ts\" \"astro dev\"",
+    "dev:win": "concurrently --kill-others --success=first \"bun --watch local/blog-data-server/index.ts --dev\"",
     "dev": "sh scripts/dev.sh",
     "start": "astro dev",
     "build": "sh scripts/build.sh",
