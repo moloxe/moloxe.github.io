@@ -42,8 +42,8 @@ function FragBuilder(tina) {
 
     void main() {
       #ifdef USE_INTERLACING
-      int y = int(uv.y * height);
-      if(y % 2 == frameCount % 2) {
+      int _pixel_y = int(uv.y * height);
+      if(_pixel_y % 2 == frameCount % 2) {
         fragColor =  vec4(0.);
         return;
       }

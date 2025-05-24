@@ -14,16 +14,35 @@ function setup() {
     useInterlacing: true,
   })
 
-  tina.shape({
-    sdFunc: `(sin(pos.y) - (cos(pos.x) + cos(pos.y) + cos(pos.z))) / 2.`,
-  })
-
   tina.build(/* glsl */ `
     // https://www.shadertoy.com/view/llBGWc
     #define padding 0.05
     #define threshold 0.55
     uniform sampler2D capture;
     const float ratio = (4. / 3.) / ${RATIO.toFixed(4)};
+
+    vec4 getBg() {
+      vec2 xy = uv.xy * 2. - 1.;
+      xy *= vec2(width / height, -1.);
+      
+      vec2 origin = xy * 3.;
+      float x = origin.x;
+      float y = origin.y;
+      vec2 target = vec2(x * x - y * y - 4., 2. * x * y);
+
+      float t = sin(time + PI) * .5 + .5;
+      target = (1. - t) * origin + t * target;
+
+      float angleO = atan(origin.y, origin.x);
+      float angleT = atan(target.y, target.x);
+
+      float eDist = length(origin - target);
+      float aDist = getAngularDist(angleO, angleT);
+      aDist = aDist / (2. * PI);
+
+      vec3 bg = hsv2rgb(vec3(aDist, 1., log(1. + eDist)));
+      return vec4(bg, 1.);
+    }
 
     vec4 getPix() {
       vec2 fixedUv = vec2(
@@ -49,30 +68,15 @@ function setup() {
       return mix(pix, bg, 1. - fac);
     }
     ---
-    vec2 dir2d = uv * 2. - 1.;
-    dir2d *= vec2(width / height, -1);
-
-    float t = time * .1;
-    vec3 ro = vec3(cos(-t) * 16., 2.4, sin(-t) * 16.);
-    vec3 rd = normalize(vec3(dir2d, -.8));
-    rd *= rotate(vec3(0., t, -t));
-
-    RayMarch rm = rayMarch(ro, rd);
-    if(rm.materialIndex == -1) return;
-
-    vec3 normal = calcSceneNormal(rm.pos) / 2. + .5;
-    float dist = length(rm.pos - ro);
-    float bri = pow(sin(dist * PI / 6.), 6.);
-
-    vec4 sceneColor = vec4(normal * bri, 1.);
-	  fragColor = mixCapture(sceneColor);
+    vec4 bg = getBg();
+	  fragColor = mixCapture(bg);
   `)
   noSmooth()
   frameRate(24)
 }
 
+const uniforms = {}
 function draw() {
-  const uniforms = {}
   if (capture) uniforms.capture = capture
   const graphics = tina.update(uniforms)
   image(graphics, 0, 0, width, height)
