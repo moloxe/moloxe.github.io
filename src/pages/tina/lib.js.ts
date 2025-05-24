@@ -1,19 +1,26 @@
 import type { APIRoute } from 'astro'
-import fs from 'fs'
 
-const readFile = (path: string) =>
-  fs.readFileSync(new URL(path, import.meta.url), 'utf-8')
-
-const TINA = readFile('./_lib/tina.js')
-const TINA_COMMON = readFile('./_lib/tina.common.js')
-const TINA_RAYMARCH_LIGHT = readFile('./_lib/raymarch/light.js')
-const TINA_RAYMARCH_MATERIAL = readFile('./_lib/raymarch/material.js')
-const TINA_RAYMARCH_SCENE = readFile('./_lib/raymarch/scene.js')
-const TINA_RAYMARCH = readFile('./_lib/raymarch/raymarch.js')
-const TINA_RAYMARCH_CAPSULE_COLLISIONS = readFile(
-  './_lib/raymarch/collisions.capsule.js'
-)
-const TINA_KEYBOARD = readFile('./_lib/utils/keyboard.js')
+const TINA = (await import('@src/pages/tina/_lib/tina.js?raw')).default
+const TINA_COMMON = (await import('@src/pages/tina/_lib/tina.common.js?raw'))
+  .default
+const TINA_RAYMARCH_LIGHT = (
+  await import('@src/pages/tina/_lib/raymarch/light.js?raw')
+).default
+const TINA_RAYMARCH_MATERIAL = (
+  await import('@src/pages/tina/_lib/raymarch/material.js?raw')
+).default
+const TINA_RAYMARCH_SCENE = (
+  await import('@src/pages/tina/_lib/raymarch/scene.js?raw')
+).default
+const TINA_RAYMARCH = (
+  await import('@src/pages/tina/_lib/raymarch/raymarch.js?raw')
+).default
+const TINA_RAYMARCH_CAPSULE_COLLISIONS = (
+  await import('@src/pages/tina/_lib/raymarch/collisions.capsule.js?raw')
+).default
+const TINA_KEYBOARD = (
+  await import('@src/pages/tina/_lib/utils/keyboard.js?raw')
+).default
 
 const SCRIPT = [
   TINA_KEYBOARD,
