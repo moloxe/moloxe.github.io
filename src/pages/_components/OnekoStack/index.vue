@@ -1,11 +1,6 @@
 <template>
-  <OnekoSingle
-    v-for="(oneko, index) in onekos"
-    :key="oneko.id"
-    :oneko="oneko"
-    :allowAlert="index === 0"
-    :forceAlert="index > 0 && onekos[0]?.sprite === 'alert'"
-  />
+  <OnekoSingle v-for="(oneko, index) in onekos" :key="oneko.id" :oneko="oneko" :allowAlert="index === 0"
+    :forceAlert="index > 0 && onekos[0]?.sprite === 'alert'" />
 </template>
 
 <script setup lang="ts">
@@ -136,11 +131,12 @@ function onMouseMove(event: MouseEvent) {
 function onKeyDown(event: KeyboardEvent) {
   const commandPressed = event.metaKey || event.ctrlKey
   const shiftPressed = event.shiftKey
-  if (shiftPressed && commandPressed && event.key === 'x') {
+  const key = event.key.toLowerCase()
+  if (shiftPressed && commandPressed && key === 'x') {
     event.preventDefault()
     addOnekoToStack()
   }
-  if (shiftPressed && commandPressed && event.key === 'z') {
+  if (shiftPressed && commandPressed && key === 'z') {
     event.preventDefault()
     killLast()
   }
