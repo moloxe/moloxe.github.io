@@ -1,7 +1,7 @@
 {
   "title": "Tina - p5js shader helper",
   "creationDate": "2024-08-21T03:25:29.805Z",
-  "lastUpdate": "2024-09-19T18:43:44.056Z",
+  "lastUpdate": "2025-05-24T01:49:26.748Z",
   "categories": [
     "tech",
     "games",
@@ -31,10 +31,6 @@
     {
       "text": "\n[<p style=\"font-size:1.5rem;font-family:monospace;font-weight:bold;\">Tina</p>](/tina)\n",
       "type": "MarkdownBlock"
-    },
-    {
-      "text": "/tina/scene-noisy-retro$eb-sep$large$eb-sep$full",
-      "type": "EmbedBlock"
     },
     {
       "text": "Dejaré la última versión del POC archivada: https://editor.p5js.org/moloxe/sketches/Mmk8d_crf",
