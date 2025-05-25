@@ -3,9 +3,7 @@ let tina
 function setup() {
   createCanvas(windowWidth, windowHeight)
 
-  tina = new Tina(240 * (width / height), 240, {
-    useInterlacing: true,
-  })
+  tina = new Tina(width, height)
 
   tina.shape({
     sdFunc: `(sin(pos.y) - (cos(pos.x) + cos(pos.y) + cos(pos.z))) / 2.`,
@@ -34,9 +32,6 @@ function setup() {
 
     fragColor = vec4(color, 1.);
   `)
-
-  frameRate(24)
-  noSmooth()
 }
 
 let pulse = 0
