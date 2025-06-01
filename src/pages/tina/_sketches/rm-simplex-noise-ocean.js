@@ -75,7 +75,6 @@ function setup() {
     fragColor = scene.color;
   `)
 
-  frameRate(24)
   noSmooth()
 }
 

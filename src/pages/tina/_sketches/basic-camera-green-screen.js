@@ -1,18 +1,14 @@
 let capture, tina
 
 function setup() {
-  const W = windowWidth
-  const H = windowHeight
   const RATIO = windowWidth / windowHeight
-  createCanvas(W, H)
-  const dim = [480, (H / W) * 480]
+  createCanvas(windowWidth, windowHeight)
+  const dim = [width, height]
   capture = createCapture(VIDEO, { flipped: false })
   capture.size(...dim)
   capture.hide()
 
-  tina = new Tina(...dim, {
-    useInterlacing: true,
-  })
+  tina = new Tina(...dim)
 
   tina.build(/* glsl */ `
     // https://www.shadertoy.com/view/llBGWc
@@ -44,7 +40,7 @@ function setup() {
       return vec4(bg, 1.);
     }
 
-    vec4 getPix() {
+    vec4 getCameraPix() {
       vec2 fixedUv = vec2(
         1. - (uv.x / ratio) * 2.,
         uv.y * 2. - 1.
@@ -57,22 +53,20 @@ function setup() {
       return pix;
     }
 
-    vec4 mixCapture(vec4 bg) {
-      vec4 pix = getPix();
-      vec3 diff = pix.rgb - vec3(0., 1., 0.);
+    vec4 mixCapture(vec4 bg, vec4 cameraPix) {
+      vec3 diff = cameraPix.rgb - vec3(0., 1., 0.);
       float fac = smoothstep(
         threshold - padding,
         threshold + padding,
         dot(diff, diff)
       );
-      return mix(pix, bg, 1. - fac);
+      return mix(cameraPix, bg, 1. - fac);
     }
     ---
     vec4 bg = getBg();
-	  fragColor = mixCapture(bg);
+    vec4 cameraPix = getCameraPix();
+	  fragColor = mixCapture(bg, cameraPix);
   `)
-  noSmooth()
-  frameRate(24)
 }
 
 const uniforms = {}
