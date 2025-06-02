@@ -23,7 +23,7 @@ const TinaExamples: FC<Props> = ({ examples }) => {
   const [currentExample, setCurrentExample] = useState(
     Math.max(
       0,
-      examples.findIndex(({ route }) => route === 'rm-periodic-space')
+      examples.findIndex(({ route }) => route === 'rm-periodic-surface')
     )
   )
   const example = examples[currentExample]
