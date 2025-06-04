@@ -53,7 +53,7 @@ function setup() {
   player = new Player()
 
   tina.spherical = [0.6, 0, -0.5]
-  tina.minBright = 0.05
+  tina.minBright = 0.1
 
   tina.sphere({
     parentIndex: player.group,
@@ -85,9 +85,8 @@ function setup() {
     dimensions: [0.4, 0.05, 0.4],
   })
 
-  tina.box({
-    pos: [0, -0.1, 0],
-    dimensions: [3, 0, 3],
+  tina.shape({
+    sdFunc: `pos.y + 0.1`,
     smoothFactor: 0.1,
   })
 
@@ -220,7 +219,7 @@ function mouseWheel(event) {
 }
 
 function getResolution() {
-  return [240 * (width / height), 240]
+  return [360 * (width / height), 360]
 }
 
 let resizeTimeout
