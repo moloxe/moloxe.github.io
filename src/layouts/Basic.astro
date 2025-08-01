@@ -1,5 +1,5 @@
 ---
-import { ViewTransitions } from 'astro:transitions'
+import { ClientRouter } from 'astro:transitions'
 import OnekoStack from '@src/pages/_components/OnekoStack/index.vue'
 import '@src/assets/styles/main.css'
 
@@ -73,7 +73,7 @@ const paths = (() => {
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <!-- <link rel="canonical" href={canonicalHref} /> -->
     {scripts.map((src) => <script src={src} />)}
-    <ViewTransitions />
+    <ClientRouter />
   </head>
   <body>
     {

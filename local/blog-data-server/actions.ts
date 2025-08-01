@@ -1,5 +1,5 @@
 import fs from 'fs'
-import { Post } from '../../src/pages/blog/_types/post'
+import { Post } from '../../src/pages/blog/_types/Post'
 import {
   parsePost,
   slugifyForPost,
