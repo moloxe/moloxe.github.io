@@ -1,4 +1,4 @@
-import{j as t}from"./jsx-runtime.7faW4zRM.js";import{r as o}from"./index.DhYZZe0J.js";import{H as c,j as d}from"./javascript.BSUlKjNi.js";/* empty css                       */c.registerLanguage("javascript",d);const p=r=>`const lib = document.createElement("script");
+import{j as t}from"./jsx-runtime.ClP7wGfN.js";import{r as o}from"./index.DK-fsZOb.js";import{H as c,j as d}from"./javascript.BVy1hubH.js";/* empty css                       */c.registerLanguage("javascript",d);const p=r=>`const lib = document.createElement("script");
 lib.src = "https://moloxe.github.io/tina/lib.js";
 document.head.appendChild(lib);
 

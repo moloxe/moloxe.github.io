@@ -1,4 +1,4 @@
-import{j as e}from"./jsx-runtime.7faW4zRM.js";import{r as c}from"./index.DhYZZe0J.js";const d=({photos:l})=>{const[r,t]=c.useState(0);function o(a){t(a)}return e.jsxs("div",{className:`photo-gallery relative grid overflow-hidden ${l.length>1?"grid-rows-[1fr_auto]":""}`,children:[l.length>1&&e.jsx("div",{className:"z-10 flex overflow-x-auto bg-[#000a]",children:e.jsx("div",{className:"flex",children:l.map((a,s)=>e.jsx("button",{className:`
+import{j as e}from"./jsx-runtime.ClP7wGfN.js";import{r as c}from"./index.DK-fsZOb.js";const d=({photos:l})=>{const[r,t]=c.useState(0);function o(a){t(a)}return e.jsxs("div",{className:`photo-gallery relative grid overflow-hidden ${l.length>1?"grid-rows-[1fr_auto]":""}`,children:[l.length>1&&e.jsx("div",{className:"z-10 flex overflow-x-auto bg-[#000a]",children:e.jsx("div",{className:"flex",children:l.map((a,s)=>e.jsx("button",{className:`
                   flex overflow-hidden w-40 h-40
                   ${r===s?"border-2 border-white":""}
                 `,onClick:()=>o(s),children:e.jsx("img",{className:`
