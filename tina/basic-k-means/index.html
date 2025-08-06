@@ -16,13 +16,11 @@ function setup() {
     vec2 xy = uv * vec2(width, height);
 
     float minD = 1e9;
-    int minIndex = 0;
+    int minIndex = -1;
     float t = time * 0.01;
     for (int i = 0; i < nPoints; i++) {
-      float x = snoise(vec3(x, float(i), t)) + 1.;
-      float y = snoise(vec3(y, float(i), t)) + 1.;
-      x = mod(x * width, width);
-      y = mod(y * height, height);
+      float x = (snoise(vec3(0., float(i), t)) * .5 + .5) * width;
+      float y = (snoise(vec3(1., float(i), t)) * .5 + .5) * height;
       float d = length(xy - vec2(x, y));
       if (d < minD) {
         minD = d;
@@ -39,7 +37,8 @@ function setup() {
 
     vec3 color = mix(
       hsv2rgb(hue, .6, 1.),
-      vec3(0.), log(minD / 20.) / 3.
+      vec3(0.),
+      log(minD / 20.) / 3.
     );
     fragColor = vec4(color, 1.);
   `)
