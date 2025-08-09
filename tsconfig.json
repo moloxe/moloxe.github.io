@@ -7,7 +7,8 @@
       "@src/*": ["src/*"]
     },
     "jsx": "react-jsx",
-    "jsxImportSource": "react"
+    "jsxImportSource": "react",
+    "types": ["@webgpu/types"]
   },
   "include": [
     "src/**/*.d.ts",

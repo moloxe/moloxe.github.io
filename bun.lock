@@ -24,6 +24,7 @@
         "@types/node": "20.12.7",
         "@types/react": "18.3.3",
         "@types/react-dom": "18.3.0",
+        "@webgpu/types": "^0.1.64",
         "concurrently": "8.2.2",
         "elysia": "1.0.14",
       },
@@ -407,6 +408,8 @@
     "@vue/server-renderer": ["@vue/server-renderer@3.4.24", "", { "dependencies": { "@vue/compiler-ssr": "3.4.24", "@vue/shared": "3.4.24" }, "peerDependencies": { "vue": "3.4.24" } }, "sha512-H+DLK4sQF6sRgzKyofmlEVBIV/9KrQU6HIV7nt6yIwSGGKvSwlV8pqJlebUKLpbXaNHugdSfAbP6YmXF69lxow=="],
 
     "@vue/shared": ["@vue/shared@3.4.24", "", {}, "sha512-BW4tajrJBM9AGAknnyEw5tO2xTmnqgup0VTnDAMcxYmqOX0RG0b9aSUGAbEKolD91tdwpA6oCwbltoJoNzpItw=="],
+
+    "@webgpu/types": ["@webgpu/types@0.1.64", "", {}, "sha512-84kRIAGV46LJTlJZWxShiOrNL30A+9KokD7RB3dRCIqODFjodS5tCD5yyiZ8kIReGVZSDfA3XkkwyyOIF6K62A=="],
 
     "acorn": ["acorn@8.15.0", "", { "bin": { "acorn": "bin/acorn" } }, "sha512-NZyJarBfL7nWwIq+FDL6Zp/yHEhePMNnnJ0y3qfieCrmNvYct8uvtiV41UvlSe6apAfk0fY1FbWx+NwfmpvtTg=="],
 
