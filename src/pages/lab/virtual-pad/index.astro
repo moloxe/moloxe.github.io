@@ -3,6 +3,6 @@ import Basic from '@src/layouts/Basic.astro'
 import VirtualPadComponent from './_components/VirtualPad.vue'
 ---
 
-<Basic showPaths title="Virtual pad">
+<Basic showPaths title="Virtual pad" allowOneko={false}>
   <VirtualPadComponent client:load />
 </Basic>

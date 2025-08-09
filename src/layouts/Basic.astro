@@ -13,8 +13,17 @@ type Props = {
   showPaths?: boolean
   seoDescription?: string
   seoImg?: string
+  allowOneko?: boolean
 }
-const { htmlClass, showPaths, seoDescription, seoImg } = Astro.props
+
+const {
+  htmlClass,
+  showPaths,
+  seoDescription,
+  seoImg,
+  allowOneko = true,
+} = Astro.props
+
 const lang = Astro.props.lang || 'es'
 const title = Astro.props.title
 const scripts = Astro.props.scripts || []
@@ -89,9 +98,13 @@ const paths = (() => {
       )
     }
 
-    <div class="absolute w-0 h-0" transition:persist>
-      <OnekoStack client:load />
-    </div>
+    {
+      allowOneko && (
+        <div class="absolute w-0 h-0" transition:persist>
+          <OnekoStack client:load />
+        </div>
+      )
+    }
 
     {
       showPaths && (
