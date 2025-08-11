@@ -2,7 +2,7 @@ class RTUniform {
   device: GPUDevice
   buffer: GPUBuffer
   keys: string[]
-  values: Float32Array<ArrayBuffer>
+  values: Float32Array
   constructor(
     device: GPUDevice,
     uniform: {

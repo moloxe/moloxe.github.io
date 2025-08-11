@@ -67,14 +67,16 @@ function draw() {
 draw()
 
 const counter = document.createElement('div')
-counter.style = `
-  position: absolute;
-  top: 0;
-  left: 0;
-  color: white;
-  font-size: 24px;
-  pointer-events: none;
-`
+counter.setAttribute(
+  'style',
+  ` position: absolute;
+    top: 0;
+    left: 0;
+    color: white;
+    font-size: 24px;
+    pointer-events: none;`
+)
+
 document.body.appendChild(counter)
 
 setInterval(() => {
