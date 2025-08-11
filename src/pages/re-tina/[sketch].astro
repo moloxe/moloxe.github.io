@@ -1,24 +1,15 @@
 ---
 const { sketch } = Astro.params
-const { path } = Astro.props
 
 export async function getStaticPaths() {
-  const files = import.meta.glob('@src/pages/re-tina/_sketches/*.ts', {
-    eager: false,
-  })
-  const paths = Object.keys(files)
-  const filenames: { sketch: string; path: string }[] = []
-
-  for (let index = 0; index < paths.length; index++) {
-    const path = paths[index]
+  const files = import.meta.glob('./_sketches/*.ts')
+  const paths = Object.keys(files).map((path) => {
     const sketch = path.split('/').pop()?.replace('.ts', '') ?? ''
-    filenames.push({ sketch, path })
-  }
-
-  return filenames.map(({ sketch, path }) => ({
-    params: { sketch },
-    props: { path },
-  }))
+    return {
+      params: { sketch },
+    }
+  })
+  return paths
 }
 ---
 
@@ -29,6 +20,7 @@ export async function getStaticPaths() {
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <meta name="robots" content="noindex, nofollow" />
+    <meta name="rt-sketch" content={sketch} />
     <title>{sketch}</title>
   </head>
   <body>
@@ -40,7 +32,13 @@ export async function getStaticPaths() {
       referrerpolicy="unsafe-url"
       id="libre-counter"
     />
-    <script is:inline src={path} type="module"></script>
+    <script>
+      const fileName = document
+        .querySelector('meta[name="rt-sketch"]')
+        ?.getAttribute('content')
+      const modules = import.meta.glob('./_sketches/*.ts')
+      modules[`./_sketches/${fileName}.ts`]()
+    </script>
   </body>
 </html>
 
