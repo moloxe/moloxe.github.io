@@ -1,0 +1,54 @@
+---
+const { sketch } = Astro.params
+const { path } = Astro.props
+
+export async function getStaticPaths() {
+  const files = import.meta.glob('@src/pages/re-tina/_sketches/*.ts', {
+    eager: false,
+  })
+  const paths = Object.keys(files)
+  const filenames: { sketch: string; path: string }[] = []
+
+  for (let index = 0; index < paths.length; index++) {
+    const path = paths[index]
+    const sketch = path.split('/').pop()?.replace('.ts', '') ?? ''
+    filenames.push({ sketch, path })
+  }
+
+  return filenames.map(({ sketch, path }) => ({
+    params: { sketch },
+    props: { path },
+  }))
+}
+---
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>{sketch}</title>
+  </head>
+  <body>
+    <img
+      class="absolute w-0 h-0"
+      src="https://librecounter.org/counter.svg"
+      loading="eager"
+      decoding="async"
+      referrerpolicy="unsafe-url"
+      id="libre-counter"
+    />
+    <script is:inline src={path} type="module"></script>
+  </body>
+</html>
+
+<style is:global>
+  html {
+    overflow: hidden;
+  }
+  canvas {
+    margin: auto;
+  }
+</style>

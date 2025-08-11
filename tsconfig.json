@@ -4,7 +4,8 @@
     "lib": ["ESNext.Array", "DOM", "ESNext"],
     "baseUrl": ".",
     "paths": {
-      "@src/*": ["src/*"]
+      "@src/*": ["src/*"],
+      "@ReTina": ["src/pages/re-tina/_lib/"]
     },
     "jsx": "react-jsx",
     "jsxImportSource": "react",
