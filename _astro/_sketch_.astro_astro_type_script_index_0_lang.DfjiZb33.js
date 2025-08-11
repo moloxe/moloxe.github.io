@@ -1,0 +1,1 @@
+import{_ as e}from"./preload-helper.BQZoAe3I.js";const t=document.querySelector('meta[name="rt-sketch"]')?.getAttribute("content"),s=Object.assign({"./_sketches/demo.ts":()=>e(()=>import("./demo.DGs2YyCa.js"),[])});s[`./_sketches/${t}.ts`]();
