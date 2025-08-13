@@ -1,0 +1,2 @@
+const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["_astro/demo.D2CjoWKw.js","_astro/ReTina.DaGLM_lD.js","_astro/voronoi.Cg-R3Hzj.js"])))=>i.map(i=>d[i]);
+import{_ as t}from"./preload-helper.BQZoAe3I.js";const e=document.querySelector('meta[name="rt-sketch"]')?.getAttribute("content"),o=Object.assign({"./_sketches/demo.ts":()=>t(()=>import("./demo.D2CjoWKw.js"),__vite__mapDeps([0,1])),"./_sketches/voronoi.ts":()=>t(()=>import("./voronoi.Cg-R3Hzj.js"),__vite__mapDeps([2,1]))});o[`./_sketches/${e}.ts`]();
