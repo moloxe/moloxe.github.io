@@ -6,19 +6,22 @@ type Props = {
   canvas: HTMLCanvasElement
   map?: string
   main: string
+  functions?: string
 }
 
 class ReTina {
   private canvas: HTMLCanvasElement
   private main: string
   private map?: string
+  private functions?: string
   private render?: (props: RenderProps) => void
   camera: RTCamera
 
-  constructor({ canvas, map, main }: Props) {
+  constructor({ canvas, map, main, functions }: Props) {
     this.canvas = canvas
     this.map = map
     this.main = main
+    this.functions = functions
     this.camera = {
       pos: { x: 0, y: 0, z: 0 },
       spherical: { radius: 0, theta: 0, phi: 0 },
@@ -38,6 +41,7 @@ class ReTina {
       canvas: this.canvas,
       main: this.main,
       map: this.map,
+      functions: this.functions,
       initialUniforms: {
         camPosX: this.camera.pos.x,
         camPosY: this.camera.pos.y,

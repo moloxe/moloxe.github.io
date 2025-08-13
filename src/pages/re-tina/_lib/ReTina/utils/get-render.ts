@@ -13,6 +13,7 @@ type Props = {
   context: GPUCanvasContext
   canvas: HTMLCanvasElement
   main: string
+  functions?: string
   map?: string
   initialUniforms: {
     camPosX: number
@@ -33,10 +34,13 @@ async function getRender({
   main,
   map,
   initialUniforms,
+  functions,
 }: Props) {
   const rtUniform = new RTUniform(device, {
     time: 0,
     aspectRatio: canvas.width / canvas.height,
+    width: canvas.width,
+    height: canvas.height,
     camPosX: initialUniforms.camPosX ?? 0,
     camPosY: initialUniforms.camPosY ?? 0,
     camPosZ: initialUniforms.camPosZ ?? 0,
@@ -61,7 +65,12 @@ async function getRender({
     entries: [{ binding: 0, resource: { buffer: rtUniform.buffer } }],
   })
 
-  const fragWGSL = getFragWGSL({ main, map, rtUniformKeys: rtUniform.keys })
+  const fragWGSL = getFragWGSL({
+    main,
+    map,
+    functions,
+    rtUniformKeys: rtUniform.keys,
+  })
 
   const renderPipeline = device.createRenderPipeline({
     layout: device.createPipelineLayout({
@@ -90,6 +99,8 @@ async function getRender({
   function render({ camera }: RenderProps) {
     rtUniform.set('time', performance.now() / 1000)
     rtUniform.set('aspectRatio', canvas.width / canvas.height)
+    rtUniform.set('width', canvas.width)
+    rtUniform.set('height', canvas.height)
     rtUniform.set('camPosX', camera.pos.x)
     rtUniform.set('camPosY', camera.pos.y)
     rtUniform.set('camPosZ', camera.pos.z)

@@ -5,10 +5,11 @@ import fragTemplateWGSL from './../shaders/frag.wgsl?raw'
 type Props = {
   main: string
   map?: string
+  functions?: string
   rtUniformKeys: string[]
 }
 
-function getFragWGSL({ main, map, rtUniformKeys }: Props) {
+function getFragWGSL({ main, map, functions, rtUniformKeys }: Props) {
   let fragWGSL = fragTemplateWGSL
 
   fragWGSL = fragWGSL.replace(
@@ -17,6 +18,10 @@ function getFragWGSL({ main, map, rtUniformKeys }: Props) {
   )
 
   fragWGSL = fragWGSL.replace('// #COMMON', commonFrag)
+
+  if (functions) {
+    fragWGSL = fragWGSL.replace('// #FUNCTIONS', functions)
+  }
 
   if (map) {
     fragWGSL = fragWGSL.replace(

@@ -5,6 +5,7 @@ struct GlobalUniform {
 @group(0) @binding(0) var <uniform> U: GlobalUniform;
 
 // #COMMON
+// #FUNCTIONS
 // #RAY_MARCH_FUNCTIONS
 
 @fragment
