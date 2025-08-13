@@ -15,6 +15,8 @@ class ReTina {
   private map?: string
   private functions?: string
   private render?: (props: RenderProps) => void
+  private initalCustomUniforms: { [key: string]: number } = {}
+  private setUniform?: (name: string, value: number) => void
   camera: RTCamera
 
   constructor({ canvas, map, main, functions }: Props) {
@@ -29,12 +31,23 @@ class ReTina {
     }
   }
 
+  registerUniform(name: string, value?: number) {
+    if (this.render) throw new Error('Render already built')
+    this.initalCustomUniforms[name] = value ?? 0
+    const setter = (value: number) => {
+      if (!this.setUniform) throw new Error('Render not built')
+      this.setUniform(name, value)
+      this.initalCustomUniforms[name] = value
+    }
+    return setter
+  }
+
   async build() {
     const { device, context, presentationFormat } = await prepareCanvas(
       this.canvas
     )
 
-    const { render } = await getRender({
+    const { render, setUniform } = await getRender({
       device,
       presentationFormat,
       context,
@@ -42,6 +55,7 @@ class ReTina {
       main: this.main,
       map: this.map,
       functions: this.functions,
+      initalCustomUniforms: this.initalCustomUniforms,
       initialUniforms: {
         camPosX: this.camera.pos.x,
         camPosY: this.camera.pos.y,
@@ -53,6 +67,7 @@ class ReTina {
       },
     })
 
+    this.setUniform = setUniform
     this.render = render
   }
 

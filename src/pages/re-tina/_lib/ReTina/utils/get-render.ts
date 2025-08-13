@@ -24,6 +24,7 @@ type Props = {
     camSphericalP: number
     camFov: number
   }
+  initalCustomUniforms: { [key: string]: number }
 }
 
 async function getRender({
@@ -35,8 +36,10 @@ async function getRender({
   map,
   initialUniforms,
   functions,
+  initalCustomUniforms,
 }: Props) {
   const rtUniform = new RTUniform(device, {
+    ...initalCustomUniforms,
     time: 0,
     aspectRatio: canvas.width / canvas.height,
     width: canvas.width,
@@ -131,7 +134,11 @@ async function getRender({
     device.queue.submit([commandEncoder.finish()])
   }
 
-  return { render }
+  function setUniform(name: string, value: number) {
+    rtUniform.set(name, value)
+  }
+
+  return { render, setUniform }
 }
 
 export default getRender
