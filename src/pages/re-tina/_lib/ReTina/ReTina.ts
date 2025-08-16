@@ -5,13 +5,13 @@ import buildMaterial from './utils/rt-material'
 
 type Props = {
   canvas: HTMLCanvasElement
-  main: string
+  main?: string
   functions?: string
 }
 
 class ReTina {
   private canvas: HTMLCanvasElement
-  private main: string
+  private main?: string
   private functions?: string
   private render?: (props: RenderProps) => void
   private initalCustomUniforms: { [key: string]: number } = {}

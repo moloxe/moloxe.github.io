@@ -12,7 +12,7 @@ type Props = {
   presentationFormat: GPUTextureFormat
   context: GPUCanvasContext
   canvas: HTMLCanvasElement
-  main: string
+  main?: string
   functions?: string
   materialSdFunctions: string[]
   initialUniforms: {

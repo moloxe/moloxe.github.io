@@ -57,7 +57,7 @@ struct Scene {
 };
 
 fn calcScene(uv: vec2<f32>) -> Scene {
-    var dir2d = (uv * 2. - 1.);
+    var dir2d = vec2<f32>(uv.x, 1. - uv.y) * 2. - 1.;
     dir2d.x *= U.aspectRatio;
 
     let pos = vec3<f32>(U.camPosX, U.camPosY, U.camPosZ);

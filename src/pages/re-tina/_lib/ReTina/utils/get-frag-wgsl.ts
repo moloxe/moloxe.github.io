@@ -3,7 +3,7 @@ import fragTemplateWGSL from './../shaders/frag.wgsl?raw'
 import getSdFragWGSL from './get-sd-frag-wgsl'
 
 type Props = {
-  main: string
+  main?: string
   rtUniformKeys: string[]
   functions?: string
   materialSdFunctions: string[]
@@ -31,12 +31,20 @@ function getFragWGSL({
   if (materialSdFunctions.length > 0) {
     const sdFragWGSL = getSdFragWGSL(materialSdFunctions)
     fragWGSL = fragWGSL.replace('// #RAY_MARCH_FUNCTIONS', sdFragWGSL)
+    if (!main) {
+      main = `
+        let scene = calcScene(uv);
+        return vec4<f32>(scene.color.rgb, 1.0);
+      `
+    }
   }
 
-  fragWGSL = fragWGSL.replace(
-    'return vec4<f32>(0.0, 0.0, 0.0, 1.0); // #MAIN',
-    main
-  )
+  if (main) {
+    fragWGSL = fragWGSL.replace(
+      'return vec4<f32>(0.0, 0.0, 0.0, 1.0); // #MAIN',
+      main
+    )
+  }
 
   return fragWGSL
 }

@@ -1,4 +1,5 @@
 import { ReTina } from '@ReTina'
+import frameCounter from './utils/frameCounter'
 
 const canvas = document.createElement('canvas')
 canvas.width = window.innerWidth * window.devicePixelRatio
@@ -58,33 +59,15 @@ document.addEventListener('mousemove', (event) => {
   targetTheta = y * Math.PI * 2
 })
 
-let frameCounter = 0
+const increaseFrame = frameCounter()
 function draw() {
   rt.camera.spherical.phi += 0.001
   rt.camera.spherical.theta += (targetTheta - rt.camera.spherical.theta) * 0.1
   rt.camera.spherical.radius +=
     (targetRadius - rt.camera.spherical.radius) * 0.1
   rt.shoot()
-  frameCounter++
   requestAnimationFrame(draw)
+  increaseFrame()
 }
 
 draw()
-
-const counter = document.createElement('div')
-counter.setAttribute(
-  'style',
-  ` position: absolute;
-    top: 0;
-    left: 0;
-    color: white;
-    font-size: 24px;
-    pointer-events: none;`
-)
-
-document.body.appendChild(counter)
-
-setInterval(() => {
-  counter.innerText = `FPS: ${frameCounter}`
-  frameCounter = 0
-}, 1000)
