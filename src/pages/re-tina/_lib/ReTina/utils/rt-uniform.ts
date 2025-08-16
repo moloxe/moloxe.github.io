@@ -1,8 +1,7 @@
 class RTUniform {
-  device: GPUDevice
-  buffer: GPUBuffer
-  keys: string[]
-  values: Float32Array
+  private device: GPUDevice
+  private buffer: GPUBuffer
+  private uniform: { [key: string]: { value: number; offSet: number } } = {}
   constructor(
     device: GPUDevice,
     uniform: {
@@ -10,24 +9,39 @@ class RTUniform {
     }
   ) {
     this.device = device
-    // 4 bytes per float
-    const size = Object.keys(uniform).length * 4
+    const keys = Object.keys(uniform)
     this.buffer = device.createBuffer({
-      size,
+      size: keys.length * 4, // 4 bytes per float
       usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
     })
-    this.keys = Object.keys(uniform)
-    this.values = new Float32Array(Object.values(uniform))
+    keys.forEach((key, index) => {
+      this.uniform[key] = {
+        value: uniform[key],
+        offSet: index * 4,
+      }
+      this.set(key, uniform[key])
+    })
+  }
+  getBuffer() {
+    return this.buffer
+  }
+  getKeysSortedByOffset() {
+    return Object.keys(this.uniform).toSorted((a, b) => {
+      return this.uniform[a].offSet - this.uniform[b].offSet
+    })
   }
   set(key: string, value: number) {
-    const index = this.keys.indexOf(key)
-    if (index === -1) throw new Error(`Uniform ${key} not found`)
-    this.values[index] = value
+    if (!this.uniform[key]) throw new Error(`Uniform ${key} not found`)
+    this.uniform[key].value = value
     this.device.queue.writeBuffer(
       this.buffer,
-      index * 4,
+      this.uniform[key].offSet,
       new Float32Array([value])
     )
+  }
+  get(key: string) {
+    if (!this.uniform[key]) throw new Error(`Uniform ${key} not found`)
+    return this.uniform[key].value
   }
 }
 

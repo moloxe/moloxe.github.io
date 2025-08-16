@@ -14,7 +14,7 @@ type Props = {
   canvas: HTMLCanvasElement
   main: string
   functions?: string
-  map?: string
+  materialSdFunctions: string[]
   initialUniforms: {
     camPosX: number
     camPosY: number
@@ -33,13 +33,12 @@ async function getRender({
   context,
   canvas,
   main,
-  map,
+  materialSdFunctions,
   initialUniforms,
   functions,
   initalCustomUniforms,
 }: Props) {
   const rtUniform = new RTUniform(device, {
-    ...initalCustomUniforms,
     time: 0,
     aspectRatio: canvas.width / canvas.height,
     width: canvas.width,
@@ -51,6 +50,7 @@ async function getRender({
     camSphericalT: initialUniforms.camSphericalT ?? 0,
     camSphericalP: initialUniforms.camSphericalP ?? 0,
     camFov: initialUniforms.camFov ?? 90,
+    ...initalCustomUniforms,
   })
 
   const sceneUniformBindGroupLayout = device.createBindGroupLayout({
@@ -65,14 +65,14 @@ async function getRender({
 
   const uniformBindGroup = device.createBindGroup({
     layout: sceneUniformBindGroupLayout,
-    entries: [{ binding: 0, resource: { buffer: rtUniform.buffer } }],
+    entries: [{ binding: 0, resource: { buffer: rtUniform.getBuffer() } }],
   })
 
   const fragWGSL = getFragWGSL({
     main,
-    map,
     functions,
-    rtUniformKeys: rtUniform.keys,
+    materialSdFunctions,
+    rtUniformKeys: rtUniform.getKeysSortedByOffset(),
   })
 
   const renderPipeline = device.createRenderPipeline({

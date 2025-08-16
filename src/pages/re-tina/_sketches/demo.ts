@@ -18,12 +18,16 @@ const rt = new ReTina({
     if scene.dist > 0.0 {
       color = hsv2rgb(
         vec3f(uv.x, 0.5, scene.normal.z)
-      );
+      ) + scene.color.rgb;
     }
 
     return vec4<f32>(color, 1.0);
   `,
-  map: /* wgsl */ `
+})
+
+rt.registerMaterial({
+  color: { r: 0, g: 0, b: 0.5 },
+  sdFunc: /* wgsl */ `
     var thres = length(pos) - 1.2;
     if thres > 0.2 {
         return thres;
@@ -54,11 +58,16 @@ const rt = new ReTina({
 await rt.build()
 
 rt.camera.spherical.radius = 2
+document.addEventListener('mousemove', (event) => {
+  const x = (event.clientY * window.devicePixelRatio) / canvas.height
+  const y = (event.clientX * window.devicePixelRatio) / canvas.width
+  rt.camera.spherical.radius = 1 + x
+  rt.camera.spherical.theta = y * Math.PI * 2
+})
 
 let frameCounter = 0
 function draw() {
-  rt.camera.spherical.theta += 0.001
-  rt.camera.spherical.phi += 0.001
+  rt.camera.spherical.phi += 0.0008
   rt.shoot()
   frameCounter++
   requestAnimationFrame(draw)

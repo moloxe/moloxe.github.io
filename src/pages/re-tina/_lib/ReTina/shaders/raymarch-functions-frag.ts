@@ -1,5 +1,18 @@
 const raymarchFunctionsFrag = /* wgsl */ `
 
+struct SdMaterial {
+    index: i32,
+    dist: f32,
+    pos: vec3<f32>,
+    color: vec3<f32>,
+}
+
+// #SD-INDIVIDUAL-MATERIALS
+
+fn sdMaterials(pos: vec3<f32>) -> SdMaterial {
+    return SdMaterial(-1, 0., vec3<f32>(0.), vec3<f32>(1.)); // #SD-MATERIALS-FUNC
+}
+
 fn map(pos: vec3<f32>) -> f32 {
     return 0.; // #MAP
 }
@@ -12,23 +25,15 @@ fn calcNormal(pos: vec3<f32>) -> vec3<f32> {
     );
 }
 
-struct RayMarch {
-    dist: f32,
-    materialIndex: i32
-}
-
 const RM_MAX_ITER: i32 = 1024;
 const RM_MIN_DIST: f32 = 1e-4;
 const RM_MAX_DIST: f32 = 1e4;
-fn rayMarch(ro: vec3<f32>, rd: vec3<f32>) -> RayMarch {
-    var materialIndex = -1;
+fn rayMarch(ro: vec3<f32>, rd: vec3<f32>) -> f32 {
     var totalDist = 0.0;
     for (var i: i32 = 0; i < RM_MAX_ITER; i++) {
-        let pos = ro + totalDist * rd;
+        let pos = ro + rd * totalDist;
         let currDist = abs(map(pos));
         if currDist < RM_MIN_DIST {
-            // TODO: implement material processing
-            // materialIndex = [returned-from-map-sd-functions].materialIndex;
             break;
         }
         totalDist += currDist;
@@ -37,7 +42,7 @@ fn rayMarch(ro: vec3<f32>, rd: vec3<f32>) -> RayMarch {
             break;
         }
     }
-    return RayMarch(totalDist, materialIndex);
+    return totalDist;
 }
 
 struct Scene {
@@ -66,20 +71,27 @@ fn calcScene(uv: vec2<f32>) -> Scene {
     var rd = vec3<f32>(dir2d, -focalLength);
     rd = rotateXY(rd, spherical.z, spherical.y);
 
-    let rm = rayMarch(ro, rd);
+    let dist = rayMarch(ro, rd);
     
-    let materialPos = ro + rd * rm.dist;
-    let materialNormal = calcNormal(materialPos);
+    var finalPos: vec3<f32>;
+    var finalNormal: vec3<f32>;
+    var finalColor = vec4<f32>(0.0, 0.0, 0.0, 1.0);
 
-    // TODO: implement material processing
-    let materialColor = vec4<f32>(1.0, 1.0, 1.0, 1.0);
+    var materialIndex = -1;
+    if dist > 0.0 {
+        finalPos = ro + rd * dist;
+        finalNormal = calcNormal(finalPos);
+        let material = sdMaterials(finalPos);
+        finalColor = vec4<f32>(material.color, 1.0);
+        materialIndex = material.index;
+    }
 
     return Scene(
-        rm.dist,
-        materialPos,
-        materialNormal,
-        rm.materialIndex,
-        materialColor
+        dist,
+        finalPos,
+        finalNormal,
+        materialIndex,
+        finalColor
     );
 }
 `

@@ -1,10 +1,10 @@
-import type { RenderProps, RTCamera } from './types'
+import type { RenderProps, RTCamera, RTMaterialPartial } from './types'
 import getRender from './utils/get-render'
 import prepareCanvas from './utils/prepare-canvas'
+import buildMaterial from './utils/rt-material'
 
 type Props = {
   canvas: HTMLCanvasElement
-  map?: string
   main: string
   functions?: string
 }
@@ -12,16 +12,15 @@ type Props = {
 class ReTina {
   private canvas: HTMLCanvasElement
   private main: string
-  private map?: string
   private functions?: string
   private render?: (props: RenderProps) => void
   private initalCustomUniforms: { [key: string]: number } = {}
   private setUniform?: (name: string, value: number) => void
+  private materialSdFunctions: string[] = []
   camera: RTCamera
 
-  constructor({ canvas, map, main, functions }: Props) {
+  constructor({ canvas, main, functions }: Props) {
     this.canvas = canvas
-    this.map = map
     this.main = main
     this.functions = functions
     this.camera = {
@@ -29,6 +28,14 @@ class ReTina {
       spherical: { radius: 0, theta: 0, phi: 0 },
       fov: 90,
     }
+  }
+
+  registerMaterial(partialMaterial: RTMaterialPartial) {
+    if (this.render) throw new Error('Render already built')
+    const index = this.materialSdFunctions.length
+    const material = buildMaterial(partialMaterial, this, index)
+    this.materialSdFunctions.push(partialMaterial.sdFunc)
+    return material
   }
 
   registerUniform(name: string, value?: number) {
@@ -53,7 +60,7 @@ class ReTina {
       context,
       canvas: this.canvas,
       main: this.main,
-      map: this.map,
+      materialSdFunctions: this.materialSdFunctions,
       functions: this.functions,
       initalCustomUniforms: this.initalCustomUniforms,
       initialUniforms: {
