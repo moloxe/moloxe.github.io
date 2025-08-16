@@ -13,20 +13,12 @@ const rt = new ReTina({
   canvas,
   main: /* wgsl */ `
     let scene = calcScene(uv);
-    var color = vec3<f32>(0.0);
-
-    if scene.dist > 0.0 {
-      color = hsv2rgb(
-        vec3f(uv.x, 0.5, scene.normal.z)
-      ) + scene.color.rgb;
-    }
-
+    let color = hsv2rgb(vec3<f32>(uv.x, 0.5, scene.normal.z));
     return vec4<f32>(color, 1.0);
   `,
 })
 
 rt.registerMaterial({
-  color: { r: 0, g: 0, b: 0.5 },
   sdFunc: /* wgsl */ `
     var thres = length(pos) - 1.2;
     if thres > 0.2 {
@@ -62,13 +54,13 @@ let targetRadius = 2
 document.addEventListener('mousemove', (event) => {
   const x = (event.clientY * window.devicePixelRatio) / canvas.height
   const y = (event.clientX * window.devicePixelRatio) / canvas.width
-  targetRadius = 1 + x
+  targetRadius = 1 + x * 2
   targetTheta = y * Math.PI * 2
 })
 
 let frameCounter = 0
 function draw() {
-  rt.camera.spherical.phi += 0.0008
+  rt.camera.spherical.phi += 0.001
   rt.camera.spherical.theta += (targetTheta - rt.camera.spherical.theta) * 0.1
   rt.camera.spherical.radius +=
     (targetRadius - rt.camera.spherical.radius) * 0.1
