@@ -20,6 +20,7 @@ export type RTMaterial = {
   sdFunc: string
   pos: RTCoord
   color: RTColor
+  rotation: RTCoord
 }
 
 export type RTMaterialPartial = Pick<RTMaterial, 'sdFunc'> &
