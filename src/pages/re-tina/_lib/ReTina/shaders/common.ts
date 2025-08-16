@@ -20,6 +20,24 @@ fn hsv2rgb(c: vec3f) -> vec3<f32> {
     return c.z * mix(K.xxx, clamp(p - K.xxx, vec3<f32>(0.0), vec3<f32>(1.0)), c.y);
 }
 
+// https://iquilezles.org/articles/distfunctions/ 💪
+
+fn sdSphere(p: vec3f, s: f32) -> f32 {
+  return length(p) - s;
+}
+
+fn sdBox(p: vec3f, b: vec3f) -> f32 {
+    let q = abs(p) - b;
+    return length(max(q, vec3<f32>(0.0))) + min(max(q.x, max(q.y, q.z)), 0.0);
+}
+
+fn sdCapsule(p: vec3f, a: vec3f, b: vec3f, r: f32) -> f32 {
+  let pa = p - a;
+  let ba = b - a;
+  let h = clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0);
+  return length(pa - ba * h) - r;
+}
+
 fn opSmoothUnion(d1: f32, d2: f32, k: f32) -> f32 {
     let h = clamp(0.5 + 0.5 * (d2 - d1) / k, 0.0, 1.0);
     return mix(d2, d1, h) - k * h * (1.0 - h);
