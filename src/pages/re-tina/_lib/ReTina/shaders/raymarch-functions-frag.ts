@@ -21,7 +21,10 @@ fn calcNormal(pos: vec3<f32>) -> vec3<f32> {
     var h = 1e-4;
     var k = vec2<f32>(1., -1.);
     return normalize(
-        k.xyy * map(pos + k.xyy * h) + k.yyx * map(pos + k.yyx * h) + k.yxy * map(pos + k.yxy * h) + k.xxx * map(pos + k.xxx * h)
+        k.xyy * map(pos + k.xyy * h) +
+        k.yyx * map(pos + k.yyx * h) +
+        k.yxy * map(pos + k.yxy * h) +
+        k.xxx * map(pos + k.xxx * h)
     );
 }
 
@@ -82,8 +85,11 @@ fn calcScene(uv: vec2<f32>) -> Scene {
         finalPos = ro + rd * dist;
         finalNormal = calcNormal(finalPos);
         let material = sdMaterials(finalPos);
-        finalColor = vec4<f32>(material.color, 1.0);
         materialIndex = material.index;
+
+        // TODO: Implement lighting
+        let lambertian = dot(finalNormal, -rd);
+        finalColor = vec4<f32>(material.color.rgb * lambertian, 1.);
     }
 
     return Scene(

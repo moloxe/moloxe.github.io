@@ -1,10 +1,10 @@
 // TODO: Add functions from 'src/pages/tina/_lib/tina.common.js'
 
 const commonFrag = /* wgsl */ `
-fn rotate(pos: vec3<f32>, aX: f32, aY: f32, aZ: f32) -> vec3<f32> {
-    var rotX: mat3x3<f32> = mat3x3<f32>(1.0, 0.0, 0.0, 0.0, cos(aX), -sin(aX), 0.0, sin(aX), cos(aX));
-    var rotY: mat3x3<f32> = mat3x3<f32>(cos(aY), 0.0, sin(aY), 0.0, 1.0, 0.0, -sin(aY), 0.0, cos(aY));
-    var rotZ: mat3x3<f32> = mat3x3<f32>(cos(aZ), -sin(aZ), 0.0, sin(aZ), cos(aZ), 0.0, 0.0, 0.0, 1.0);
+fn rotate(pos: vec3<f32>, rot: vec3<f32>) -> vec3<f32> {
+    var rotX: mat3x3<f32> = mat3x3<f32>(1.0, 0.0, 0.0, 0.0, cos(rot.x), -sin(rot.x), 0.0, sin(rot.x), cos(rot.x));
+    var rotY: mat3x3<f32> = mat3x3<f32>(cos(rot.y), 0.0, sin(rot.y), 0.0, 1.0, 0.0, -sin(rot.y), 0.0, cos(rot.y));
+    var rotZ: mat3x3<f32> = mat3x3<f32>(cos(rot.z), -sin(rot.z), 0.0, sin(rot.z), cos(rot.z), 0.0, 0.0, 0.0, 1.0);
     return rotX * rotY * rotZ * pos;
 }
 
@@ -19,6 +19,12 @@ fn hsv2rgb(c: vec3f) -> vec3<f32> {
     let p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
     return c.z * mix(K.xxx, clamp(p - K.xxx, vec3<f32>(0.0), vec3<f32>(1.0)), c.y);
 }
+
+fn opSmoothUnion(d1: f32, d2: f32, k: f32) -> f32 {
+    let h = clamp(0.5 + 0.5 * (d2 - d1) / k, 0.0, 1.0);
+    return mix(d2, d1, h) - k * h * (1.0 - h);
+}
+
 //  MIT License. © Ian McEwan, Stefan Gustavson, Munrocket, Johan Helsing
 //
 fn mod289(x: vec2f) -> vec2f {
