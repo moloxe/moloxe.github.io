@@ -57,17 +57,21 @@ rt.registerMaterial({
 
 await rt.build()
 
-rt.camera.spherical.radius = 2
+let targetTheta = 0
+let targetRadius = 2
 document.addEventListener('mousemove', (event) => {
   const x = (event.clientY * window.devicePixelRatio) / canvas.height
   const y = (event.clientX * window.devicePixelRatio) / canvas.width
-  rt.camera.spherical.radius = 1 + x
-  rt.camera.spherical.theta = y * Math.PI * 2
+  targetRadius = 1 + x
+  targetTheta = y * Math.PI * 2
 })
 
 let frameCounter = 0
 function draw() {
   rt.camera.spherical.phi += 0.0008
+  rt.camera.spherical.theta += (targetTheta - rt.camera.spherical.theta) * 0.1
+  rt.camera.spherical.radius +=
+    (targetRadius - rt.camera.spherical.radius) * 0.1
   rt.shoot()
   frameCounter++
   requestAnimationFrame(draw)

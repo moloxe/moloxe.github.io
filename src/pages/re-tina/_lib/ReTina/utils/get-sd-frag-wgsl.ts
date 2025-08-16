@@ -5,10 +5,14 @@ function getSdFragWGSL(materialSdFunctions: string[]) {
 
   const sdIndividualMaterials = materialSdFunctions
     .map((sdFunc, index) => {
-      const name = `sdMaterial${index}`
       const materialPos = `vec3<f32>(U.material${index}Px, U.material${index}Py, U.material${index}Pz)`
-      return `fn ${name}(posIn: vec3<f32>) -> f32 {
-        let pos = posIn - ${materialPos};
+      const materialRot = `vec3<f32>(U.material${index}Rx, U.material${index}Ry, U.material${index}Rz)`
+      return `fn sdMaterial${index}(posIn: vec3<f32>) -> f32 {
+        let mRotation = ${materialRot};
+        var pos = posIn - ${materialPos};
+        if length(mRotation) != 0.0 {
+          pos = rotate(pos, mRotation);
+        }
         ${sdFunc}
       }`
     })
