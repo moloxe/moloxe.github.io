@@ -59,7 +59,7 @@ document.addEventListener('mousemove', (event) => {
   targetTheta = y * Math.PI * 2
 })
 
-const increaseFrame = frameCounter()
+const increaseFrameCounter = frameCounter()
 function draw() {
   rt.camera.spherical.phi += 0.001
   rt.camera.spherical.theta += (targetTheta - rt.camera.spherical.theta) * 0.1
@@ -67,7 +67,7 @@ function draw() {
     (targetRadius - rt.camera.spherical.radius) * 0.1
   rt.shoot()
   requestAnimationFrame(draw)
-  increaseFrame()
+  increaseFrameCounter()
 }
 
 draw()
