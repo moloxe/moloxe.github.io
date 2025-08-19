@@ -2,16 +2,44 @@
 
 const commonFrag = /* wgsl */ `
 fn rotate(pos: vec3<f32>, rot: vec3<f32>) -> vec3<f32> {
-    var rotX: mat3x3<f32> = mat3x3<f32>(1.0, 0.0, 0.0, 0.0, cos(rot.x), -sin(rot.x), 0.0, sin(rot.x), cos(rot.x));
-    var rotY: mat3x3<f32> = mat3x3<f32>(cos(rot.y), 0.0, sin(rot.y), 0.0, 1.0, 0.0, -sin(rot.y), 0.0, cos(rot.y));
-    var rotZ: mat3x3<f32> = mat3x3<f32>(cos(rot.z), -sin(rot.z), 0.0, sin(rot.z), cos(rot.z), 0.0, 0.0, 0.0, 1.0);
-    return rotX * rotY * rotZ * pos;
+    var result = pos;
+    // Rotation around the Z axis
+    let sinZ = sin(rot.z);
+    let cosZ = cos(rot.z);
+    var temp_x = result.x * cosZ - result.y * sinZ;
+    var temp_y = result.x * sinZ + result.y * cosZ;
+    result.x = temp_x;
+    result.y = temp_y;
+    // Rotation around the Y axis
+    let sinY = sin(rot.y);
+    let cosY = cos(rot.y);
+    temp_x = result.x * cosY + result.z * sinY;
+    var temp_z = result.z * cosY - result.x * sinY;
+    result.x = temp_x;
+    result.z = temp_z;
+    // Rotation around the X axis
+    let sinX = sin(rot.x);
+    let cosX = cos(rot.x);
+    temp_y = result.y * cosX - result.z * sinX;
+    temp_z = result.y * sinX + result.z * cosX;
+    result.y = temp_y;
+    result.z = temp_z;
+    return result;
 }
 
 fn rotateXY(vec: vec3f, aX: f32, aY: f32) -> vec3f {
-    let rotX = mat3x3<f32>(1.0, 0.0, 0.0, 0.0, cos(aX), -sin(aX), 0.0, sin(aX), cos(aX));
-    let rotY = mat3x3<f32>(cos(aY), 0.0, sin(aY), 0.0, 1.0, 0.0, -sin(aY), 0.0, cos(aY));
-    return rotX * rotY * vec;
+    // Rotation around the X axis
+    let sinX = sin(aX);
+    let cosX = cos(aX);
+    let temp_y = vec.y * cosX - vec.z * sinX;
+    let temp_z = vec.y * sinX + vec.z * cosX;
+    let rotatedX = vec3f(vec.x, temp_y, temp_z);
+    // Rotation around the Y axis (applied to the result of the X rotation)
+    let sinY = sin(aY);
+    let cosY = cos(aY);
+    let temp_x = rotatedX.x * cosY + rotatedX.z * sinY;
+    let temp_z_final = rotatedX.z * cosY - rotatedX.x * sinY;
+    return vec3f(temp_x, rotatedX.y, temp_z_final);
 }
 
 fn hsv2rgb(c: vec3f) -> vec3<f32> {
