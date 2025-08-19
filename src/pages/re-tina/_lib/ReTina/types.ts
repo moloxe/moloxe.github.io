@@ -21,7 +21,6 @@ export type RTMaterial = {
   pos: RTCoord
   color: RTColor
   rotation: RTCoord
-  smoothness: number
   // TODO: Implement lightning
   // shininess = 1,
   // TODO: Implement grouping

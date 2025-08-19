@@ -58,25 +58,8 @@ function getSdFragWGSL(materialSdFunctions: string[]) {
   const map = `
     var dist: f32 = 1e10;
     var accDist: f32;
-    var smoothness: f32 = 0.0;
     ${materialSdFunctions
-      .map(
-        (_, index) => `
-        dist = min(dist, sdMaterial${index}(pos));
-
-        // Smoothness processing
-        if smoothness > 0. {
-          accDist = opSmoothUnion(accDist, dist, smoothness);
-        } else {
-          accDist = dist;
-        }
-        if (accDist < dist) {
-          dist = accDist;
-        }
-        smoothness = U.material${index}smoothness;
-        // End smoothness processing
-      `
-      )
+      .map((_, index) => `dist = min(dist, sdMaterial${index}(pos));`)
       .join('\n')}
     return dist;
   `
