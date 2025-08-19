@@ -34,9 +34,9 @@ rt.registerMaterial({
   pos: { x: 0, y: 0.03, z: 0.22 },
   color: { r: 0.1, g: 0.1, b: 0.1 },
   sdFunc: /* wgsl */ `
-    let left  = sdBox(pos + vec3<f32>(-0.15, 0.0, 0.0), vec3<f32>(0.12, 0.08, 0.001));
-    let right = sdBox(pos + vec3<f32>(0.15, 0.0, 0.0), vec3<f32>(0.12, 0.08, 0.001));
-    let mid = sdCapsule(pos + vec3<f32>(0.0, -0.04, 0.0), vec3<f32>(0.05, 0, 0), vec3<f32>(-0.05, 0, 0), 0.01);
+    let left  = sdBox(pos - vec3<f32>(0.15, 0.0, 0.0), vec3<f32>(0.12, 0.08, 0.001));
+    let right = sdBox(pos - vec3<f32>(-0.15, 0.0, 0.0), vec3<f32>(0.12, 0.08, 0.001));
+    let mid = sdCapsule(pos - vec3<f32>(0.0, 0.04, 0.0), vec3<f32>(0.05, 0, 0), vec3<f32>(-0.05, 0, 0), 0.01);
     return opSmoothUnion(min(left, right), mid, 0.02);
   `,
 })
@@ -57,8 +57,8 @@ rt.registerMaterial({
 rt.registerMaterial({
   color: { r: 0.4, g: 0.4, b: 0.4 },
   sdFunc: /* wgsl */ `
-    let dFloor = sdBox(pos + vec3<f32>(0, 1, 0), vec3<f32>(1, 0.01, 1));
-    let dWall = sdBox(pos + vec3<f32>(0, 0, 1), vec3<f32>(1, 1, 0.01));
+    let dFloor = sdBox(pos - vec3<f32>(0, -1, 0), vec3<f32>(1, 0.01, 1));
+    let dWall = sdBox(pos - vec3<f32>(0, 0, -1), vec3<f32>(1, 1, 0.01));
     return min(dFloor, dWall);
   `,
 })
