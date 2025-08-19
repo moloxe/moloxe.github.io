@@ -1,5 +1,6 @@
 import { ReTina } from '@ReTina'
 import frameCounter from './utils/frameCounter'
+import modelControls from './utils/modelControls'
 
 const canvas = document.createElement('canvas')
 canvas.width = window.innerWidth * window.devicePixelRatio
@@ -14,7 +15,11 @@ const rt = new ReTina({
   canvas,
   main: /* wgsl */ `
     let scene = calcScene(uv);
-    let color = hsv2rgb(vec3<f32>(uv.x, 0.5, scene.normal.z));
+    var color = vec3<f32>(0.0);
+    if scene.materialIndex != -1 {
+        let bri = max(max(scene.color.rgb.r, scene.color.rgb.g), scene.color.rgb.b);
+        color = hsv2rgb(vec3<f32>(uv.x, 0.5, bri));
+    }
     return vec4<f32>(color, 1.0);
   `,
 })
@@ -50,21 +55,16 @@ rt.registerMaterial({
 
 await rt.build()
 
-let targetTheta = 0
-let targetRadius = 2
-document.addEventListener('mousemove', (event) => {
-  const x = (event.clientY * window.devicePixelRatio) / canvas.height
-  const y = (event.clientX * window.devicePixelRatio) / canvas.width
-  targetRadius = 1 + x * 2
-  targetTheta = y * Math.PI * 2
-})
-
+const { getTargets } = modelControls(canvas, { radius: 2 })
 const increaseFrameCounter = frameCounter()
 function draw() {
-  rt.camera.spherical.phi += 0.001
-  rt.camera.spherical.theta += (targetTheta - rt.camera.spherical.theta) * 0.1
+  const target = getTargets()
   rt.camera.spherical.radius +=
-    (targetRadius - rt.camera.spherical.radius) * 0.1
+    (target.radius - rt.camera.spherical.radius) * 0.1
+  rt.camera.spherical.theta += (target.theta - rt.camera.spherical.theta) * 0.1
+  rt.camera.spherical.phi += 0.1
+  rt.camera.spherical.phi += (target.phi - rt.camera.spherical.phi) * 0.1
+
   rt.shoot()
   requestAnimationFrame(draw)
   increaseFrameCounter()
