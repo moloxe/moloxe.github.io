@@ -13,6 +13,7 @@ fn sdMaterials(pos: vec3<f32>) -> SdMaterial {
     return SdMaterial(-1, 0., vec3<f32>(0.), vec3<f32>(1.)); // #SD-MATERIALS-FUNC
 }
 
+// This function is exclusive for calcNormal
 fn map(pos: vec3<f32>) -> f32 {
     return 0.; // #MAP
 }
@@ -28,26 +29,6 @@ fn calcNormal(pos: vec3<f32>) -> vec3<f32> {
     );
 }
 
-const RM_MAX_ITER: i32 = 1024;
-const RM_MIN_DIST: f32 = 1e-4;
-const RM_MAX_DIST: f32 = 1e4;
-fn rayMarch(ro: vec3<f32>, rd: vec3<f32>) -> f32 {
-    var totalDist = 0.0;
-    for (var i: i32 = 0; i < RM_MAX_ITER; i++) {
-        let pos = ro + rd * totalDist;
-        let currDist = abs(map(pos));
-        if currDist < RM_MIN_DIST {
-            break;
-        }
-        totalDist += currDist;
-        if totalDist > RM_MAX_DIST {
-            totalDist = -1.0;
-            break;
-        }
-    }
-    return totalDist;
-}
-
 struct Scene {
     dist: f32,
     pos: vec3<f32>,
@@ -55,6 +36,28 @@ struct Scene {
     materialIndex: i32,
     color: vec4<f32>,
 };
+
+const RM_MAX_ITER: i32 = 1024;
+const RM_MIN_DIST: f32 = 1e-4;
+const RM_MAX_DIST: f32 = 1e4;
+fn rayMarch(ro: vec3<f32>, rd: vec3<f32>) -> SdMaterial {
+    var totalDist = 0.0;
+    var material = SdMaterial(-1, 0.0, vec3<f32>(0.0), vec3<f32>(0.0));
+    for (var i: i32 = 0; i < RM_MAX_ITER; i++) {
+        let pos = ro + rd * totalDist;
+        material = sdMaterials(pos);
+        let currDist = material.dist;
+        if currDist < RM_MIN_DIST {
+            material.dist = totalDist;
+            return material;
+        }
+        totalDist += currDist;
+        if totalDist > RM_MAX_DIST {
+            break;
+        }
+    }
+    return SdMaterial(-1, -1.0, vec3<f32>(0.0), vec3<f32>(0.0));
+}
 
 fn calcScene(uv: vec2<f32>) -> Scene {
     var dir2d = vec2<f32>(uv.x, 1. - uv.y) * 2. - 1.;
@@ -71,34 +74,25 @@ fn calcScene(uv: vec2<f32>) -> Scene {
     ro = rotateXY(ro, spherical.z, spherical.y);
     ro += pos;
 
-    var rd = vec3<f32>(dir2d, -focalLength);
+    var rd = normalize(vec3<f32>(dir2d, -focalLength));
     rd = rotateXY(rd, spherical.z, spherical.y);
 
-    let dist = rayMarch(ro, rd);
-    
+    let material = rayMarch(ro, rd);
+
     var finalPos: vec3<f32>;
     var finalNormal: vec3<f32>;
     var finalColor = vec4<f32>(0.0, 0.0, 0.0, 1.0);
 
-    var materialIndex = -1;
-    if dist > 0.0 {
-        finalPos = ro + rd * dist;
+    if material.index != -1 {
+        finalPos = ro + rd * material.dist;
         finalNormal = calcNormal(finalPos);
-        let material = sdMaterials(finalPos);
-        materialIndex = material.index;
 
         // TODO: Implement lighting
         let lambertian = dot(finalNormal, -rd);
         finalColor = vec4<f32>(material.color.rgb * lambertian, 1.);
     }
 
-    return Scene(
-        dist,
-        finalPos,
-        finalNormal,
-        materialIndex,
-        finalColor
-    );
+    return Scene(material.dist, finalPos, finalNormal, material.index, finalColor);
 }
 `
 
