@@ -1,4 +1,4 @@
-import{R as i}from"./ReTina.DDuzLWef.js";import{m as a,f as s}from"./modelControls.D0ohSsn_.js";const t=document.createElement("canvas");t.width=window.innerWidth*window.devicePixelRatio;t.height=window.innerHeight*window.devicePixelRatio;t.style.width=`${window.innerWidth}px`;t.style.height=`${window.innerHeight}px`;t.style.height=`${window.innerHeight}px`;document.body.appendChild(t);const e=new i({canvas:t});e.camera.fov=60;e.registerMaterial({color:{r:.5,g:.5,b:.5},sdFunc:`
+import{R as i}from"./ReTina.nFUelFXB.js";import{m as a,f as s}from"./modelControls.D0ohSsn_.js";const t=document.createElement("canvas");t.width=window.innerWidth*window.devicePixelRatio;t.height=window.innerHeight*window.devicePixelRatio;t.style.width=`${window.innerWidth}px`;t.style.height=`${window.innerHeight}px`;document.body.appendChild(t);const e=new i({canvas:t});e.camera.fov=60;e.registerMaterial({color:{r:.5,g:.5,b:.5},sdFunc:`
     let dBox = sdBox(pos, vec3<f32>(0.26, 0.14, 0.08));
     let dSphere = sdSphere(pos, 0.1);
     return opSmoothUnion(dBox, dSphere, 0.5);
@@ -17,4 +17,4 @@ import{R as i}from"./ReTina.DDuzLWef.js";import{m as a,f as s}from"./modelContro
     let dFloor = sdBox(pos - vec3<f32>(0, -1, 0), vec3<f32>(1, 0.01, 1));
     let dWall = sdBox(pos - vec3<f32>(0, 0, -1), vec3<f32>(1, 1, 0.01));
     return min(dFloor, dWall);
-  `});await e.build();const{getTargets:d}=a(t,{radius:2}),n=s();function o(){const r=d();e.camera.spherical.radius+=(r.radius-e.camera.spherical.radius)*.1,e.camera.spherical.theta+=(r.theta-e.camera.spherical.theta)*.1,e.camera.spherical.phi+=(r.phi-e.camera.spherical.phi)*.1,e.shoot(),requestAnimationFrame(o),n()}o();
+  `});await e.build();const{getTargets:d}=a(t,{radius:2}),c=s();function o(){const r=d();e.camera.spherical.radius+=(r.radius-e.camera.spherical.radius)*.1,e.camera.spherical.theta+=(r.theta-e.camera.spherical.theta)*.1,e.camera.spherical.phi+=(r.phi-e.camera.spherical.phi)*.1,e.shoot(),requestAnimationFrame(o),c()}o();
