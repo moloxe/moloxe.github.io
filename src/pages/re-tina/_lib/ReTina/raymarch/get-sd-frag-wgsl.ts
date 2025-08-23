@@ -1,4 +1,4 @@
-import raymarchFunctionsFrag from '../shaders/raymarch-functions-frag'
+import raymarchFunctionsFrag from './raymarch-functions-frag'
 
 function getSdFragWGSL(materialSdFunctions: string[]) {
   let sdFragWGSL = raymarchFunctionsFrag

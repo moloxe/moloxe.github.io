@@ -1,7 +1,7 @@
 import type { RenderProps } from '../types'
 import vertWGSL from './../shaders/vert.wgsl?raw'
-import getFragWGSL from './../utils/get-frag-wgsl'
-import RTUniform from './rt-uniform'
+import getFragWGSL from '../shaders/get-frag-wgsl'
+import RTUniform from '../utils/rt-uniform'
 
 // Based on:
 // https://webgpulab.xbdev.net/index.php?page=editor&id=mandelbulbbasic3&

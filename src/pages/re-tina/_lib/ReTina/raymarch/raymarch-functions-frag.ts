@@ -89,7 +89,13 @@ fn calcScene(uv: vec2<f32>) -> Scene {
 
         // TODO: Implement lighting
         let lambertian = dot(finalNormal, -rd);
-        finalColor = vec4<f32>(material.color.rgb * lambertian, 1.);
+        var spec = 1.;
+        if lambertian > 0. {
+            let lightDir = normalize(ro - finalPos);
+            let halfDir = normalize(lightDir + -rd);
+            spec = pow(max(dot(halfDir, finalNormal), 0.), 500.);
+        }
+        finalColor = vec4<f32>(material.color.rgb * lambertian + spec, 1.);
     }
 
     return Scene(material.dist, finalPos, finalNormal, material.index, finalColor);

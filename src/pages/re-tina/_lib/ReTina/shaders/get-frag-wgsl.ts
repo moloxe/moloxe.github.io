@@ -1,6 +1,6 @@
-import commonFrag from '../shaders/common'
+import commonFrag from './common'
 import fragTemplateWGSL from './../shaders/frag.wgsl?raw'
-import getSdFragWGSL from './get-sd-frag-wgsl'
+import getSdFragWGSL from '../raymarch/get-sd-frag-wgsl'
 
 type Props = {
   main?: string

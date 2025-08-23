@@ -1,6 +1,6 @@
 import type { RenderProps, RTCamera, RTMaterialPartial } from './types'
-import getRender from './utils/get-render'
-import prepareCanvas from './utils/prepare-canvas'
+import getRender from './device/get-render'
+import prepareCanvas from './device/prepare-canvas'
 import buildMaterial from './utils/rt-material'
 
 type Props = {
