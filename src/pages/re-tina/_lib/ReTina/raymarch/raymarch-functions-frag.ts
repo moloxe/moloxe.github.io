@@ -33,7 +33,6 @@ struct Scene {
     dist: f32,
     pos: vec3<f32>,
     normal: vec3<f32>,
-    materialIndex: i32,
     color: vec4<f32>,
 };
 
@@ -89,16 +88,10 @@ fn calcScene(uv: vec2<f32>) -> Scene {
 
         // TODO: Implement lighting
         let lambertian = dot(finalNormal, -rd);
-        var spec = 1.;
-        if lambertian > 0. {
-            let lightDir = normalize(ro - finalPos);
-            let halfDir = normalize(lightDir + -rd);
-            spec = pow(max(dot(halfDir, finalNormal), 0.), 500.);
-        }
-        finalColor = vec4<f32>(material.color.rgb * lambertian + spec, 1.);
+        finalColor = vec4<f32>(material.color.rgb * lambertian, 1.);
     }
 
-    return Scene(material.dist, finalPos, finalNormal, material.index, finalColor);
+    return Scene(material.dist, finalPos, finalNormal, finalColor);
 }
 `
 

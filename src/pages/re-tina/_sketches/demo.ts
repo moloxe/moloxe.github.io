@@ -16,7 +16,7 @@ const rt = new ReTina({
   main: /* wgsl */ `
     let scene = calcScene(uv);
     var color = vec3<f32>(0.0);
-    if scene.materialIndex != -1 {
+    if scene.dist > 0 {
         let bri = max(max(scene.color.rgb.r, scene.color.rgb.g), scene.color.rgb.b);
         color = hsv2rgb(vec3<f32>(uv.x, 0.5, bri));
     }
