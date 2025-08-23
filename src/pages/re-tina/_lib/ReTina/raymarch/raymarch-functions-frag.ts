@@ -29,6 +29,19 @@ fn calcNormal(pos: vec3<f32>) -> vec3<f32> {
     );
 }
 
+// #LIGHT-INDIVIDUAL-MATERIALS
+
+fn calcLight(
+    ro: vec3<f32>,
+    rd: vec3<f32>,
+    pos: vec3<f32>,
+    normal: vec3<f32>,
+    color: vec3<f32>,
+    materialIndex: i32
+) -> vec4<f32> {
+    return vec4<f32>(0.0); // #LIGHT-MATERIALS-FUNC
+}
+
 struct Scene {
     dist: f32,
     pos: vec3<f32>,
@@ -85,10 +98,14 @@ fn calcScene(uv: vec2<f32>) -> Scene {
     if material.index != -1 {
         finalPos = ro + rd * material.dist;
         finalNormal = calcNormal(finalPos);
-
-        // TODO: Implement lighting
-        let lambertian = dot(finalNormal, -rd);
-        finalColor = vec4<f32>(material.color.rgb * lambertian, 1.);
+        finalColor = calcLight(
+            ro,
+            rd,
+            finalPos,
+            finalNormal,
+            material.color,
+            material.index
+        );
     }
 
     return Scene(material.dist, finalPos, finalNormal, finalColor);

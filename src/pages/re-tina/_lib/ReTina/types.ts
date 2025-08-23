@@ -18,11 +18,10 @@ type Spherical = {
 
 export type RTMaterial = {
   sdFunc: string
+  lightFunc: string
   pos: RTCoord
   color: RTColor
   rotation: RTCoord
-  // TODO: Implement lightning
-  // shininess = 1,
   // TODO: Implement grouping
   // group = -1,
   // TODO: Implement physics?
@@ -31,6 +30,11 @@ export type RTMaterial = {
 
 export type RTMaterialPartial = Pick<RTMaterial, 'sdFunc'> &
   Partial<Omit<RTMaterial, 'sdFunc'>>
+
+export type RTMaterialFuncs = {
+  sdFunc: string
+  lightFunc?: string
+}
 
 export type RenderProps = {
   camera: RTCamera

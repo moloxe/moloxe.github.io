@@ -1,4 +1,4 @@
-import type { RenderProps } from '../types'
+import type { RenderProps, RTMaterialFuncs } from '../types'
 import vertWGSL from './../shaders/vert.wgsl?raw'
 import getFragWGSL from '../shaders/get-frag-wgsl'
 import RTUniform from '../utils/rt-uniform'
@@ -14,7 +14,7 @@ type Props = {
   canvas: HTMLCanvasElement
   main?: string
   functions?: string
-  materialSdFunctions: string[]
+  materialFuncs: RTMaterialFuncs[]
   initialUniforms: {
     camPosX: number
     camPosY: number
@@ -33,7 +33,7 @@ async function getRender({
   context,
   canvas,
   main,
-  materialSdFunctions,
+  materialFuncs,
   initialUniforms,
   functions,
   initalCustomUniforms,
@@ -71,7 +71,7 @@ async function getRender({
   const fragWGSL = getFragWGSL({
     main,
     functions,
-    materialSdFunctions,
+    materialFuncs,
     rtUniformKeys: rtUniform.getKeysSortedByOffset(),
   })
 

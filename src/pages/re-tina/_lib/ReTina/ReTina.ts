@@ -1,4 +1,9 @@
-import type { RenderProps, RTCamera, RTMaterialPartial } from './types'
+import type {
+  RenderProps,
+  RTCamera,
+  RTMaterialFuncs,
+  RTMaterialPartial,
+} from './types'
 import getRender from './device/get-render'
 import prepareCanvas from './device/prepare-canvas'
 import buildMaterial from './utils/rt-material'
@@ -16,7 +21,7 @@ class ReTina {
   private render?: (props: RenderProps) => void
   private initalCustomUniforms: { [key: string]: number } = {}
   private setUniform?: (name: string, value: number) => void
-  private materialSdFunctions: string[] = []
+  private materialFuncs: RTMaterialFuncs[] = []
   camera: RTCamera
 
   constructor({ canvas, main, functions }: Props) {
@@ -32,9 +37,12 @@ class ReTina {
 
   registerMaterial(partialMaterial: RTMaterialPartial) {
     if (this.render) throw new Error('Render already built')
-    const index = this.materialSdFunctions.length
+    const index = this.materialFuncs.length
     const material = buildMaterial(partialMaterial, this, index)
-    this.materialSdFunctions.push(partialMaterial.sdFunc)
+    this.materialFuncs.push({
+      sdFunc: partialMaterial.sdFunc,
+      lightFunc: partialMaterial.lightFunc,
+    })
     return material
   }
 
@@ -60,7 +68,7 @@ class ReTina {
       context,
       canvas: this.canvas,
       main: this.main,
-      materialSdFunctions: this.materialSdFunctions,
+      materialFuncs: this.materialFuncs,
       functions: this.functions,
       initalCustomUniforms: this.initalCustomUniforms,
       initialUniforms: {

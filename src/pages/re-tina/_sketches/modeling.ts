@@ -31,7 +31,17 @@ rt.registerMaterial({
 // Sun glasses
 rt.registerMaterial({
   pos: { x: 0, y: 0.03, z: 0.22 },
-  color: { r: 0.1, g: 0.1, b: 0.1 },
+  color: { r: 0, g: 0, b: 0 },
+  lightFunc: /* wgsl */ `
+    var spec = 0.;
+    let lambertian = dot(normal, -rd);
+    if lambertian > 0. {
+        let lightDir = normalize(ro - pos);
+        let halfDir = normalize(lightDir + -rd);
+        spec = pow(max(dot(halfDir, normal), 0.), 512.);
+    }
+    return vec4<f32>(color * lambertian + spec, 1.);
+  `,
   sdFunc: /* wgsl */ `
     let left  = sdBox(pos - vec3<f32>(0.15, 0.0, 0.0), vec3<f32>(0.12, 0.08, 0.001));
     let right = sdBox(pos - vec3<f32>(-0.15, 0.0, 0.0), vec3<f32>(0.12, 0.08, 0.001));
@@ -42,7 +52,14 @@ rt.registerMaterial({
 
 // Body
 rt.registerMaterial({
-  color: { r: 0.1, g: 0.3, b: 0.1 },
+  lightFunc: /* wgsl */ `
+    var n = snoise3d(pos * 20.);
+    n = snoise3d(vec3<f32>(pos.xy, n + U.time)) * 0.5 + 0.5;
+    n = pow(n, 2.0);
+    let c = hsv2rgb(vec3<f32>(pos.y + U.time, 1.0 - n, n));
+    let lambertian = dot(normal, -rd);
+    return vec4<f32>(c * lambertian, 1.);
+  `,
   sdFunc: /* wgsl */ `
     let dBody = sdCapsule(pos, vec3<f32>(0, -0.32, 0), vec3<f32>(0, -0.4, 0), 0.08);
     let leftLeg = sdCapsule(pos, vec3<f32>(-0.04, -0.45, 0), vec3<f32>(-0.07, -0.55, 0), 0.05);
@@ -64,7 +81,16 @@ rt.registerMaterial({
 
 await rt.build()
 
-rt.camera.pos.z = 2
+rt.camera.pos = {
+  x: 0,
+  y: -0.2,
+  z: -0.5,
+}
+rt.camera.spherical = {
+  radius: 1.5,
+  phi: -0.2,
+  theta: 0.15,
+}
 freeControls(rt)
 
 const increaseFrameCounter = frameCounter()

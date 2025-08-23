@@ -1,20 +1,16 @@
 import commonFrag from './common'
 import fragTemplateWGSL from './../shaders/frag.wgsl?raw'
 import getSdFragWGSL from '../raymarch/get-sd-frag-wgsl'
+import type { RTMaterialFuncs } from '../types'
 
 type Props = {
   main?: string
   rtUniformKeys: string[]
   functions?: string
-  materialSdFunctions: string[]
+  materialFuncs: RTMaterialFuncs[]
 }
 
-function getFragWGSL({
-  main,
-  functions,
-  rtUniformKeys,
-  materialSdFunctions,
-}: Props) {
+function getFragWGSL({ main, functions, rtUniformKeys, materialFuncs }: Props) {
   let fragWGSL = fragTemplateWGSL
 
   fragWGSL = fragWGSL.replace(
@@ -28,8 +24,8 @@ function getFragWGSL({
     fragWGSL = fragWGSL.replace('// #FUNCTIONS', functions)
   }
 
-  if (materialSdFunctions.length > 0) {
-    const sdFragWGSL = getSdFragWGSL(materialSdFunctions)
+  if (materialFuncs.length > 0) {
+    const sdFragWGSL = getSdFragWGSL(materialFuncs)
     fragWGSL = fragWGSL.replace('// #RAY_MARCH_FUNCTIONS', sdFragWGSL)
     if (!main) {
       main = `
