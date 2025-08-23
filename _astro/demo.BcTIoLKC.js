@@ -1,7 +1,7 @@
-import{R as t}from"./ReTina.DEMKjgxf.js";import{m as o,f as n}from"./modelControls.D0ohSsn_.js";const r=document.createElement("canvas");r.width=window.innerWidth*window.devicePixelRatio;r.height=window.innerHeight*window.devicePixelRatio;r.style.width=`${window.innerWidth}px`;r.style.height=`${window.innerHeight}px`;document.body.appendChild(r);const e=new t({canvas:r,main:`
+import{R as t}from"./ReTina.B_GusYvz.js";import{f as o,a}from"./freeControls.mEnd03r0.js";const r=document.createElement("canvas");r.width=window.innerWidth*window.devicePixelRatio;r.height=window.innerHeight*window.devicePixelRatio;r.style.width=`${window.innerWidth}px`;r.style.height=`${window.innerHeight}px`;document.body.appendChild(r);const e=new t({canvas:r,main:`
     let scene = calcScene(uv);
     var color = vec3<f32>(0.0);
-    if scene.materialIndex != -1 {
+    if scene.dist > 0 {
         let bri = max(max(scene.color.rgb.r, scene.color.rgb.g), scene.color.rgb.b);
         color = hsv2rgb(vec3<f32>(uv.x, 0.5, bri));
     }
@@ -31,4 +31,4 @@ import{R as t}from"./ReTina.DEMKjgxf.js";import{m as o,f as n}from"./modelContro
         z += c;
     }
     return 0.5 * log(r) * r / dr;
-  `});await e.build();const{getTargets:c}=o(r,{radius:2}),s=n();function i(){const a=c();e.camera.spherical.radius+=(a.radius-e.camera.spherical.radius)*.1,e.camera.spherical.theta+=(a.theta-e.camera.spherical.theta)*.1,e.camera.spherical.phi+=.1,e.camera.spherical.phi+=(a.phi-e.camera.spherical.phi)*.1,e.shoot(),requestAnimationFrame(i),s()}i();
+  `});await e.build();e.camera.spherical.radius=2;o(e);const n=a();function i(){e.shoot(),requestAnimationFrame(i),n()}i();
