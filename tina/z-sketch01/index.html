@@ -1,0 +1,85 @@
+<!DOCTYPE html><html> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width"><meta name="generator" content="Astro v5.12.8"><meta name="robots" content="noindex, nofollow"><title>z-sketch01</title><script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.10.0/p5.js"></script><script src="/tina/lib.js"></script><link rel="stylesheet" href="/_astro/index.CuJmtE6D.css">
+<link rel="stylesheet" href="/_astro/index.BvIAkOc0.css">
+<style>html{overflow:hidden}canvas{margin:auto}
+</style></head> <body> <img class="absolute w-0 h-0" src="https://librecounter.org/counter.svg" loading="eager" decoding="async" referrerpolicy="unsafe-url" id="libre-counter"> <script>let tina
+
+function setLights() {
+  const pos = createVector(0, 1000, -1500)
+  const sun = tina.sphere({
+    color: [1, 0.8, 0.6],
+    pos: pos.array(),
+    radius: 400,
+  })
+
+  tina.pointLight({
+    color: sun.color,
+    pos: pos.array(),
+    computeShadows: true,
+    offsetRadius: 400.01,
+    power: 12_000_000,
+  })
+}
+
+function setWater() {
+  tina.shape({
+    color: [0, 0.44, 0.46],
+    sdFunc: `
+      (
+        pos.y +
+        snoise(vec3(pos.x * .06 + time * .1, pos.z * .06, time * .5)) * 0.8 +
+        snoise(vec3(pos.x * .4 + time * .4, pos.z * .5, time * 2.)) * .01
+      )
+    `,
+    shininess: 1e4,
+    smoothFactor: 1,
+  })
+}
+
+function setup() {
+  createCanvas(windowWidth, windowHeight)
+
+  createCanvas(windowWidth, windowHeight)
+  tina = new Tina(240 * (width / height), 240, { useInterlacing: true })
+
+  setLights()
+  setWater()
+  tina.fov = 120
+  tina.pos = [0, 2.5, 0]
+
+  tina.build(/* glsl */ `
+    Scene scene = calcScene();
+    if(scene.materialIndex == -1 && !scene.interlaced) {
+      // Skybox: stars
+      vec3 p = toSpherical(scene.rd * 30.);
+      p = toCartesian(vec3(p.x, p.y - time / 1000., p.z));
+      float v = snoise(p);
+      v = max(v, 0.);
+      scene.color.rgb = mix(
+        hsv2rgb(.6, 1., .05), vec3(1.), pow(v, 20.)
+      );
+    } else {
+      vec3 col = rgb2hsv(scene.color.rgb);
+      float thresh = (1. - col.y) * col.z;
+      scene.color.rgb = mix(
+        scene.color.rgb,
+        vec3(1., .75, .7),
+        min(thresh, 1.)
+      );
+    }
+    fragColor = scene.color;
+  `)
+
+  noSmooth()
+}
+
+function draw() {
+  const graphics = tina.update()
+
+  tina.spherical = [
+    0,
+    noise(frameCount * 5e-3) * 0.1,
+    noise(frameCount * 5e-3 + 1e3) * 0.2,
+  ]
+  image(graphics, 0, 0, width, height)
+}
+</script> </body> </html> 
