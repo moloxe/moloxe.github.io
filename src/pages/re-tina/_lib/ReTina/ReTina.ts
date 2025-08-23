@@ -10,7 +10,7 @@ type Props = {
 }
 
 class ReTina {
-  private canvas: HTMLCanvasElement
+  canvas: HTMLCanvasElement
   private main?: string
   private functions?: string
   private render?: (props: RenderProps) => void
