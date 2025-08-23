@@ -18,9 +18,9 @@ function freeControls(rt: ReTina) {
   document.addEventListener('mousemove', (event) => {
     if (!mousePressed) return
     rt.camera.spherical.theta +=
-      (3 * (prevMouseX - event.clientX)) / canvas.width
+      (3 * (prevMouseX - event.clientX)) / window.innerWidth
     rt.camera.spherical.phi +=
-      (3 * (prevMouseY - event.clientY)) / canvas.height
+      (3 * (prevMouseY - event.clientY)) / window.innerHeight
     prevMouseX = event.clientX
     prevMouseY = event.clientY
   })
@@ -31,67 +31,59 @@ function freeControls(rt: ReTina) {
   })
 
   document.addEventListener('wheel', (event) => {
-    rt.camera.spherical.radius += event.deltaY * 0.1
+    rt.camera.spherical.radius += event.deltaY * 0.01
   })
 
   const vel = [0, 0, 0]
-  const acc = 0.02
-  function move(move: string) {
+  const acc = 0.002
+
+  keyboardListener((move) => {
     const yAngle = rt.camera.spherical.theta
-    if (move === 'UP') {
-      vel[1] += 0.05
+
+    if (move.UP) {
+      vel[1] += acc
     }
-    if (move === 'DOWN') {
-      vel[1] -= 0.05
+    if (move.DOWN) {
+      vel[1] -= acc
     }
-    if (move === 'FRONT') {
+    if (move.FRONT) {
       vel[0] -= acc * Math.sin(yAngle)
       vel[2] -= acc * Math.cos(yAngle)
     }
-    if (move === 'BACK') {
+    if (move.BACK) {
       vel[0] += acc * Math.sin(yAngle)
       vel[2] += acc * Math.cos(yAngle)
     }
-    if (move === 'LEFT') {
+    if (move.LEFT) {
       vel[0] -= acc * Math.cos(yAngle)
       vel[2] += acc * Math.sin(yAngle)
     }
-    if (move === 'RIGHT') {
+    if (move.RIGHT) {
       vel[0] += acc * Math.cos(yAngle)
       vel[2] -= acc * Math.sin(yAngle)
     }
-  }
 
-  keyboardListener({
-    Space: () => move('UP'),
-    MetaLeft: () => move('DOWN'),
-    ControlLeft: () => move('DOWN'),
-    KeyW: () => move('FRONT'),
-    KeyS: () => move('BACK'),
-    KeyA: () => move('LEFT'),
-    KeyD: () => move('RIGHT'),
-  })
-
-  let lastTime = performance.now()
-  const freq = 1000 / 60
-  setInterval(() => {
-    const now = performance.now()
-    const delta = (now - lastTime) / freq
-    lastTime = now
-
-    rt.camera.pos.x += vel[0] * delta
-    rt.camera.pos.y += vel[1] * delta
-    rt.camera.pos.z += vel[2] * delta
+    rt.camera.pos.x += vel[0]
+    rt.camera.pos.y += vel[1]
+    rt.camera.pos.z += vel[2]
 
     vel[0] *= 0.9
     vel[1] *= 0.9
     vel[2] *= 0.9
-  }, freq)
+  })
 }
 
-function keyboardListener(actions: { [key: string]: () => void }) {
+function keyboardListener(
+  cb: (state: {
+    UP?: boolean
+    DOWN?: boolean
+    FRONT?: boolean
+    BACK?: boolean
+    LEFT?: boolean
+    RIGHT?: boolean
+  }) => void
+) {
   const codes: { [key: string]: boolean } = {}
-  const keys = Object.keys(actions)
   window.addEventListener('keydown', (event) => {
     event.preventDefault()
     codes[event.code] = true
@@ -100,11 +92,18 @@ function keyboardListener(actions: { [key: string]: () => void }) {
     event.preventDefault()
     codes[event.code] = false
   })
-  setInterval(() => {
-    keys.forEach((key) => {
-      if (codes[key]) actions[key]()
+  function update() {
+    cb({
+      UP: codes['Space'],
+      DOWN: codes['MetaLeft'] || codes['ControlLeft'],
+      FRONT: codes['KeyW'],
+      BACK: codes['KeyS'],
+      LEFT: codes['KeyA'],
+      RIGHT: codes['KeyD'],
     })
-  }, 1000 / 60)
+    requestAnimationFrame(update)
+  }
+  update()
 }
 
 export default freeControls

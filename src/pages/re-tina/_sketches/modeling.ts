@@ -1,6 +1,6 @@
 import { ReTina } from '@ReTina'
 import frameCounter from './utils/frameCounter'
-import modelControls from './utils/modelControls'
+import freeControls from './utils/freeControls'
 
 const canvas = document.createElement('canvas')
 canvas.width = window.innerWidth * window.devicePixelRatio
@@ -64,16 +64,11 @@ rt.registerMaterial({
 
 await rt.build()
 
-const { getTargets } = modelControls(canvas, { radius: 2 })
+rt.camera.pos.z = 2
+freeControls(rt)
 
 const increaseFrameCounter = frameCounter()
 function draw() {
-  const target = getTargets()
-  rt.camera.spherical.radius +=
-    (target.radius - rt.camera.spherical.radius) * 0.1
-  rt.camera.spherical.theta += (target.theta - rt.camera.spherical.theta) * 0.1
-  rt.camera.spherical.phi += (target.phi - rt.camera.spherical.phi) * 0.1
-
   rt.shoot()
   requestAnimationFrame(draw)
   increaseFrameCounter()
