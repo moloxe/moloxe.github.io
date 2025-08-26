@@ -1,4 +1,4 @@
-import{R as r}from"./ReTina.B_GusYvz.js";import{f as i,a as n}from"./freeControls.mEnd03r0.js";const o=document.createElement("canvas");o.width=window.innerWidth*window.devicePixelRatio;o.height=window.innerHeight*window.devicePixelRatio;o.style.width=`${window.innerWidth}px`;o.style.height=`${window.innerHeight}px`;document.body.appendChild(o);const e=new r({canvas:o});e.camera.fov=60;e.registerMaterial({color:{r:.5,g:.5,b:.5},sdFunc:`
+import{R as r}from"./ReTina.BWp5I4CI.js";import{f as i,a as n}from"./freeControls.mEnd03r0.js";const o=document.createElement("canvas");o.width=window.innerWidth*window.devicePixelRatio;o.height=window.innerHeight*window.devicePixelRatio;o.style.width=`${window.innerWidth}px`;o.style.height=`${window.innerHeight}px`;document.body.appendChild(o);const e=new r({canvas:o});e.camera.fov=60;e.registerMaterial({color:{r:.5,g:.5,b:.5},sdFunc:`
     let dBox = sdBox(pos, vec3<f32>(0.26, 0.14, 0.08));
     let dSphere = sdSphere(pos, 0.1);
     return opSmoothUnion(dBox, dSphere, 0.5);
