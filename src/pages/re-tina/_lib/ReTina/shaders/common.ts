@@ -1,6 +1,8 @@
 // TODO: Add functions from 'src/pages/tina/_lib/tina.common.js'
 
 const commonFrag = /* wgsl */ `
+const PI = f32(3.1415926535897932384626433832795);
+
 fn rotate(pos: vec3<f32>, rot: vec3<f32>) -> vec3<f32> {
     var result = pos;
     // Rotation around the Z axis
