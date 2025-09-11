@@ -99,8 +99,3 @@ export async function uploadPostImage(slugUrl: string, image: File) {
 
   return `/${image.name}`
 }
-
-export function getPostImage(slugUrl: string, imgName: string) {
-  const image = fs.readFileSync(`${BLOG_DATA_PATH}/${slugUrl}/img/${imgName}`)
-  return image
-}

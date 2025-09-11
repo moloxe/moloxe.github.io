@@ -32,10 +32,6 @@ const app = new Elysia()
     const name = await uploadPostImage(slugUrl, image)
     return name
   })
-  .get('/image/:slugUrl/:imgName', async ({ params: { slugUrl, imgName } }) => {
-    const image = getPostImage(slugUrl, imgName)
-    return image
-  })
   .listen(6969)
 
 console.log(`Blog: ${app.server?.url}`)
