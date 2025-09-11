@@ -6,7 +6,6 @@ import {
   stringifyPost,
 } from '../../src/pages/blog/_utils/post'
 
-const isDev = process.argv[2] === '--dev'
 const BLOG_DATA_PATH = 'local/blog-data-server/data'
 
 export function getPosts() {

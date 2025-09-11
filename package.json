@@ -3,9 +3,9 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "concurrently --kill-others --success=first \"bun --watch local/blog-data-server/index.ts --dev\" \"astro dev\"",
-    "build": "concurrently --kill-others --success=first \"bun --watch local/blog-data-server/index.ts --dev\" \"astro check && astro build\"",
-    "check": "concurrently --kill-others --success=first \"bun --watch local/blog-data-server/index.ts --dev\" \"astro check\"",
+    "dev": "concurrently --kill-others --success=first \"bun --watch local/blog-data-server/index.ts\" \"astro dev\"",
+    "build": "concurrently --kill-others --success=first \"bun --watch local/blog-data-server/index.ts\" \"astro check && astro build\"",
+    "check": "concurrently --kill-others --success=first \"bun --watch local/blog-data-server/index.ts\" \"astro check\"",
     "deploy": "sh deploy.sh",
     "start": "astro dev",
     "preview": "astro preview",
