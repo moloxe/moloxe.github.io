@@ -111,17 +111,23 @@ export async function uploadPostImage(slugUrl: string, image: File) {
   if (!fs.existsSync(postImagesPath)) fs.mkdirSync(postImagesPath)
 
   const name = image.name
+    .toLowerCase()
+    .replaceAll(' ', '-')
+    .split('.')
+    .filter((_, i, arr) => i === arr.length - 1 || i === 0)
+    .join('.')
   const imagePath = `${postImagesPath}/${name}`
 
   const existFile = fs.existsSync(imagePath)
   if (existFile) if (!image) throw new Error(`File ${imagePath} already exist.`)
 
   const buffer = await image.arrayBuffer()
-  fs.writeFileSync(imagePath, Buffer.from(buffer), {
+  // 'Buffer' is allowed by 'node'
+  fs.writeFileSync(imagePath, Buffer.from(buffer) as any, {
     encoding: 'utf-8',
   })
 
-  return `/${image.name}`
+  return `/${name}`
 }
 
 export function getPostImages(slugUrl: string) {

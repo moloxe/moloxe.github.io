@@ -5,7 +5,7 @@ export const GET: APIRoute = async ({ params }) => {
   const { slugUrl, imgName } = params
   if (!slugUrl || !imgName) throw new Error('Some param is undefined.')
   const image = await PostService.getPostImage(slugUrl, imgName)
-  return new Response(image)
+  return new Response(image as any) // 'Buffer' is allowed as response only for 'node'
 }
 
 export async function getStaticPaths() {
