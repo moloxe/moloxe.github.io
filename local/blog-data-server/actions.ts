@@ -1,10 +1,6 @@
 import fs from 'fs'
 import { Post } from '../../src/pages/blog/_types/Post'
-import {
-  parsePost,
-  slugifyForPost,
-  stringifyPost,
-} from '../../src/pages/blog/_utils/post'
+import { slugifyForPost, stringifyPost } from '../../src/pages/blog/_utils/post'
 
 const BLOG_DATA_PATH = 'local/blog-data-server/data'
 
@@ -81,21 +77,29 @@ export async function updatePostTitle(oldTitle: string, newTitle: string) {
   return newSlugUrl
 }
 
-export async function uploadPostImage(slugUrl: string, image: File) {
+export async function uploadBlogPostImage(slugUrl: string, image: File) {
   const postImagesPath = `${BLOG_DATA_PATH}/${slugUrl}/img`
 
   if (!fs.existsSync(postImagesPath)) fs.mkdirSync(postImagesPath)
 
   const name = image.name
+    .toLowerCase()
+    .replaceAll(' ', '-')
+    .split('.')
+    .filter((_, i, arr) => i === arr.length - 1 || i === 0)
+    .join('.')
+
   const imagePath = `${postImagesPath}/${name}`
 
   const existFile = fs.existsSync(imagePath)
   if (existFile) if (!image) throw new Error(`File ${imagePath} already exist.`)
 
   const buffer = await image.arrayBuffer()
-  fs.writeFileSync(imagePath, Buffer.from(buffer), {
+
+  // 'Buffer' is allowed by 'node'
+  fs.writeFileSync(imagePath, Buffer.from(buffer) as any, {
     encoding: 'utf-8',
   })
 
-  return `/${image.name}`
+  return `/${name}`
 }

@@ -2,10 +2,9 @@ import { Elysia } from 'elysia'
 import { cors } from '@elysiajs/cors'
 import {
   createPost,
-  getPostImage,
   updatePost,
   updatePostTitle,
-  uploadPostImage,
+  uploadBlogPostImage,
 } from './actions'
 import { Post } from '../../src/pages/blog/_types/Post'
 
@@ -29,7 +28,7 @@ const app = new Elysia()
   .post('/image/:slugUrl', async ({ request, params: { slugUrl } }) => {
     const formData = await request.formData()
     const image = formData.get('image') as File
-    const name = await uploadPostImage(slugUrl, image)
+    const name = await uploadBlogPostImage(slugUrl, image)
     return name
   })
   .listen(6969)
