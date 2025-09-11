@@ -1,12 +1,12 @@
 import type { Post, PostCard } from '@src/pages/blog/_types/Post'
 import { parsePost, toPostCard } from '@src/pages/blog/_utils/post'
+import { getBlogPosts } from '../_utils/posts-folder-queries'
 
 const BASE_ULR = 'http://localhost:6969'
 
 const PostService = {
   async getPosts() {
-    const res = await fetch(`${BASE_ULR}/post`)
-    let posts = (await res.json()).posts as Post[]
+    let posts = getBlogPosts()
     posts = posts.map(parsePost)
     return posts
   },

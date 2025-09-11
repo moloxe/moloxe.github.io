@@ -4,7 +4,6 @@ import {
   createPost,
   getPostImage,
   getPostImages,
-  getPosts,
   updatePost,
   updatePostTitle,
   uploadPostImage,
@@ -13,10 +12,6 @@ import { Post } from '../../src/pages/blog/_types/Post'
 
 const app = new Elysia()
   .use(cors())
-  .get('/post', async () => {
-    const posts = getPosts()
-    return { posts }
-  })
   .post('/post', ({ body }) => {
     const { title } = JSON.parse(body as any)
     const slugUrl = createPost(title)
