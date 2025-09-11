@@ -1,36 +1,8 @@
 import fs from 'fs'
 import { Post } from '../../src/pages/blog/_types/Post'
-import {
-  parsePost,
-  slugifyForPost,
-  stringifyPost,
-} from '../../src/pages/blog/_utils/post'
+import { slugifyForPost, stringifyPost } from '../../src/pages/blog/_utils/post'
 
 const BLOG_DATA_PATH = 'local/blog-data-server/data'
-
-export function getPosts() {
-  const postFileNames = fs.readdirSync(BLOG_DATA_PATH)
-
-  let posts: Post[] = []
-
-  for (let index = 0; index < postFileNames.length; index++) {
-    const fileName = postFileNames[index]
-    const path = `${BLOG_DATA_PATH}/${fileName}/post.json`
-    const file = fs.readFileSync(path, { encoding: 'utf8' })
-
-    const post = JSON.parse(file) as Post
-    post.slugUrl = fileName.split('.json')[0]
-    posts.push(parsePost(post))
-  }
-
-  posts.sort((p1, p2) => {
-    const d1 = new Date(p1.creationDate).getTime()
-    const d2 = new Date(p2.creationDate).getTime()
-    return d2 - d1
-  })
-
-  return posts
-}
 
 export function createPost(title: string) {
   const slugUrl = slugifyForPost(title)
@@ -105,34 +77,29 @@ export async function updatePostTitle(oldTitle: string, newTitle: string) {
   return newSlugUrl
 }
 
-export async function uploadPostImage(slugUrl: string, image: File) {
+export async function uploadBlogPostImage(slugUrl: string, image: File) {
   const postImagesPath = `${BLOG_DATA_PATH}/${slugUrl}/img`
 
   if (!fs.existsSync(postImagesPath)) fs.mkdirSync(postImagesPath)
 
   const name = image.name
+    .toLowerCase()
+    .replaceAll(' ', '-')
+    .split('.')
+    .filter((_, i, arr) => i === arr.length - 1 || i === 0)
+    .join('.')
+
   const imagePath = `${postImagesPath}/${name}`
 
   const existFile = fs.existsSync(imagePath)
   if (existFile) if (!image) throw new Error(`File ${imagePath} already exist.`)
 
   const buffer = await image.arrayBuffer()
-  fs.writeFileSync(imagePath, Buffer.from(buffer), {
+
+  // 'Buffer' is allowed by 'node'
+  fs.writeFileSync(imagePath, Buffer.from(buffer) as any, {
     encoding: 'utf-8',
   })
 
-  return `/${image.name}`
-}
-
-export function getPostImages(slugUrl: string) {
-  const dirents = fs.readdirSync(`${BLOG_DATA_PATH}/${slugUrl}/img`, {
-    withFileTypes: true,
-  })
-  const images = dirents.map(({ name }) => name)
-  return images
-}
-
-export function getPostImage(slugUrl: string, imgName: string) {
-  const image = fs.readFileSync(`${BLOG_DATA_PATH}/${slugUrl}/img/${imgName}`)
-  return image
+  return `/${name}`
 }

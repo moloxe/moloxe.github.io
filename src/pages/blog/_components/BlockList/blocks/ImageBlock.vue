@@ -39,10 +39,6 @@ const url = computed(() => {
   return props.block.text
 })
 
-function selectImage(newUrl: string) {
-  props.block.text = newUrl
-}
-
 async function uploadImage(event: Event) {
   const targe = event?.target as HTMLInputElement & EventTarget
   if (!targe?.files) return

@@ -1,12 +1,16 @@
 import type { Post, PostCard } from '@src/pages/blog/_types/Post'
 import { parsePost, toPostCard } from '@src/pages/blog/_utils/post'
+import {
+  getBlogPostImage,
+  getBlogPostImages,
+  getBlogPosts,
+} from '../_utils/posts-folder-queries'
 
 const BASE_ULR = 'http://localhost:6969'
 
 const PostService = {
   async getPosts() {
-    const res = await fetch(`${BASE_ULR}/post`)
-    let posts = (await res.json()).posts as Post[]
+    let posts = getBlogPosts()
     posts = posts.map(parsePost)
     return posts
   },
@@ -84,15 +88,12 @@ const PostService = {
     return slugUrl
   },
   async getPostImages(slugUrl: string) {
-    const res = await fetch(`${BASE_ULR}/image/${slugUrl}`)
-    const images = (await res.json()).images as string[]
+    const images = getBlogPostImages(slugUrl)
     return images
   },
-  async getPostImage(slugUrl: string, imgName: string) {
-    const res = await fetch(`${BASE_ULR}/image/${slugUrl}/${imgName}`)
-    const arrayBuffer = await res.arrayBuffer()
-    const buffer = Buffer.from(arrayBuffer)
-    return buffer
+  getPostImage(slugUrl: string, imgName: string) {
+    const imageBuffer = getBlogPostImage(slugUrl, imgName)
+    return imageBuffer
   },
   async uploadPostImage(slugUrl: string, image: File) {
     const formData = new FormData()
