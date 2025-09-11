@@ -27,3 +27,11 @@ export function getBlogPosts() {
 
   return posts
 }
+
+export function getBlogPostImages(slugUrl: string) {
+  const dirents = fs.readdirSync(`${BLOG_DATA_PATH}/${slugUrl}/img`, {
+    withFileTypes: true,
+  })
+  const images = dirents.map(({ name }) => name)
+  return images
+}

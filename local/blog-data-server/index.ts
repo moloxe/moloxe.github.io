@@ -3,7 +3,6 @@ import { cors } from '@elysiajs/cors'
 import {
   createPost,
   getPostImage,
-  getPostImages,
   updatePost,
   updatePostTitle,
   uploadPostImage,
@@ -32,10 +31,6 @@ const app = new Elysia()
     const image = formData.get('image') as File
     const name = await uploadPostImage(slugUrl, image)
     return name
-  })
-  .get('/image/:slugUrl', async ({ params: { slugUrl } }) => {
-    const images = getPostImages(slugUrl)
-    return { images }
   })
   .get('/image/:slugUrl/:imgName', async ({ params: { slugUrl, imgName } }) => {
     const image = getPostImage(slugUrl, imgName)
