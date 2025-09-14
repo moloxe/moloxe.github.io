@@ -1,0 +1,61 @@
+---
+import Basic from '@src/layouts/Basic.astro'
+import TinaImg from './_assets/tina.jpeg'
+import ReTinaExamples, {
+  type ReTinaExample,
+} from '@src/pages/re-tina/_components/ReTinaExamples'
+
+const files = import.meta.glob('@src/pages/re-tina/_sketches/*.ts', {
+  eager: false,
+  query: '?raw',
+})
+
+const paths = Object.keys(files)
+const examples: ReTinaExample[] = []
+
+for (let index = 0; index < paths.length; index++) {
+  const path = paths[index]
+  const route = path.split('/').pop()?.replace('.ts', '') ?? ''
+  const sketch = ((await files[path]()) as any).default as string
+  examples.push({ route, sketch })
+}
+---
+
+<Basic title="Tina" lang="en" showPaths>
+  <main class="flex flex-col gap-10 p-2 justify-center w-full max-w-2xl m-auto">
+    <div class="flex w-full items-end gap-4">
+      <p class="text-4xl font-mono mb-[6%]">Re</p>
+      <div>
+        <img src={TinaImg.src} alt="Tina logo" class="tina-logo" />
+      </div>
+    </div>
+
+    <div>ReTina, raymarch engine for the gang.</div>
+
+    <ReTinaExamples client:load examples={examples} />
+  </main>
+</Basic>
+
+<footer class="py-16 flex justify-between max-w-2xl m-auto p-2">
+  <p>
+    © 2025. All content and pages are licensed under
+    <a
+      target="_blank"
+      href="https://creativecommons.org/licenses/by-sa/4.0/"
+      class="hover:text-white">CC BY-SA 4.0</a
+    >
+  </p>
+
+  <a href="/">Home</a>
+</footer>
+
+<style>
+  a {
+    @apply text-[var(--primary)];
+  }
+
+  .tina-logo {
+    border-radius: 8px;
+    filter: grayscale(1) contrast(1.5) brightness(6) invert(1) opacity(0.8);
+  }
+</style>
