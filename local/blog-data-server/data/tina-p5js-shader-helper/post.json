@@ -1,7 +1,7 @@
 {
   "title": "Tina - p5js shader helper",
   "creationDate": "2024-08-21T03:25:29.805Z",
-  "lastUpdate": "2025-05-24T01:49:26.748Z",
+  "lastUpdate": "2025-09-20T16:30:54.924Z",
   "categories": [
     "tech",
     "games",
@@ -37,5 +37,5 @@
       "type": "MarkdownBlock"
     }
   ],
-  "isPinned": true
+  "isPinned": false
 }
