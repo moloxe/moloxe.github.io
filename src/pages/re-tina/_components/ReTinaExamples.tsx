@@ -50,7 +50,7 @@ const ReTinaExamples: FC<Props> = ({ examples }) => {
                 }}
                 href={`/re-tina/${example.route}`}
                 target="_blank"
-                className="underline text-primary"
+                className={'underline ' + (isCurrent ? 'text-primary' : '')}
               >
                 {example.route}
               </a>
