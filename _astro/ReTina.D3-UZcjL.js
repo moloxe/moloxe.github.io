@@ -79,6 +79,45 @@ fn rgb2hsv(c: vec3f) -> vec3<f32> {
     return vec3<f32>(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
 }
 
+fn blinnPhong(
+  // Environment
+  rd: vec3<f32>,
+  normal: vec3<f32>,
+  minBright: f32,
+  // Material
+  pos: vec3<f32>,
+  diffuseColor: vec3<f32>,
+  shininess: f32,
+  // Light
+  lightPos: vec3<f32>,
+  lightColor: vec3<f32>,
+  power: f32,
+) -> vec3<f32> {
+    let viewDir = -rd;
+    var lightDir = lightPos - pos;
+    var distance = length(lightDir); distance *= distance;
+    lightDir = normalize(lightDir);
+    let lambertian = dot(normal, lightDir);
+
+    var specular = 0.;
+    if lambertian > 0. {
+        let halfDir = normalize(lightDir + viewDir);
+        let specAngle = max(dot(halfDir, normal), 0.);
+        specular = pow(specAngle, shininess);
+    }
+
+    let lightPower = lightColor * power / distance;
+    let ambientColor = minBright * mix(diffuseColor, lightColor, .5);
+
+    let colorLinear = ambientColor +
+      (
+        diffuseColor *    lambertian * lightPower +
+        /* specColor * */ specular   * lightPower
+      );
+
+    return colorLinear;
+}
+
 // https://iquilezles.org/articles/distfunctions/ 💪
 
 fn sdSphere(p: vec3f, s: f32) -> f32 {
@@ -237,7 +276,7 @@ fn main(@location(0) fragCoord: vec2<f32>) -> @location(0) vec4<f32> {
     let uv = 1. - fragCoord.xy;
     return vec4<f32>(0.0, 0.0, 0.0, 1.0); // #MAIN
 }
-`,U=`
+`,w=`
 
 struct SdMaterial {
     index: i32,
@@ -349,7 +388,7 @@ fn calcScene(uv: vec2<f32>) -> Scene {
 
     return Scene(material.dist, finalPos, finalNormal, finalColor);
 }
-`;function M(o){let e=U;const t=o.map(r=>r.sdFunc),a=o.map(r=>r.lightFunc);{const r=t.map((s,i)=>{const v=`vec3<f32>(U.material${i}Px, U.material${i}Py, U.material${i}Pz)`,f=`vec3<f32>(U.material${i}Rx, U.material${i}Ry, U.material${i}Rz)`;return`fn sdMaterial${i}(posIn: vec3<f32>) -> f32 {
+`;function C(o){let e=w;const t=o.map(r=>r.sdFunc),a=o.map(r=>r.lightFunc);{const r=t.map((s,i)=>{const v=`vec3<f32>(U.material${i}Px, U.material${i}Py, U.material${i}Pz)`,f=`vec3<f32>(U.material${i}Rx, U.material${i}Ry, U.material${i}Rz)`;return`fn sdMaterial${i}(posIn: vec3<f32>) -> f32 {
         let mRotation = ${f};
         var pos = posIn - ${v};
         if length(mRotation) != 0.0 {
@@ -405,8 +444,8 @@ fn calcScene(uv: vec2<f32>) -> Scene {
         `).join(`
 `)}
       return finalColor;
-    `;e=e.replace("return vec4<f32>(0.0); // #LIGHT-MATERIALS-FUNC",c)}return e}function _({main:o,functions:e,rtUniformKeys:t,materialFuncs:a}){let r=b;if(r=r.replace("UNIFORMS: f32, // #UNIFORMS",t.map(c=>`${c}: f32,`).join(`
-`)),r=r.replace("// #COMMON",S),e&&(r=r.replace("// #FUNCTIONS",e)),a.length>0){const c=M(a);r=r.replace("// #RAY_MARCH_FUNCTIONS",c),o||(o=`
+    `;e=e.replace("return vec4<f32>(0.0); // #LIGHT-MATERIALS-FUNC",c)}return e}function U({main:o,functions:e,rtUniformKeys:t,materialFuncs:a}){let r=b;if(r=r.replace("UNIFORMS: f32, // #UNIFORMS",t.map(c=>`${c}: f32,`).join(`
+`)),r=r.replace("// #COMMON",S),e&&(r=r.replace("// #FUNCTIONS",e)),a.length>0){const c=C(a);r=r.replace("// #RAY_MARCH_FUNCTIONS",c),o||(o=`
         let scene = calcScene(uv);
         return vec4<f32>(scene.color.rgb, 1.0);
-      `)}return o&&(r=r.replace("return vec4<f32>(0.0, 0.0, 0.0, 1.0); // #MAIN",o)),r}class w{device;buffer;uniform={};constructor(e,t){this.device=e;const a=Object.keys(t);this.buffer=e.createBuffer({size:a.length*4,usage:GPUBufferUsage.UNIFORM|GPUBufferUsage.COPY_DST}),a.forEach((r,c)=>{this.uniform[r]={value:t[r],offSet:c*4},this.set(r,t[r])})}getBuffer(){return this.buffer}getKeysSortedByOffset(){return Object.keys(this.uniform).toSorted((e,t)=>this.uniform[e].offSet-this.uniform[t].offSet)}set(e,t){if(!this.uniform[e])throw new Error(`Uniform ${e} not found`);this.uniform[e].value=t,this.device.queue.writeBuffer(this.buffer,this.uniform[e].offSet,new Float32Array([t]))}get(e){if(!this.uniform[e])throw new Error(`Uniform ${e} not found`);return this.uniform[e].value}}async function R({device:o,presentationFormat:e,context:t,canvas:a,main:r,materialFuncs:c,initialUniforms:s,functions:i,initalCustomUniforms:v}){const f=new w(o,{time:0,aspectRatio:a.width/a.height,width:a.width,height:a.height,camPosX:s.camPosX??0,camPosY:s.camPosY??0,camPosZ:s.camPosZ??0,camSphericalR:s.camSphericalR??0,camSphericalT:s.camSphericalT??0,camSphericalP:s.camSphericalP??0,camFov:s.camFov??90,...v}),m=o.createBindGroupLayout({entries:[{binding:0,visibility:GPUShaderStage.FRAGMENT,buffer:{type:"uniform"}}]}),p=o.createBindGroup({layout:m,entries:[{binding:0,resource:{buffer:f.getBuffer()}}]}),x=_({main:r,functions:i,materialFuncs:c,rtUniformKeys:f.getKeysSortedByOffset()}),d=o.createRenderPipeline({layout:o.createPipelineLayout({bindGroupLayouts:[m]}),vertex:{module:o.createShaderModule({code:z}),entryPoint:"main"},fragment:{module:o.createShaderModule({code:x}),entryPoint:"main",targets:[{format:e}]},primitive:{topology:"triangle-strip",frontFace:"ccw",stripIndexFormat:"uint32"}});function y({camera:l}){f.set("time",performance.now()/1e3),f.set("aspectRatio",a.width/a.height),f.set("width",a.width),f.set("height",a.height),f.set("camPosX",l.pos.x),f.set("camPosY",l.pos.y),f.set("camPosZ",l.pos.z),f.set("camSphericalR",l.spherical.radius),f.set("camSphericalT",l.spherical.theta),f.set("camSphericalP",l.spherical.phi),f.set("camFov",l.fov);const h={colorAttachments:[{view:t.getCurrentTexture().createView(),loadOp:"clear",clearValue:{r:0,g:0,b:0,a:1},storeOp:"store"}]},g=o.createCommandEncoder(),u=g.beginRenderPass(h);u.setPipeline(d),u.setBindGroup(0,p),u.draw(4,1,0,0),u.end(),o.queue.submit([g.finish()])}function n(l,h){f.set(l,h)}return{render:y,setUniform:n}}async function C(o){const t=await navigator.gpu.requestAdapter();if(!t)throw new Error("No adapter found");const a=t.features.has("texture-compression-bc");a||console.warn("shader-f16 not available");const r=await t.requestDevice({requiredFeatures:a?["shader-f16"]:[]}),c=navigator.gpu.getPreferredCanvasFormat(),s=o.getContext("webgpu");if(!s)throw new Error("No context found");return s.configure({device:r,format:c,alphaMode:"premultiplied"}),{context:s,device:r,presentationFormat:c}}function I(o,e,t){o.pos||(o.pos={x:0,y:0,z:0}),o.color||(o.color={r:1,g:1,b:1}),o.rotation||(o.rotation={x:0,y:0,z:0});const a=e.registerUniform(`material${t}Px`,o.pos.x),r=e.registerUniform(`material${t}Py`,o.pos.y),c=e.registerUniform(`material${t}Pz`,o.pos.z),s=n=>{n.x!==void 0&&a(n.x),n.y!==void 0&&r(n.y),n.z!==void 0&&c(n.z)},i=e.registerUniform(`material${t}Rx`,o.rotation.x),v=e.registerUniform(`material${t}Ry`,o.rotation.y),f=e.registerUniform(`material${t}Rz`,o.rotation.z),m=n=>{n.x!==void 0&&i(n.x),n.y!==void 0&&v(n.y),n.z!==void 0&&f(n.z)},p=e.registerUniform(`material${t}Cr`,o.color.r),x=e.registerUniform(`material${t}Cg`,o.color.g),d=e.registerUniform(`material${t}Cb`,o.color.b);return{setPos:s,setRot:m,setColor:n=>{n.r!==void 0&&p(n.r),n.g!==void 0&&x(n.g),n.b!==void 0&&d(n.b)}}}class P{canvas;main;functions;render;initalCustomUniforms={};setUniform;materialFuncs=[];camera;constructor({canvas:e,main:t,functions:a}){this.canvas=e,this.main=t,this.functions=a,this.camera={pos:{x:0,y:0,z:0},spherical:{radius:0,theta:0,phi:0},fov:90}}registerMaterial(e){if(this.render)throw new Error("Render already built");const t=this.materialFuncs.length,a=I(e,this,t);return this.materialFuncs.push({sdFunc:e.sdFunc,lightFunc:e.lightFunc}),a}registerUniform(e,t){if(this.render)throw new Error("Render already built");return this.initalCustomUniforms[e]=t??0,r=>{if(!this.setUniform)throw new Error("Render not built");this.setUniform(e,r),this.initalCustomUniforms[e]=r}}async build(){const{device:e,context:t,presentationFormat:a}=await C(this.canvas),{render:r,setUniform:c}=await R({device:e,presentationFormat:a,context:t,canvas:this.canvas,main:this.main,materialFuncs:this.materialFuncs,functions:this.functions,initalCustomUniforms:this.initalCustomUniforms,initialUniforms:{camPosX:this.camera.pos.x,camPosY:this.camera.pos.y,camPosZ:this.camera.pos.z,camSphericalR:this.camera.spherical.radius,camSphericalT:this.camera.spherical.theta,camSphericalP:this.camera.spherical.phi,camFov:this.camera.fov}});this.setUniform=c,this.render=r}shoot(){this.render?.({camera:this.camera})}}export{P as R};
+      `)}return o&&(r=r.replace("return vec4<f32>(0.0, 0.0, 0.0, 1.0); // #MAIN",o)),r}class M{device;buffer;uniform={};constructor(e,t){this.device=e;const a=Object.keys(t);this.buffer=e.createBuffer({size:a.length*4,usage:GPUBufferUsage.UNIFORM|GPUBufferUsage.COPY_DST}),a.forEach((r,c)=>{this.uniform[r]={value:t[r],offSet:c*4},this.set(r,t[r])})}getBuffer(){return this.buffer}getKeysSortedByOffset(){return Object.keys(this.uniform).toSorted((e,t)=>this.uniform[e].offSet-this.uniform[t].offSet)}set(e,t){if(!this.uniform[e])throw new Error(`Uniform ${e} not found`);this.uniform[e].value=t,this.device.queue.writeBuffer(this.buffer,this.uniform[e].offSet,new Float32Array([t]))}get(e){if(!this.uniform[e])throw new Error(`Uniform ${e} not found`);return this.uniform[e].value}}async function P({device:o,presentationFormat:e,context:t,canvas:a,main:r,materialFuncs:c,initialUniforms:s,functions:i,initalCustomUniforms:v}){const f=new M(o,{time:0,aspectRatio:a.width/a.height,width:a.width,height:a.height,camPosX:s.camPosX??0,camPosY:s.camPosY??0,camPosZ:s.camPosZ??0,camSphericalR:s.camSphericalR??0,camSphericalT:s.camSphericalT??0,camSphericalP:s.camSphericalP??0,camFov:s.camFov??90,...v}),m=o.createBindGroupLayout({entries:[{binding:0,visibility:GPUShaderStage.FRAGMENT,buffer:{type:"uniform"}}]}),p=o.createBindGroup({layout:m,entries:[{binding:0,resource:{buffer:f.getBuffer()}}]}),x=U({main:r,functions:i,materialFuncs:c,rtUniformKeys:f.getKeysSortedByOffset()}),h=o.createRenderPipeline({layout:o.createPipelineLayout({bindGroupLayouts:[m]}),vertex:{module:o.createShaderModule({code:z}),entryPoint:"main"},fragment:{module:o.createShaderModule({code:x}),entryPoint:"main",targets:[{format:e}]},primitive:{topology:"triangle-strip",frontFace:"ccw",stripIndexFormat:"uint32"}});function y({camera:l}){f.set("time",performance.now()/1e3),f.set("aspectRatio",a.width/a.height),f.set("width",a.width),f.set("height",a.height),f.set("camPosX",l.pos.x),f.set("camPosY",l.pos.y),f.set("camPosZ",l.pos.z),f.set("camSphericalR",l.spherical.radius),f.set("camSphericalT",l.spherical.theta),f.set("camSphericalP",l.spherical.phi),f.set("camFov",l.fov);const d={colorAttachments:[{view:t.getCurrentTexture().createView(),loadOp:"clear",clearValue:{r:0,g:0,b:0,a:1},storeOp:"store"}]},g=o.createCommandEncoder(),u=g.beginRenderPass(d);u.setPipeline(h),u.setBindGroup(0,p),u.draw(4,1,0,0),u.end(),o.queue.submit([g.finish()])}function n(l,d){f.set(l,d)}return{render:y,setUniform:n}}async function _(o){const t=await navigator.gpu.requestAdapter();if(!t)throw new Error("No adapter found");const a=t.features.has("texture-compression-bc");a||console.warn("shader-f16 not available");const r=await t.requestDevice({requiredFeatures:a?["shader-f16"]:[]}),c=navigator.gpu.getPreferredCanvasFormat(),s=o.getContext("webgpu");if(!s)throw new Error("No context found");return s.configure({device:r,format:c,alphaMode:"premultiplied"}),{context:s,device:r,presentationFormat:c}}function R(o,e,t){o.pos||(o.pos={x:0,y:0,z:0}),o.color||(o.color={r:1,g:1,b:1}),o.rotation||(o.rotation={x:0,y:0,z:0});const a=e.registerUniform(`material${t}Px`,o.pos.x),r=e.registerUniform(`material${t}Py`,o.pos.y),c=e.registerUniform(`material${t}Pz`,o.pos.z),s=n=>{n.x!==void 0&&a(n.x),n.y!==void 0&&r(n.y),n.z!==void 0&&c(n.z)},i=e.registerUniform(`material${t}Rx`,o.rotation.x),v=e.registerUniform(`material${t}Ry`,o.rotation.y),f=e.registerUniform(`material${t}Rz`,o.rotation.z),m=n=>{n.x!==void 0&&i(n.x),n.y!==void 0&&v(n.y),n.z!==void 0&&f(n.z)},p=e.registerUniform(`material${t}Cr`,o.color.r),x=e.registerUniform(`material${t}Cg`,o.color.g),h=e.registerUniform(`material${t}Cb`,o.color.b);return{setPos:s,setRot:m,setColor:n=>{n.r!==void 0&&p(n.r),n.g!==void 0&&x(n.g),n.b!==void 0&&h(n.b)}}}class I{canvas;main;functions;render;initalCustomUniforms={};setUniform;materialFuncs=[];camera;constructor({canvas:e,main:t,functions:a}){this.canvas=e,this.main=t,this.functions=a,this.camera={pos:{x:0,y:0,z:0},spherical:{radius:0,theta:0,phi:0},fov:90}}registerMaterial(e){if(this.render)throw new Error("Render already built");const t=this.materialFuncs.length,a=R(e,this,t);return this.materialFuncs.push({sdFunc:e.sdFunc,lightFunc:e.lightFunc}),a}registerUniform(e,t){if(this.render)throw new Error("Render already built");return this.initalCustomUniforms[e]=t??0,r=>{if(!this.setUniform)throw new Error("Render not built");this.setUniform(e,r),this.initalCustomUniforms[e]=r}}async build(){const{device:e,context:t,presentationFormat:a}=await _(this.canvas),{render:r,setUniform:c}=await P({device:e,presentationFormat:a,context:t,canvas:this.canvas,main:this.main,materialFuncs:this.materialFuncs,functions:this.functions,initalCustomUniforms:this.initalCustomUniforms,initialUniforms:{camPosX:this.camera.pos.x,camPosY:this.camera.pos.y,camPosZ:this.camera.pos.z,camSphericalR:this.camera.spherical.radius,camSphericalT:this.camera.spherical.theta,camSphericalP:this.camera.spherical.phi,camFov:this.camera.fov}});this.setUniform=c,this.render=r}shoot(){this.render?.({camera:this.camera})}}export{I as R};
