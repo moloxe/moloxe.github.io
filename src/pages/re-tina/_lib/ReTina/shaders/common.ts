@@ -57,6 +57,45 @@ fn rgb2hsv(c: vec3f) -> vec3<f32> {
     return vec3<f32>(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
 }
 
+fn blinnPhong(
+  // Environment
+  rd: vec3<f32>,
+  normal: vec3<f32>,
+  minBright: f32,
+  // Material
+  pos: vec3<f32>,
+  diffuseColor: vec3<f32>,
+  shininess: f32,
+  // Light
+  lightPos: vec3<f32>,
+  lightColor: vec3<f32>,
+  power: f32,
+) -> vec3<f32> {
+    let viewDir = -rd;
+    var lightDir = lightPos - pos;
+    var distance = length(lightDir); distance *= distance;
+    lightDir = normalize(lightDir);
+    let lambertian = dot(normal, lightDir);
+
+    var specular = 0.;
+    if lambertian > 0. {
+        let halfDir = normalize(lightDir + viewDir);
+        let specAngle = max(dot(halfDir, normal), 0.);
+        specular = pow(specAngle, shininess);
+    }
+
+    let lightPower = lightColor * power / distance;
+    let ambientColor = minBright * mix(diffuseColor, lightColor, .5);
+
+    let colorLinear = ambientColor +
+      (
+        diffuseColor *    lambertian * lightPower +
+        /* specColor * */ specular   * lightPower
+      );
+
+    return colorLinear;
+}
+
 // https://iquilezles.org/articles/distfunctions/ 💪
 
 fn sdSphere(p: vec3f, s: f32) -> f32 {
