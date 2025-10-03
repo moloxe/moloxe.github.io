@@ -15,16 +15,7 @@ type Props = {
   main?: string
   functions?: string
   materialFuncs: RTMaterialFuncs[]
-  initialUniforms: {
-    camPosX: number
-    camPosY: number
-    camPosZ: number
-    camSphericalR: number
-    camSphericalT: number
-    camSphericalP: number
-    camFov: number
-  }
-  initalCustomUniforms: { [key: string]: number }
+  rtUniform: RTUniform
 }
 
 async function getRender({
@@ -34,25 +25,9 @@ async function getRender({
   canvas,
   main,
   materialFuncs,
-  initialUniforms,
   functions,
-  initalCustomUniforms,
+  rtUniform,
 }: Props) {
-  const rtUniform = new RTUniform(device, {
-    time: 0,
-    aspectRatio: canvas.width / canvas.height,
-    width: canvas.width,
-    height: canvas.height,
-    camPosX: initialUniforms.camPosX ?? 0,
-    camPosY: initialUniforms.camPosY ?? 0,
-    camPosZ: initialUniforms.camPosZ ?? 0,
-    camSphericalR: initialUniforms.camSphericalR ?? 0,
-    camSphericalT: initialUniforms.camSphericalT ?? 0,
-    camSphericalP: initialUniforms.camSphericalP ?? 0,
-    camFov: initialUniforms.camFov ?? 90,
-    ...initalCustomUniforms,
-  })
-
   const sceneUniformBindGroupLayout = device.createBindGroupLayout({
     entries: [
       {
@@ -68,6 +43,8 @@ async function getRender({
     entries: [{ binding: 0, resource: { buffer: rtUniform.getBuffer() } }],
   })
 
+  const bindGroupLayouts = [sceneUniformBindGroupLayout]
+
   const fragWGSL = getFragWGSL({
     main,
     functions,
@@ -77,7 +54,7 @@ async function getRender({
 
   const renderPipeline = device.createRenderPipeline({
     layout: device.createPipelineLayout({
-      bindGroupLayouts: [sceneUniformBindGroupLayout],
+      bindGroupLayouts,
     }),
     vertex: {
       module: device.createShaderModule({

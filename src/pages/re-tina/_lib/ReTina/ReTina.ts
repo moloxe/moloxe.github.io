@@ -7,6 +7,7 @@ import type {
 import getRender from './device/get-render'
 import prepareCanvas from './device/prepare-canvas'
 import buildMaterial from './utils/rt-material'
+import RTUniform from './utils/rt-uniform'
 
 type Props = {
   canvas: HTMLCanvasElement
@@ -62,6 +63,21 @@ class ReTina {
       this.canvas
     )
 
+    const rtUniform = new RTUniform(device, {
+      time: 0,
+      aspectRatio: this.canvas.width / this.canvas.height,
+      width: this.canvas.width,
+      height: this.canvas.height,
+      camPosX: this.camera.pos.x ?? 0,
+      camPosY: this.camera.pos.y ?? 0,
+      camPosZ: this.camera.pos.z ?? 0,
+      camSphericalR: this.camera.spherical.radius ?? 0,
+      camSphericalT: this.camera.spherical.theta ?? 0,
+      camSphericalP: this.camera.spherical.phi ?? 0,
+      camFov: this.camera.fov ?? 90,
+      ...this.initalCustomUniforms,
+    })
+
     const { render, setUniform } = await getRender({
       device,
       presentationFormat,
@@ -70,16 +86,7 @@ class ReTina {
       main: this.main,
       materialFuncs: this.materialFuncs,
       functions: this.functions,
-      initalCustomUniforms: this.initalCustomUniforms,
-      initialUniforms: {
-        camPosX: this.camera.pos.x,
-        camPosY: this.camera.pos.y,
-        camPosZ: this.camera.pos.z,
-        camSphericalR: this.camera.spherical.radius,
-        camSphericalT: this.camera.spherical.theta,
-        camSphericalP: this.camera.spherical.phi,
-        camFov: this.camera.fov,
-      },
+      rtUniform,
     })
 
     this.setUniform = setUniform
