@@ -2,6 +2,9 @@ class RTUniform {
   private device: GPUDevice
   private buffer: GPUBuffer
   private uniform: { [key: string]: { value: number; offSet: number } } = {}
+  uniformBindGroupLayout: GPUBindGroupLayout
+  uniformBindGroup: GPUBindGroup
+
   constructor(
     device: GPUDevice,
     uniform: {
@@ -20,6 +23,30 @@ class RTUniform {
         offSet: index * 4,
       }
       this.set(key, uniform[key])
+    })
+    this.uniformBindGroupLayout = device.createBindGroupLayout({
+      entries: [
+        {
+          binding: 0,
+          visibility: GPUShaderStage.FRAGMENT,
+          buffer: { type: 'uniform' },
+        },
+        {
+          binding: 1,
+          visibility: GPUShaderStage.FRAGMENT,
+          sampler: { type: 'non-filtering' },
+        },
+      ],
+    })
+    this.uniformBindGroup = this.device.createBindGroup({
+      layout: this.uniformBindGroupLayout,
+      entries: [
+        { binding: 0, resource: { buffer: this.getBuffer() } },
+        {
+          binding: 1,
+          resource: this.device.createSampler({}),
+        },
+      ],
     })
   }
   getBuffer() {

@@ -1,11 +1,9 @@
-import type { RenderProps, RTMaterialFuncs } from '../types'
+import type { RenderProps, RTCamera, RTMaterialFuncs, RTTex } from '../types'
 import vertWGSL from './../shaders/vert.wgsl?raw'
 import getFragWGSL from '../shaders/get-frag-wgsl'
 import RTUniform from '../utils/rt-uniform'
-
-// Based on:
-// https://webgpulab.xbdev.net/index.php?page=editor&id=mandelbulbbasic3&
-// https://www.youtube.com/watch?v=rPp7HZFNXnM
+import RTTexture from '../utils/rt-texture'
+import RTPingPong from '../utils/rt-ping-pong'
 
 type Props = {
   device: GPUDevice
@@ -16,6 +14,8 @@ type Props = {
   functions?: string
   materialFuncs: RTMaterialFuncs[]
   rtUniform: RTUniform
+  texs: RTTex[]
+  usePrevFrameTex?: boolean
 }
 
 async function getRender({
@@ -27,29 +27,29 @@ async function getRender({
   materialFuncs,
   functions,
   rtUniform,
+  texs,
+  usePrevFrameTex,
 }: Props) {
-  const sceneUniformBindGroupLayout = device.createBindGroupLayout({
-    entries: [
-      {
-        binding: 0,
-        visibility: GPUShaderStage.FRAGMENT,
-        buffer: { type: 'uniform' },
-      },
-    ],
-  })
+  const rtTexture = new RTTexture(device, presentationFormat, texs)
 
-  const uniformBindGroup = device.createBindGroup({
-    layout: sceneUniformBindGroupLayout,
-    entries: [{ binding: 0, resource: { buffer: rtUniform.getBuffer() } }],
-  })
+  const bindGroupLayouts = [
+    rtUniform.uniformBindGroupLayout,
+    rtTexture.textureBindGroupLayout,
+  ]
 
-  const bindGroupLayouts = [sceneUniformBindGroupLayout]
+  let rtPingPong: RTPingPong | null = null
+  if (usePrevFrameTex) {
+    rtPingPong = new RTPingPong(canvas, device, presentationFormat)
+    bindGroupLayouts.push(rtPingPong.pingPongBindGroupLayout)
+  }
 
   const fragWGSL = getFragWGSL({
     main,
     functions,
     materialFuncs,
     rtUniformKeys: rtUniform.getKeysSortedByOffset(),
+    nTextures: texs.length,
+    usePrevFrameTex,
   })
 
   const renderPipeline = device.createRenderPipeline({
@@ -76,7 +76,7 @@ async function getRender({
     },
   })
 
-  function render({ camera }: RenderProps) {
+  function updateSceneUniforms(camera: RTCamera) {
     rtUniform.set('time', performance.now() / 1000)
     rtUniform.set('aspectRatio', canvas.width / canvas.height)
     rtUniform.set('width', canvas.width)
@@ -88,11 +88,19 @@ async function getRender({
     rtUniform.set('camSphericalT', camera.spherical.theta)
     rtUniform.set('camSphericalP', camera.spherical.phi)
     rtUniform.set('camFov', camera.fov)
+  }
+
+  function render({ camera }: RenderProps) {
+    updateSceneUniforms(camera)
+
+    const currentView = rtPingPong
+      ? rtPingPong.currentWriteTextureView
+      : context.getCurrentTexture().createView()
 
     const renderPassDescriptor: GPURenderPassDescriptor = {
       colorAttachments: [
         {
-          view: context.getCurrentTexture().createView(),
+          view: currentView,
           loadOp: 'clear',
           clearValue: { r: 0, g: 0, b: 0, a: 1 },
           storeOp: 'store',
@@ -103,19 +111,48 @@ async function getRender({
     const commandEncoder = device.createCommandEncoder()
 
     const renderPass = commandEncoder.beginRenderPass(renderPassDescriptor)
+
     renderPass.setPipeline(renderPipeline)
-    renderPass.setBindGroup(0, uniformBindGroup)
+
+    renderPass.setBindGroup(0, rtUniform.uniformBindGroup)
+
+    const textureBindGroup = device.createBindGroup({
+      layout: renderPipeline.getBindGroupLayout(1),
+      entries: rtTexture.getTextureEntries(),
+    })
+    renderPass.setBindGroup(1, textureBindGroup)
+
+    if (rtPingPong) {
+      renderPass.setBindGroup(2, rtPingPong.currentBindGroupIn)
+    }
+
     renderPass.draw(4, 1, 0, 0)
     renderPass.end()
 
+    if (rtPingPong) {
+      commandEncoder.copyTextureToTexture(
+        { texture: rtPingPong.currentWriteTexture },
+        { texture: context.getCurrentTexture() },
+        rtPingPong.offscreenTextureSize
+      )
+    }
+
     device.queue.submit([commandEncoder.finish()])
+
+    if (rtPingPong) {
+      rtPingPong.swap()
+    }
   }
 
   function setUniform(name: string, value: number) {
     rtUniform.set(name, value)
   }
 
-  return { render, setUniform }
+  function setTexture(index: number, textureData: Uint8Array<ArrayBuffer>) {
+    rtTexture.setTexture(index, textureData)
+  }
+
+  return { render, setUniform, setTexture }
 }
 
 export default getRender

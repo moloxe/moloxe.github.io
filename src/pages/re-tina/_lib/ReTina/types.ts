@@ -45,3 +45,8 @@ export type RTCamera = {
   spherical: Spherical
   fov: number
 }
+
+export type RTTex = {
+  width: number
+  height: number
+}

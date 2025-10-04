@@ -29,6 +29,7 @@ async function prepareCanvas(canvas: HTMLCanvasElement) {
     device,
     format: presentationFormat,
     alphaMode: 'premultiplied',
+    usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.COPY_DST,
   })
 
   return { context, device, presentationFormat }

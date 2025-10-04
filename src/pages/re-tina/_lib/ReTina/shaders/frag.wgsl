@@ -3,6 +3,9 @@ struct GlobalUniform {
 };
 
 @group(0) @binding(0) var <uniform> U: GlobalUniform;
+@group(0) @binding(1) var u_sampler: sampler;
+// #GROUP-1-BINDING-X
+// #GROUP-2-BINDING-X
 
 // #COMMON
 // #FUNCTIONS

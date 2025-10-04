@@ -3,6 +3,7 @@ import type {
   RTCamera,
   RTMaterialFuncs,
   RTMaterialPartial,
+  RTTex,
 } from './types'
 import getRender from './device/get-render'
 import prepareCanvas from './device/prepare-canvas'
@@ -13,6 +14,8 @@ type Props = {
   canvas: HTMLCanvasElement
   main?: string
   functions?: string
+  texs?: RTTex[]
+  usePrevFrameTex?: boolean
 }
 
 class ReTina {
@@ -23,9 +26,15 @@ class ReTina {
   private initalCustomUniforms: { [key: string]: number } = {}
   private setUniform?: (name: string, value: number) => void
   private materialFuncs: RTMaterialFuncs[] = []
+  private usePrevFrameTex?: boolean
+  private setDeviceTexure?: (
+    index: number,
+    textureData: Uint8Array<ArrayBuffer>
+  ) => void
+  private texs: RTTex[]
   camera: RTCamera
 
-  constructor({ canvas, main, functions }: Props) {
+  constructor({ canvas, main, functions, texs, usePrevFrameTex }: Props) {
     this.canvas = canvas
     this.main = main
     this.functions = functions
@@ -34,6 +43,8 @@ class ReTina {
       spherical: { radius: 0, theta: 0, phi: 0 },
       fov: 90,
     }
+    this.texs = texs ?? []
+    this.usePrevFrameTex = usePrevFrameTex
   }
 
   registerMaterial(partialMaterial: RTMaterialPartial) {
@@ -45,6 +56,11 @@ class ReTina {
       lightFunc: partialMaterial.lightFunc,
     })
     return material
+  }
+
+  setTex(index: number, textureData: Uint8Array<ArrayBuffer>) {
+    if (!this.setDeviceTexure) throw new Error('Render not built')
+    this.setDeviceTexure(index, textureData)
   }
 
   registerUniform(name: string, value?: number) {
@@ -78,7 +94,7 @@ class ReTina {
       ...this.initalCustomUniforms,
     })
 
-    const { render, setUniform } = await getRender({
+    const { render, setUniform, setTexture } = await getRender({
       device,
       presentationFormat,
       context,
@@ -87,10 +103,13 @@ class ReTina {
       materialFuncs: this.materialFuncs,
       functions: this.functions,
       rtUniform,
+      texs: this.texs,
+      usePrevFrameTex: this.usePrevFrameTex,
     })
 
     this.setUniform = setUniform
     this.render = render
+    this.setDeviceTexure = setTexture
   }
 
   shoot() {
