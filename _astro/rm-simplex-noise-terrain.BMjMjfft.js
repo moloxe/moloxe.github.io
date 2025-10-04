@@ -1,4 +1,4 @@
-import{R as o}from"./ReTina.D3-UZcjL.js";const e=document.createElement("canvas");e.width=320*(window.innerWidth/window.innerHeight);e.height=320;e.style.width=`${window.innerWidth}px`;e.style.height=`${window.innerHeight}px`;e.style.imageRendering="pixelated";document.body.appendChild(e);const t=new o({canvas:e,main:`
+import{R as o}from"./ReTina.BLr4UXLG.js";const e=document.createElement("canvas");e.width=320*(window.innerWidth/window.innerHeight);e.height=320;e.style.width=`${window.innerWidth}px`;e.style.height=`${window.innerHeight}px`;e.style.imageRendering="pixelated";document.body.appendChild(e);const t=new o({canvas:e,main:`
     let scene = calcScene(uv);
     var color = vec3<f32>(0.0);
     if scene.dist > 0 {
