@@ -44,7 +44,12 @@ class RTUniform {
         { binding: 0, resource: { buffer: this.getBuffer() } },
         {
           binding: 1,
-          resource: this.device.createSampler({}),
+          resource: this.device.createSampler({
+            addressModeU: 'repeat',
+            addressModeV: 'repeat',
+            magFilter: 'nearest',
+            minFilter: 'nearest',
+          }),
         },
       ],
     })
