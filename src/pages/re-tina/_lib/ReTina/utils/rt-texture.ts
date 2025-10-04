@@ -36,13 +36,13 @@ class RTTexture {
     })
   }
 
-  setTexture(index: number, textureData: Uint8Array<ArrayBuffer>) {
+  setTexture(index: number, textureData: Uint8Array) {
     const width = this.texs[index].width
     const height = this.texs[index].height
     const texture = this.textures[index]
     this.device.queue.writeTexture(
       { texture },
-      textureData,
+      textureData as any, // It may be a problem with "@webgpu/types" expecting Uint8Array<ArrayBufferLike>
       { offset: 0, bytesPerRow: width * 4, rowsPerImage: height },
       [width, height, 1]
     )

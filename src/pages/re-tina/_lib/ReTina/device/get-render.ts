@@ -148,7 +148,7 @@ async function getRender({
     rtUniform.set(name, value)
   }
 
-  function setTexture(index: number, textureData: Uint8Array<ArrayBuffer>) {
+  function setTexture(index: number, textureData: Uint8Array) {
     rtTexture.setTexture(index, textureData)
   }
 

@@ -27,10 +27,7 @@ class ReTina {
   private setUniform?: (name: string, value: number) => void
   private materialFuncs: RTMaterialFuncs[] = []
   private usePrevFrameTex?: boolean
-  private setDeviceTexure?: (
-    index: number,
-    textureData: Uint8Array<ArrayBuffer>
-  ) => void
+  private setDeviceTexure?: (index: number, textureData: Uint8Array) => void
   private texs: RTTex[]
   camera: RTCamera
 
@@ -58,7 +55,7 @@ class ReTina {
     return material
   }
 
-  setTex(index: number, textureData: Uint8Array<ArrayBuffer>) {
+  setTex(index: number, textureData: Uint8Array) {
     if (!this.setDeviceTexure) throw new Error('Render not built')
     this.setDeviceTexure(index, textureData)
   }
