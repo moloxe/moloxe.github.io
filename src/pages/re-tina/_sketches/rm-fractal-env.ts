@@ -1,22 +1,16 @@
 import { ReTina } from '@ReTina'
 import frameCounter from './utils/frameCounter'
 import freeControls from './utils/freeControls'
-
-const canvas = document.createElement('canvas')
-canvas.width = window.innerWidth
-canvas.height = window.innerHeight
-canvas.style.width = '100vw'
-canvas.style.height = '100vh'
-
-document.body.appendChild(canvas)
+import fsCanvas from './utils/fsCanvas'
 
 const rt = new ReTina({
-  canvas,
+  canvas: fsCanvas(),
 })
 
 // Based on: https://shaders.skia.org/?id=ed72577c437c036447372e4c873462fc1bbfc0cb5e9fb0630ab1c07368a0db48
 rt.registerMaterial({
   sdFunc: /* wgsl */ `
+    pos.z -= U.time * 0.5;
     pos = asin(sin(pos)) - vec3<f32>(3.0);
     for (var i = 0; i < 9; i++) {
         pos = abs(vec3<f32>(pos.xz, pos.y).xzy);
@@ -60,7 +54,6 @@ freeControls(rt)
 
 const increaseFrameCounter = frameCounter()
 function draw() {
-  rt.camera.pos.z -= 0.005
   rt.shoot()
   requestAnimationFrame(draw)
   increaseFrameCounter()

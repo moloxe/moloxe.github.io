@@ -1,16 +1,12 @@
 import { ReTina } from '../_lib'
-
-const canvas = document.createElement('canvas')
-canvas.width = 320 * (window.innerWidth / window.innerHeight)
-canvas.height = 320
-canvas.style.width = `${window.innerWidth}px`
-canvas.style.height = `${window.innerHeight}px`
-canvas.style.imageRendering = 'pixelated'
-
-document.body.appendChild(canvas)
+import fsCanvas from './utils/fsCanvas'
 
 const rt = new ReTina({
-  canvas: canvas,
+  canvas: fsCanvas({
+    width: 320 * (window.innerWidth / window.innerHeight),
+    height: 320,
+    pixelated: true,
+  }),
   main: /* wgsl */ `
     let scene = calcScene(uv);
     var color = vec3<f32>(0.0);
@@ -40,7 +36,7 @@ rt.registerMaterial({
     let shininess = 1024.;
     let lightPos = getLightPos();
     let lightColor = vec3f(0.8, 0.9, 0.9);
-    let power = 50.;
+    let power = 124.;
     let light = blinnPhong(
       // Environment
       rd, normal, minBright,

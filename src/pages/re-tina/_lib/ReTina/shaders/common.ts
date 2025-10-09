@@ -1,6 +1,13 @@
 const commonFrag = /* wgsl */ `
 const PI = f32(3.1415926535897932384626433832795);
 
+fn toSpherical(pos: vec3<f32>) -> vec3<f32> {
+    let r = length(pos);
+    let theta = acos(pos.z / r);
+    let phi = atan2(pos.y, pos.x);
+    return vec3<f32>(r, theta, phi);
+}
+
 fn rotate(pos: vec3<f32>, rot: vec3<f32>) -> vec3<f32> {
     var result = pos;
     // Rotation around the Z axis

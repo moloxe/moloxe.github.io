@@ -1,20 +1,11 @@
 import { ReTina } from '@ReTina'
 import frameCounter from './utils/frameCounter'
 import freeControls from './utils/freeControls'
-
-const canvas = document.createElement('canvas')
-canvas.width = window.innerWidth * window.devicePixelRatio
-canvas.height = window.innerHeight * window.devicePixelRatio
-canvas.style.width = `${window.innerWidth}px`
-canvas.style.height = `${window.innerHeight}px`
-
-document.body.appendChild(canvas)
+import fsCanvas from './utils/fsCanvas'
 
 const rt = new ReTina({
-  canvas,
+  canvas: fsCanvas(),
 })
-
-rt.camera.fov = 60
 
 // Based on ./src/pages/tina/_sketches/rm-modeling.js
 
@@ -33,14 +24,21 @@ rt.registerMaterial({
   pos: { x: 0, y: 0.03, z: 0.22 },
   color: { r: 0, g: 0, b: 0 },
   lightFunc: /* wgsl */ `
-    var spec = 0.;
-    let lambertian = dot(normal, -rd);
-    if lambertian > 0. {
-        let lightDir = normalize(ro - pos);
-        let halfDir = normalize(lightDir + -rd);
-        spec = pow(max(dot(halfDir, normal), 0.), 512.);
-    }
-    return vec4<f32>(color * lambertian + spec, 1.);
+    let minBright = 0.1;
+    let diffuseColor = color;
+    let shininess = 2056.;
+    let lightPos = ro;
+    let lightColor = vec3f(1);
+    let power = 2.;
+    let light = blinnPhong(
+      // Environment
+      rd, normal, minBright,
+      // Material
+      pos, diffuseColor, shininess,
+      // Light
+      lightPos, lightColor, power,
+    );
+    return vec4f(light, 1.);
   `,
   sdFunc: /* wgsl */ `
     let left  = sdBox(pos - vec3<f32>(0.15, 0.0, 0.0), vec3<f32>(0.12, 0.08, 0.001));
@@ -81,16 +79,12 @@ rt.registerMaterial({
 
 await rt.build()
 
-rt.camera.pos = {
-  x: 0,
-  y: -0.2,
-  z: -0.5,
-}
-rt.camera.spherical = {
-  radius: 1.5,
-  phi: -0.2,
-  theta: 0.15,
-}
+rt.camera.fov = 60
+rt.camera.pos.x = 0.2
+rt.camera.pos.z = 1.2
+rt.camera.spherical.phi = -0.1
+rt.camera.spherical.theta = 0.2
+
 freeControls(rt)
 
 const increaseFrameCounter = frameCounter()

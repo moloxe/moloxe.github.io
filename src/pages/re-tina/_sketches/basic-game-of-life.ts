@@ -1,20 +1,16 @@
 import { ReTina } from '@ReTina'
 import TinaLogo from '@src/assets/img/tina.jpeg'
 import { loadImage } from './utils/loadImage'
-
-const canvas = document.createElement('canvas')
-canvas.width = 128 * (window.innerWidth / window.innerHeight)
-canvas.height = 128
-canvas.style.width = `${window.innerWidth}px`
-canvas.style.height = `${window.innerHeight}px`
-canvas.style.imageRendering = 'pixelated'
-
-document.body.appendChild(canvas)
+import fsCanvas from './utils/fsCanvas'
 
 const img = await loadImage(TinaLogo.src)
 
 const rt = new ReTina({
-  canvas,
+  canvas: fsCanvas({
+    width: 128 * (window.innerWidth / window.innerHeight),
+    height: 128,
+    pixelated: true,
+  }),
   texs: [{ width: img.width, height: img.height }],
   usePrevFrameTex: true,
   functions: /* wgsl */ `
@@ -23,7 +19,7 @@ const rt = new ReTina({
     }
   `,
   main: /* wgsl */ `
-    if (U.frame < 24) {
+    if (U.time < 1) {
       let pix = getTex0Sample(uv).rgb;
       if rgb2hsv(pix).b > 0.5 {
         return vec4f(1);

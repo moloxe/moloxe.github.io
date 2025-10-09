@@ -1,13 +1,7 @@
 import { ReTina } from '../_lib'
+import fsCanvas from './utils/fsCanvas'
 
-const canvas = document.createElement('canvas')
-canvas.width = window.innerWidth * window.devicePixelRatio
-canvas.height = window.innerHeight * window.devicePixelRatio
-canvas.style.width = `${window.innerWidth}px`
-canvas.style.height = `${window.innerHeight}px`
-
-document.body.appendChild(canvas)
-
+const canvas = fsCanvas({ useExactPixels: true })
 const rt = new ReTina({
   canvas,
 })

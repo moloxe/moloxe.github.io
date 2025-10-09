@@ -1,15 +1,8 @@
 import { ReTina } from '@ReTina'
-
-const canvas = document.createElement('canvas')
-canvas.width = window.innerWidth * window.devicePixelRatio
-canvas.height = window.innerHeight * window.devicePixelRatio
-canvas.style.width = `${window.innerWidth}px`
-canvas.style.height = `${window.innerHeight}px`
-
-document.body.appendChild(canvas)
+import fsCanvas from './utils/fsCanvas'
 
 const rt = new ReTina({
-  canvas,
+  canvas: fsCanvas(),
   functions: /* wgsl */ `
     fn pdist(pos1: vec2<f32>, pos2: vec2<f32>, p: f32) -> f32 {
       return pow(
@@ -20,7 +13,7 @@ const rt = new ReTina({
   `,
   main: /* wgsl */ `
     let xy = uv * vec2<f32>(U.width, U.height);
-    let power = 3.;
+    let power = 4.;
 
     var minD = 1e9;
     var minIndex = -1;
@@ -45,7 +38,7 @@ const rt = new ReTina({
     var color = mix(
       hsv2rgb(vec3<f32>(hue, .6, 1.)),
       vec3(0.),
-      log(minD / 20.) / 4.
+      log(minD / 10.) / 4.
     );
     return vec4<f32>(color, 1.0);
   `,
@@ -57,8 +50,8 @@ const setMouseY = rt.registerUniform('mouseY')
 await rt.build()
 
 document.addEventListener('mousemove', (event) => {
-  setMouseX(event.clientX * window.devicePixelRatio)
-  setMouseY(event.clientY * window.devicePixelRatio)
+  setMouseX(event.clientX)
+  setMouseY(event.clientY)
 })
 
 function draw() {
