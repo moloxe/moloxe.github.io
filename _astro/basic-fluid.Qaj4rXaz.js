@@ -1,4 +1,4 @@
-import{R as n}from"./ReTina.BLr4UXLG.js";import{l as i}from"./loadImage.DWgqKgWY.js";const s={src:"/_astro/castle.ChpmK7ow.jpg"},e=await i(s.src),t=document.createElement("canvas");t.width=e.width;t.height=e.height;document.body.appendChild(t);const a=new n({canvas:t,texs:[{width:e.width,height:e.height}],usePrevFrameTex:!0,functions:`
+import{R as r,f as n}from"./fsCanvas.MrD-UkXb.js";import{l as i,T as s}from"./loadImage.DoVZmuyO.js";const t=await i(s.src),e=new r({canvas:n(),texs:[{width:t.width,height:t.height}],usePrevFrameTex:!0,functions:`
     fn getState(uv: vec2f) -> vec3f {
       return rgb2hsv(getPrevFrameTexSample(uv).rgb);
     }
@@ -25,4 +25,4 @@ import{R as n}from"./ReTina.BLr4UXLG.js";import{l as i}from"./loadImage.DWgqKgWY
       }
       return vec4f(hsv2rgb(newState), 1);
     }
-  `}),o=a.registerUniform("frame");await a.build();a.setTex(0,e.textureData);let r=0;setInterval(()=>{a.shoot(),r++,o(r)},1e3/30);
+  `}),o=e.registerUniform("frame");await e.build();e.setTex(0,t.textureData);let a=0;setInterval(()=>{e.shoot(),a++,o(a)},1e3/30);

@@ -1,16 +1,23 @@
-import{R as r}from"./ReTina.BLr4UXLG.js";import{f as i,a as n}from"./freeControls.mEnd03r0.js";const o=document.createElement("canvas");o.width=window.innerWidth*window.devicePixelRatio;o.height=window.innerHeight*window.devicePixelRatio;o.style.width=`${window.innerWidth}px`;o.style.height=`${window.innerHeight}px`;document.body.appendChild(o);const e=new r({canvas:o});e.camera.fov=60;e.registerMaterial({color:{r:.5,g:.5,b:.5},sdFunc:`
+import{R as r,f as t}from"./fsCanvas.MrD-UkXb.js";import{f as s,a as l}from"./freeControls.mEnd03r0.js";const e=new r({canvas:t()});e.registerMaterial({color:{r:.5,g:.5,b:.5},sdFunc:`
     let dBox = sdBox(pos, vec3<f32>(0.26, 0.14, 0.08));
     let dSphere = sdSphere(pos, 0.1);
     return opSmoothUnion(dBox, dSphere, 0.5);
   `});e.registerMaterial({pos:{x:0,y:.03,z:.22},color:{r:0,g:0,b:0},lightFunc:`
-    var spec = 0.;
-    let lambertian = dot(normal, -rd);
-    if lambertian > 0. {
-        let lightDir = normalize(ro - pos);
-        let halfDir = normalize(lightDir + -rd);
-        spec = pow(max(dot(halfDir, normal), 0.), 512.);
-    }
-    return vec4<f32>(color * lambertian + spec, 1.);
+    let minBright = 0.1;
+    let diffuseColor = color;
+    let shininess = 2056.;
+    let lightPos = ro;
+    let lightColor = vec3f(1);
+    let power = 2.;
+    let light = blinnPhong(
+      // Environment
+      rd, normal, minBright,
+      // Material
+      pos, diffuseColor, shininess,
+      // Light
+      lightPos, lightColor, power,
+    );
+    return vec4f(light, 1.);
   `,sdFunc:`
     let left  = sdBox(pos - vec3<f32>(0.15, 0.0, 0.0), vec3<f32>(0.12, 0.08, 0.001));
     let right = sdBox(pos - vec3<f32>(-0.15, 0.0, 0.0), vec3<f32>(0.12, 0.08, 0.001));
@@ -33,4 +40,4 @@ import{R as r}from"./ReTina.BLr4UXLG.js";import{f as i,a as n}from"./freeControl
     let dFloor = sdBox(pos - vec3<f32>(0, -1, 0), vec3<f32>(1, 0.01, 1));
     let dWall = sdBox(pos - vec3<f32>(0, 0, -1), vec3<f32>(1, 1, 0.01));
     return min(dFloor, dWall);
-  `});await e.build();e.camera.pos={x:0,y:-.2,z:-.5};e.camera.spherical={radius:1.5,phi:-.2,theta:.15};i(e);const a=n();function t(){e.shoot(),requestAnimationFrame(t),a()}t();
+  `});await e.build();e.camera.fov=60;e.camera.pos.x=.2;e.camera.pos.z=1.2;e.camera.spherical.phi=-.1;e.camera.spherical.theta=.2;s(e);const i=l();function o(){e.shoot(),requestAnimationFrame(o),i()}o();

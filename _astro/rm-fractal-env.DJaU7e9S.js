@@ -1,4 +1,5 @@
-import{R as r}from"./ReTina.BLr4UXLG.js";import{f as a,a as s}from"./freeControls.mEnd03r0.js";const e=document.createElement("canvas");e.width=window.innerWidth;e.height=window.innerHeight;e.style.width="100vw";e.style.height="100vh";document.body.appendChild(e);const o=new r({canvas:e});o.registerMaterial({sdFunc:`
+import{R as s,f as a}from"./fsCanvas.MrD-UkXb.js";import{f as e,a as t}from"./freeControls.mEnd03r0.js";const o=new s({canvas:a()});o.registerMaterial({sdFunc:`
+    pos.z -= U.time * 0.5;
     pos = asin(sin(pos)) - vec3<f32>(3.0);
     for (var i = 0; i < 9; i++) {
         pos = abs(vec3<f32>(pos.xz, pos.y).xzy);
@@ -25,4 +26,4 @@ import{R as r}from"./ReTina.BLr4UXLG.js";import{f as a,a as s}from"./freeControl
     out = hsv2rgb(vec3<f32>(out.x + U.time * .2 + sin(pos.x + pos.y) / 4., .6, .6));
     out = (out * lambertian + spec) / dd;
     return vec4<f32>(out, 1.);
-  `});await o.build();o.camera.fov=100;o.camera.spherical={radius:0,phi:0,theta:.2};a(o);const i=s();function t(){o.camera.pos.z-=.005,o.shoot(),requestAnimationFrame(t),i()}t();
+  `});await o.build();o.camera.fov=100;o.camera.spherical={radius:0,phi:0,theta:.2};e(o);const i=t();function r(){o.shoot(),requestAnimationFrame(r),i()}r();

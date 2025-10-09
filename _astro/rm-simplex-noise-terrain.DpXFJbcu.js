@@ -1,4 +1,4 @@
-import{R as o}from"./ReTina.BLr4UXLG.js";const e=document.createElement("canvas");e.width=320*(window.innerWidth/window.innerHeight);e.height=320;e.style.width=`${window.innerWidth}px`;e.style.height=`${window.innerHeight}px`;e.style.imageRendering="pixelated";document.body.appendChild(e);const t=new o({canvas:e,main:`
+import{R as n,f as r}from"./fsCanvas.MrD-UkXb.js";const e=new n({canvas:r({width:320*(window.innerWidth/window.innerHeight),height:320,pixelated:!0}),main:`
     let scene = calcScene(uv);
     var color = vec3<f32>(0.0);
     if scene.dist > 0 {
@@ -9,7 +9,7 @@ import{R as o}from"./ReTina.BLr4UXLG.js";const e=document.createElement("canvas"
     fn getLightPos() -> vec3f {
       return vec3f(0, 2, U.camPosZ - 10);
     }
-  `});t.registerMaterial({sdFunc:`
+  `});e.registerMaterial({sdFunc:`
     let n1 = snoise(vec2<f32>(pos.x, pos.y - U.time / 10.));
     let n2 = snoise(vec2<f32>(pos.z, -pos.y - U.time / 10.));
     let terrain = (pos.y - n1 - n2) / 6;
@@ -21,7 +21,7 @@ import{R as o}from"./ReTina.BLr4UXLG.js";const e=document.createElement("canvas"
     let shininess = 1024.;
     let lightPos = getLightPos();
     let lightColor = vec3f(0.8, 0.9, 0.9);
-    let power = 50.;
+    let power = 124.;
     let light = blinnPhong(
       // Environment
       rd, normal, minBright,
@@ -31,4 +31,4 @@ import{R as o}from"./ReTina.BLr4UXLG.js";const e=document.createElement("canvas"
       lightPos, lightColor, power,
     );
     return vec4f(light, 1.);
-  `});t.registerMaterial({sdFunc:"return sdSphere((pos - getLightPos()), 1.0);",lightFunc:"return vec4f(1);"});await t.build();function i(){const n=performance.now()/1e3;t.camera.pos={x:0,y:1,z:-n/4},t.camera.spherical={radius:-1e-4,theta:Math.sin(n/2)/2,phi:0},t.shoot(),requestAnimationFrame(i)}requestAnimationFrame(i);
+  `});e.registerMaterial({sdFunc:"return sdSphere((pos - getLightPos()), 1.0);",lightFunc:"return vec4f(1);"});await e.build();function i(){const t=performance.now()/1e3;e.camera.pos={x:0,y:1,z:-t/4},e.camera.spherical={radius:-1e-4,theta:Math.sin(t/2)/2,phi:0},e.shoot(),requestAnimationFrame(i)}requestAnimationFrame(i);

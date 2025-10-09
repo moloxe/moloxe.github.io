@@ -1,4 +1,4 @@
-import{R as t}from"./ReTina.BLr4UXLG.js";const e=document.createElement("canvas");e.width=window.innerWidth*window.devicePixelRatio;e.height=window.innerHeight*window.devicePixelRatio;e.style.width=`${window.innerWidth}px`;e.style.height=`${window.innerHeight}px`;document.body.appendChild(e);const i=new t({canvas:e,functions:`
+import{R as s,f as n}from"./fsCanvas.MrD-UkXb.js";const e=new s({canvas:n(),functions:`
     fn pdist(pos1: vec2<f32>, pos2: vec2<f32>, p: f32) -> f32 {
       return pow(
         pow(abs(pos1.x - pos2.x), p) +
@@ -7,7 +7,7 @@ import{R as t}from"./ReTina.BLr4UXLG.js";const e=document.createElement("canvas"
     }
   `,main:`
     let xy = uv * vec2<f32>(U.width, U.height);
-    let power = 3.;
+    let power = 4.;
 
     var minD = 1e9;
     var minIndex = -1;
@@ -32,7 +32,7 @@ import{R as t}from"./ReTina.BLr4UXLG.js";const e=document.createElement("canvas"
     var color = mix(
       hsv2rgb(vec3<f32>(hue, .6, 1.)),
       vec3(0.),
-      log(minD / 20.) / 4.
+      log(minD / 10.) / 4.
     );
     return vec4<f32>(color, 1.0);
-  `}),s=i.registerUniform("mouseX"),d=i.registerUniform("mouseY");await i.build();document.addEventListener("mousemove",n=>{s(n.clientX*window.devicePixelRatio),d(n.clientY*window.devicePixelRatio)});function o(){i.shoot(),requestAnimationFrame(o)}o();
+  `}),t=e.registerUniform("mouseX"),r=e.registerUniform("mouseY");await e.build();document.addEventListener("mousemove",i=>{t(i.clientX),r(i.clientY)});function o(){e.shoot(),requestAnimationFrame(o)}o();

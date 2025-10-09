@@ -1,9 +1,9 @@
-import{R as r}from"./ReTina.BLr4UXLG.js";import{l as a}from"./loadImage.DWgqKgWY.js";const o={src:"/_astro/tina.4YsElRAf.jpeg"},e=document.createElement("canvas");e.width=128*(window.innerWidth/window.innerHeight);e.height=128;e.style.width=`${window.innerWidth}px`;e.style.height=`${window.innerHeight}px`;e.style.imageRendering="pixelated";document.body.appendChild(e);const i=await a(o.src),t=new r({canvas:e,texs:[{width:i.width,height:i.height}],usePrevFrameTex:!0,functions:`
+import{R as n,f as r}from"./fsCanvas.MrD-UkXb.js";import{l as a,T as s}from"./loadImage.DoVZmuyO.js";const t=await a(s.src),e=new n({canvas:r({width:128*(window.innerWidth/window.innerHeight),height:128,pixelated:!0}),texs:[{width:t.width,height:t.height}],usePrevFrameTex:!0,functions:`
     fn isPixAlive(uv: vec2f) -> bool {
       return getPrevFrameTexSample(uv).r > 0.5;
     }
   `,main:`
-    if (U.frame < 24) {
+    if (U.time < 1) {
       let pix = getTex0Sample(uv).rgb;
       if rgb2hsv(pix).b > 0.5 {
         return vec4f(1);
@@ -37,4 +37,4 @@ import{R as r}from"./ReTina.BLr4UXLG.js";import{l as a}from"./loadImage.DWgqKgWY
       }
       return vec4f(vec3f(newState), 1);
     }
-  `}),s=t.registerUniform("frame");await t.build();t.setTex(0,i.textureData);let n=0;setInterval(()=>{t.shoot(),n++,s(n)},1e3/24);
+  `}),f=e.registerUniform("frame");await e.build();e.setTex(0,t.textureData);let i=0;setInterval(()=>{e.shoot(),i++,f(i)},1e3/24);
