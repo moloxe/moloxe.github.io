@@ -1,5 +1,3 @@
-import { Elysia } from 'elysia'
-import { cors } from '@elysiajs/cors'
 import {
   createPost,
   getPostImage,
@@ -11,41 +9,54 @@ import {
 } from './actions'
 import { Post } from '../../src/pages/blog/_types/Post'
 
-const app = new Elysia()
-  .use(cors())
-  .get('/post', async () => {
-    const posts = getPosts()
-    return { posts }
-  })
-  .post('/post', ({ body }) => {
-    const { title } = JSON.parse(body as any)
-    const slugUrl = createPost(title)
-    return { slugUrl }
-  })
-  .put('/post', ({ body }) => {
-    const post = JSON.parse(body as any).post as Post
-    const slugUrl = updatePost(post)
-    return { slugUrl }
-  })
-  .patch('/post-title', async ({ body }) => {
-    const { oldTitle, newTitle } = JSON.parse(body as any)
-    const slugUrl = await updatePostTitle(oldTitle, newTitle)
-    return { slugUrl }
-  })
-  .post('/image/:slugUrl', async ({ request, params: { slugUrl } }) => {
-    const formData = await request.formData()
-    const image = formData.get('image') as File
-    const name = await uploadPostImage(slugUrl, image)
-    return name
-  })
-  .get('/image/:slugUrl', async ({ params: { slugUrl } }) => {
-    const images = getPostImages(slugUrl)
-    return { images }
-  })
-  .get('/image/:slugUrl/:imgName', async ({ params: { slugUrl, imgName } }) => {
-    const image = getPostImage(slugUrl, imgName)
-    return image
-  })
-  .listen(6969)
+const PORT = 6969
 
-console.log(`Blog: ${app.server?.url}`)
+console.log(`Blog: http://localhost:${PORT}/post`)
+
+Bun.serve({
+  port: PORT,
+  routes: {
+    '/post': {
+      GET() {
+        const posts = getPosts()
+        return Response.json({ posts })
+      },
+      async POST(req) {
+        const { title } = await req.json()
+        const slugUrl = createPost(title)
+        return Response.json({ slugUrl })
+      },
+      async PUT(req) {
+        const post = (await req.json()).post as Post
+        const slugUrl = updatePost(post)
+        return Response.json({ slugUrl })
+      },
+    },
+    '/post-title': {
+      async PATCH(req) {
+        const { oldTitle, newTitle } = await req.json()
+        const slugUrl = await updatePostTitle(oldTitle, newTitle)
+        return Response.json({ slugUrl })
+      },
+    },
+    '/image/:slugUrl': {
+      GET(req) {
+        const images = getPostImages(req.params.slugUrl)
+        return Response.json({ images })
+      },
+      async POST(req) {
+        const formData = await req.formData()
+        const image = formData.get('image') as File
+        if (image === null) throw new Error('image is null')
+        const name = await uploadPostImage(req.params.slugUrl, image)
+        return Response.json({ name })
+      },
+    },
+    '/image/:slugUrl/:imgName': {
+      async GET(req) {
+        const bytes = await getPostImage(req.params.slugUrl, req.params.imgName)
+        return new Response(bytes)
+      },
+    },
+  },
+})

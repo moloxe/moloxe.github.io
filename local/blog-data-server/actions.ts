@@ -138,7 +138,8 @@ export function getPostImages(slugUrl: string) {
   return images
 }
 
-export function getPostImage(slugUrl: string, imgName: string) {
-  const image = fs.readFileSync(`${BLOG_DATA_PATH}/${slugUrl}/img/${imgName}`)
-  return image
+export async function getPostImage(slugUrl: string, imgName: string) {
+  const path = `${BLOG_DATA_PATH}/${slugUrl}/img/${imgName}`
+  const bytes = await Bun.file(path).bytes()
+  return bytes
 }
