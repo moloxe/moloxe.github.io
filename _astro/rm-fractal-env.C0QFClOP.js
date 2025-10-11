@@ -1,4 +1,4 @@
-import{R as s,f as a}from"./fsCanvas.MrD-UkXb.js";import{f as e,a as t}from"./freeControls.mEnd03r0.js";const o=new s({canvas:a()});o.registerMaterial({sdFunc:`
+import{R as r}from"./ReTina.Da95_7ih.js";import{f as s}from"./freeControls.BVGVdC3g.js";const o=new r({showFps:!0,height:720,useInterlacing:!0});o.registerMaterial({sdFunc:`
     pos.z -= U.time * 0.5;
     pos = asin(sin(pos)) - vec3<f32>(3.0);
     for (var i = 0; i < 9; i++) {
@@ -26,4 +26,4 @@ import{R as s,f as a}from"./fsCanvas.MrD-UkXb.js";import{f as e,a as t}from"./fr
     out = hsv2rgb(vec3<f32>(out.x + U.time * .2 + sin(pos.x + pos.y) / 4., .6, .6));
     out = (out * lambertian + spec) / dd;
     return vec4<f32>(out, 1.);
-  `});await o.build();o.camera.fov=100;o.camera.spherical={radius:0,phi:0,theta:.2};e(o);const i=t();function r(){o.shoot(),requestAnimationFrame(r),i()}r();
+  `});await o.build();o.camera.fov=100;o.camera.spherical={radius:0,phi:0,theta:.2};s(o);o.buildAndRun();

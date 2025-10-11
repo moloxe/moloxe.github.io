@@ -1,4 +1,4 @@
-import{R as n,f as r}from"./fsCanvas.MrD-UkXb.js";const e=new n({canvas:r({width:320*(window.innerWidth/window.innerHeight),height:320,pixelated:!0}),main:`
+import{R as r}from"./ReTina.Da95_7ih.js";const e=new r({useInterlacing:!0,fps:30,height:240,main:`
     let scene = calcScene(uv);
     var color = vec3<f32>(0.0);
     if scene.dist > 0 {
@@ -31,4 +31,4 @@ import{R as n,f as r}from"./fsCanvas.MrD-UkXb.js";const e=new n({canvas:r({width
       lightPos, lightColor, power,
     );
     return vec4f(light, 1.);
-  `});e.registerMaterial({sdFunc:"return sdSphere((pos - getLightPos()), 1.0);",lightFunc:"return vec4f(1);"});await e.build();function i(){const t=performance.now()/1e3;e.camera.pos={x:0,y:1,z:-t/4},e.camera.spherical={radius:-1e-4,theta:Math.sin(t/2)/2,phi:0},e.shoot(),requestAnimationFrame(i)}requestAnimationFrame(i);
+  `});e.registerMaterial({sdFunc:"return sdSphere((pos - getLightPos()), 1.0);",lightFunc:"return vec4f(1);"});await e.buildAndRun(()=>{const t=performance.now()/1e3;e.camera.pos={x:0,y:1,z:-t/4},e.camera.spherical={radius:-1e-4,theta:Math.sin(t/2)/2,phi:0}});

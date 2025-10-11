@@ -1,4 +1,4 @@
-import{R as r,f as n}from"./fsCanvas.MrD-UkXb.js";import{l as i,T as s}from"./loadImage.DoVZmuyO.js";const t=await i(s.src),e=new r({canvas:n(),texs:[{width:t.width,height:t.height}],usePrevFrameTex:!0,functions:`
+import{R as a}from"./ReTina.Da95_7ih.js";import{l as r,T as i}from"./loadImage.DoVZmuyO.js";const e=await r(i.src),t=new a({texs:[{width:e.width,height:e.height}],showFps:!0,usePrevFrameTex:!0,functions:`
     fn getState(uv: vec2f) -> vec3f {
       return rgb2hsv(getPrevFrameTexSample(uv).rgb);
     }
@@ -25,4 +25,4 @@ import{R as r,f as n}from"./fsCanvas.MrD-UkXb.js";import{l as i,T as s}from"./lo
       }
       return vec4f(hsv2rgb(newState), 1);
     }
-  `}),o=e.registerUniform("frame");await e.build();e.setTex(0,t.textureData);let a=0;setInterval(()=>{e.shoot(),a++,o(a)},1e3/30);
+  `});await t.build();t.setTex(0,e.textureData);t.run();

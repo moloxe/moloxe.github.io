@@ -1,7 +1,0 @@
-function l(){let a=0;const e=document.createElement("div");return e.setAttribute("style",`   position: absolute;
-        top: 0;
-        left: 0;
-        color: white;
-        font-size: 24px;
-        pointer-events: none;
-    `),document.body.appendChild(e),setInterval(()=>{e.innerText=`FPS: ${a}`,a=0},1e3),()=>{a++}}function u(a){const e=a.canvas;e.style.cursor="grab";let r=!1,o,c;document.addEventListener("mousedown",n=>{r=!0,o=n.clientX,c=n.clientY,e.style.cursor="grabbing"}),document.addEventListener("mousemove",n=>{r&&(a.camera.spherical.theta+=3*(o-n.clientX)/window.innerWidth,a.camera.spherical.phi+=3*(c-n.clientY)/window.innerHeight,o=n.clientX,c=n.clientY)}),document.addEventListener("mouseup",()=>{r=!1,e.style.cursor="grab"}),document.addEventListener("wheel",n=>{a.camera.spherical.radius+=n.deltaY*.01});const t=[0,0,0],s=.002;d(n=>{const i=a.camera.spherical.theta;n.UP&&(t[1]+=s),n.DOWN&&(t[1]-=s),n.FRONT&&(t[0]-=s*Math.sin(i),t[2]-=s*Math.cos(i)),n.BACK&&(t[0]+=s*Math.sin(i),t[2]+=s*Math.cos(i)),n.LEFT&&(t[0]-=s*Math.cos(i),t[2]+=s*Math.sin(i)),n.RIGHT&&(t[0]+=s*Math.cos(i),t[2]-=s*Math.sin(i)),a.camera.pos.x+=t[0],a.camera.pos.y+=t[1],a.camera.pos.z+=t[2],t[0]*=.9,t[1]*=.9,t[2]*=.9})}function d(a){const e={};window.addEventListener("keydown",o=>{o.preventDefault(),e[o.code]=!0}),window.addEventListener("keyup",o=>{o.preventDefault(),e[o.code]=!1});function r(){a({UP:e.Space,DOWN:e.MetaLeft||e.ControlLeft,FRONT:e.KeyW,BACK:e.KeyS,LEFT:e.KeyA,RIGHT:e.KeyD}),requestAnimationFrame(r)}r()}export{l as a,u as f};

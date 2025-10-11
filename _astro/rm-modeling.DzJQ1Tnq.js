@@ -1,4 +1,4 @@
-import{R as r,f as t}from"./fsCanvas.MrD-UkXb.js";import{f as s,a as l}from"./freeControls.mEnd03r0.js";const e=new r({canvas:t()});e.registerMaterial({color:{r:.5,g:.5,b:.5},sdFunc:`
+import{R as o}from"./ReTina.Da95_7ih.js";import{f as r}from"./freeControls.BVGVdC3g.js";const e=new o;e.registerMaterial({color:{r:.5,g:.5,b:.5},sdFunc:`
     let dBox = sdBox(pos, vec3<f32>(0.26, 0.14, 0.08));
     let dSphere = sdSphere(pos, 0.1);
     return opSmoothUnion(dBox, dSphere, 0.5);
@@ -40,4 +40,4 @@ import{R as r,f as t}from"./fsCanvas.MrD-UkXb.js";import{f as s,a as l}from"./fr
     let dFloor = sdBox(pos - vec3<f32>(0, -1, 0), vec3<f32>(1, 0.01, 1));
     let dWall = sdBox(pos - vec3<f32>(0, 0, -1), vec3<f32>(1, 1, 0.01));
     return min(dFloor, dWall);
-  `});await e.build();e.camera.fov=60;e.camera.pos.x=.2;e.camera.pos.z=1.2;e.camera.spherical.phi=-.1;e.camera.spherical.theta=.2;s(e);const i=l();function o(){e.shoot(),requestAnimationFrame(o),i()}o();
+  `});e.camera.fov=60;e.camera.pos.x=.2;e.camera.pos.z=1.2;e.camera.spherical.phi=-.1;e.camera.spherical.theta=.2;r(e);await e.buildAndRun();

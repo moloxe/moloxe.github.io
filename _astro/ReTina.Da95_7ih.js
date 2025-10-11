@@ -1,4 +1,4 @@
-const z=`struct VSOut {
+const R=`struct VSOut {
     @builtin(position) Position: vec4<f32>,
     @location(0)       uvs: vec2<f32>
 };
@@ -20,7 +20,7 @@ fn main(@builtin(vertex_index) VertexIndex: u32) -> VSOut {
     vsOut.uvs = uvs[ VertexIndex ] * 0.5 + 0.5;
     return vsOut;
 }
-`,R=`
+`,G=`
 const PI = f32(3.1415926535897932384626433832795);
 
 fn toSpherical(pos: vec3<f32>) -> vec3<f32> {
@@ -268,7 +268,7 @@ fn snoise3d(v: vec3<f32>) -> f32 {
   m = m * m;
   return 105.0 * dot(m * m, vec4<f32>(dot(p0_norm, x0), dot(p1_norm, x1), dot(p2_norm, x2), dot(p3_norm, x3)));
 }
-`,G=`struct GlobalUniform {
+`,C=`struct GlobalUniform {
     UNIFORMS: f32, // #UNIFORMS
 };
 
@@ -282,8 +282,9 @@ fn snoise3d(v: vec3<f32>) -> f32 {
 // #RAY_MARCH_FUNCTIONS
 
 @fragment
-fn main(@location(0) fragCoord: vec2<f32>) -> @location(0) vec4<f32> {
+fn main(@location(0) fragCoord: vec2<f32>) -> @location(0) vec4f {
     let uv = 1. - fragCoord.xy;
+    // #INTERLACING
     return vec4<f32>(0.0, 0.0, 0.0, 1.0); // #MAIN
 }
 `,U=`
@@ -398,44 +399,44 @@ fn calcScene(uv: vec2<f32>) -> Scene {
 
     return Scene(material.dist, finalPos, finalNormal, finalColor);
 }
-`;function I(o){let e=U;const t=o.map(i=>i.sdFunc),s=o.map(i=>i.lightFunc);{const i=t.map((a,r)=>{const v=`vec3<f32>(U.material${r}Px, U.material${r}Py, U.material${r}Pz)`,u=`vec3<f32>(U.material${r}Rx, U.material${r}Ry, U.material${r}Rz)`;return`fn sdMaterial${r}(posIn: vec3<f32>) -> f32 {
-        let mRotation = ${u};
-        var pos = posIn - ${v};
+`;function _(n){let e=U;const r=n.map(i=>i.sdFunc),o=n.map(i=>i.lightFunc);{const i=r.map((a,t)=>{const f=`vec3<f32>(U.material${t}Px, U.material${t}Py, U.material${t}Pz)`,p=`vec3<f32>(U.material${t}Rx, U.material${t}Ry, U.material${t}Rz)`;return`fn sdMaterial${t}(posIn: vec3<f32>) -> f32 {
+        let mRotation = ${p};
+        var pos = posIn - ${f};
         if length(mRotation) != 0.0 {
           pos = rotate(pos, mRotation);
         }
         ${a}
       }`}).join(`
-`);e=e.replace("// #SD-INDIVIDUAL-MATERIALS",i);const n=`
+`);e=e.replace("// #SD-INDIVIDUAL-MATERIALS",i);const s=`
     var material = SdMaterial(-1, 1e10, vec3<f32>(0.), vec3<f32>(0.));
     var curDist: f32;
-    ${t.map((a,r)=>`
-        curDist = sdMaterial${r}(pos);
+    ${r.map((a,t)=>`
+        curDist = sdMaterial${t}(pos);
         if curDist < material.dist {
-          material.index = ${r};
+          material.index = ${t};
           material.dist = curDist;
           material.pos = vec3<f32>(
-            U.material${r}Px,
-            U.material${r}Py,
-            U.material${r}Pz
+            U.material${t}Px,
+            U.material${t}Py,
+            U.material${t}Pz
           );
           material.color = vec3<f32>(
-            U.material${r}Cr,
-            U.material${r}Cg,
-            U.material${r}Cb
+            U.material${t}Cr,
+            U.material${t}Cg,
+            U.material${t}Cb
           );
         }
       `).join(`
 `)}
     return material;
-  `;e=e.replace("return SdMaterial(-1, 0., vec3<f32>(0.), vec3<f32>(1.)); // #SD-MATERIALS-FUNC",n)}{const i=`
+  `;e=e.replace("return SdMaterial(-1, 0., vec3<f32>(0.), vec3<f32>(1.)); // #SD-MATERIALS-FUNC",s)}{const i=`
     var dist: f32 = 1e10;
     var accDist: f32;
-    ${t.map((n,a)=>`dist = min(dist, sdMaterial${a}(pos));`).join(`
+    ${r.map((s,a)=>`dist = min(dist, sdMaterial${a}(pos));`).join(`
 `)}
     return dist;
-  `;e=e.replace("return 0.; // #MAP",i)}{const i=s.map((a,r)=>`
-          fn calcLightMaterial${r}(
+  `;e=e.replace("return 0.; // #MAP",i)}{const i=o.map((a,t)=>`
+          fn calcLightMaterial${t}(
             ro: vec3<f32>,
             rd: vec3<f32>,
             pos: vec3<f32>,
@@ -445,26 +446,36 @@ fn calcScene(uv: vec2<f32>) -> Scene {
               let finalColor = max(color * 0.2, color * lamb);
               return vec4<f32>(finalColor, 1.);`}
           }`).join(`
-`);e=e.replace("// #LIGHT-INDIVIDUAL-MATERIALS",i);const n=`
+`);e=e.replace("// #LIGHT-INDIVIDUAL-MATERIALS",i);const s=`
       var finalColor = vec4<f32>(0.0);
-      ${s.map((a,r)=>`
-        if(materialIndex == ${r}) {
-          finalColor = calcLightMaterial${r}(ro, rd, pos, normal, color);
+      ${o.map((a,t)=>`
+        if(materialIndex == ${t}) {
+          finalColor = calcLightMaterial${t}(ro, rd, pos, normal, color);
         }
         `).join(`
 `)}
       return finalColor;
-    `;e=e.replace("return vec4<f32>(0.0); // #LIGHT-MATERIALS-FUNC",n)}return e}function C({main:o,functions:e,rtUniformKeys:t,materialFuncs:s,nTextures:i,usePrevFrameTex:n}){let a=G;if(a=a.replace("UNIFORMS: f32, // #UNIFORMS",t.map(r=>`${r}: f32,`).join(`
-`)),i>0){const r=new Array(i).fill(0).map((v,u)=>`
-          @group(1) @binding(${u}) var tex${u}: texture_2d<f32>;
-          fn getTex${u}Sample(uv: vec2<f32>) -> vec4<f32> {
-            return textureSample(tex${u}, u_sampler, uv);
+    `;e=e.replace("return vec4<f32>(0.0); // #LIGHT-MATERIALS-FUNC",s)}return e}function F({main:n,functions:e,rtUniformKeys:r,materialFuncs:o,nTextures:i,usePrevFrameTex:s,useInterlacing:a}){let t=C;if(t=t.replace("UNIFORMS: f32, // #UNIFORMS",r.map(f=>`${f}: f32,`).join(`
+`)),i>0){const f=new Array(i).fill(0).map((p,v)=>`
+          @group(1) @binding(${v}) var tex${v}: texture_2d<f32>;
+          fn getTex${v}Sample(uv: vec2<f32>) -> vec4<f32> {
+            return textureSample(tex${v}, u_sampler, uv);
           }
         `).join(`
-`);a=a.replace("// #GROUP-1-BINDING-X",r)}if(n&&(a=a.replace("// #GROUP-2-BINDING-X",`@group(2) @binding(0) var prevFrameTex: texture_2d<f32>;
+`);t=t.replace("// #GROUP-1-BINDING-X",f)}if(s&&(t=t.replace("// #GROUP-2-BINDING-X",`@group(2) @binding(0) var prevFrameTex: texture_2d<f32>;
       fn getPrevFrameTexSample(uv: vec2<f32>) -> vec4<f32> {
         return textureSample(prevFrameTex, u_sampler, uv);
-      }`)),a=a.replace("// #COMMON",R),e&&(a=a.replace("// #FUNCTIONS",e)),s.length>0){const r=I(s);a=a.replace("// #RAY_MARCH_FUNCTIONS",r),o||(o=`
+      }`)),t=t.replace("// #COMMON",G),e&&(t=t.replace("// #FUNCTIONS",e)),o.length>0){const f=_(o);t=t.replace("// #RAY_MARCH_FUNCTIONS",f),n||(n=`
         let scene = calcScene(uv);
         return vec4<f32>(scene.color.rgb, 1.0);
-      `)}return o&&(a=a.replace("return vec4<f32>(0.0, 0.0, 0.0, 1.0); // #MAIN",o)),a}class _{device;buffer;uniform={};uniformBindGroupLayout;uniformBindGroup;constructor(e,t){this.device=e;const s=Object.keys(t);this.buffer=e.createBuffer({size:s.length*4,usage:GPUBufferUsage.UNIFORM|GPUBufferUsage.COPY_DST}),s.forEach((i,n)=>{this.uniform[i]={value:t[i],offSet:n*4},this.set(i,t[i])}),this.uniformBindGroupLayout=e.createBindGroupLayout({entries:[{binding:0,visibility:GPUShaderStage.FRAGMENT,buffer:{type:"uniform"}},{binding:1,visibility:GPUShaderStage.FRAGMENT,sampler:{type:"non-filtering"}}]}),this.uniformBindGroup=this.device.createBindGroup({layout:this.uniformBindGroupLayout,entries:[{binding:0,resource:{buffer:this.getBuffer()}},{binding:1,resource:this.device.createSampler({addressModeU:"repeat",addressModeV:"repeat",magFilter:"nearest",minFilter:"nearest"})}]})}getBuffer(){return this.buffer}getKeysSortedByOffset(){return Object.keys(this.uniform).toSorted((e,t)=>this.uniform[e].offSet-this.uniform[t].offSet)}set(e,t){if(!this.uniform[e])throw new Error(`Uniform ${e} not found`);this.uniform[e].value=t,this.device.queue.writeBuffer(this.buffer,this.uniform[e].offSet,new Float32Array([t]))}get(e){if(!this.uniform[e])throw new Error(`Uniform ${e} not found`);return this.uniform[e].value}}class M{texs;device;presentationFormat;textures;textureEntries;textureBindGroupLayout;constructor(e,t,s){this.texs=s,this.device=e,this.presentationFormat=t,this.textures=this.texs.map(({width:i,height:n})=>this.device.createTexture({size:[i,n,1],format:this.presentationFormat,usage:GPUTextureUsage.COPY_DST|GPUTextureUsage.TEXTURE_BINDING})),this.textureEntries=this.textures.map((i,n)=>({binding:n,resource:i.createView()})),this.textureBindGroupLayout=e.createBindGroupLayout({entries:s.map((i,n)=>({binding:n,visibility:GPUShaderStage.FRAGMENT,texture:{sampleType:"unfilterable-float"}}))})}setTexture(e,t){const s=this.texs[e].width,i=this.texs[e].height,n=this.textures[e];this.device.queue.writeTexture({texture:n},t,{offset:0,bytesPerRow:s*4,rowsPerImage:i},[s,i,1]),this.textureEntries[e].resource=n.createView()}getTextureEntries(){return this.textureEntries}}class D{pingPongBindGroupLayout;bindGroupPingIn;bindGroupPongIn;currentReadTexture;currentReadTextureView;currentWriteTexture;currentWriteTextureView;currentBindGroupIn;offscreenTextureSize;constructor(e,t,s){this.offscreenTextureSize=[e.width,e.height,1];const i=t.createTexture({size:this.offscreenTextureSize,format:s,usage:GPUTextureUsage.RENDER_ATTACHMENT|GPUTextureUsage.TEXTURE_BINDING|GPUTextureUsage.COPY_SRC}),n=t.createTexture({size:this.offscreenTextureSize,format:s,usage:GPUTextureUsage.RENDER_ATTACHMENT|GPUTextureUsage.TEXTURE_BINDING|GPUTextureUsage.COPY_SRC}),a=i.createView(),r=n.createView();this.pingPongBindGroupLayout=t.createBindGroupLayout({entries:[{binding:0,visibility:GPUShaderStage.FRAGMENT,texture:{sampleType:"unfilterable-float"}}]}),this.bindGroupPingIn=t.createBindGroup({layout:this.pingPongBindGroupLayout,entries:[{binding:0,resource:i.createView()}]}),this.bindGroupPongIn=t.createBindGroup({layout:this.pingPongBindGroupLayout,entries:[{binding:0,resource:n.createView()}]}),this.currentReadTexture=i,this.currentReadTextureView=a,this.currentWriteTexture=n,this.currentWriteTextureView=r,this.currentBindGroupIn=this.bindGroupPingIn}preSubmit(){}swap(){const e=this.currentReadTexture,t=this.currentReadTextureView,s=this.currentBindGroupIn;this.currentReadTexture=this.currentWriteTexture,this.currentReadTextureView=this.currentWriteTextureView,this.currentBindGroupIn=s===this.bindGroupPingIn?this.bindGroupPongIn:this.bindGroupPingIn,this.currentWriteTexture=e,this.currentWriteTextureView=t}}async function N({device:o,presentationFormat:e,context:t,canvas:s,main:i,materialFuncs:n,functions:a,rtUniform:r,texs:v,usePrevFrameTex:u}){const x=new M(o,e,v),m=[r.uniformBindGroupLayout,x.textureBindGroupLayout];let f=null;u&&(f=new D(s,o,e),m.push(f.pingPongBindGroupLayout));const d=C({main:i,functions:a,materialFuncs:n,rtUniformKeys:r.getKeysSortedByOffset(),nTextures:v.length,usePrevFrameTex:u}),g=o.createRenderPipeline({layout:o.createPipelineLayout({bindGroupLayouts:m}),vertex:{module:o.createShaderModule({code:z}),entryPoint:"main"},fragment:{module:o.createShaderModule({code:d}),entryPoint:"main",targets:[{format:e}]},primitive:{topology:"triangle-strip",frontFace:"ccw",stripIndexFormat:"uint32"}});function c(l){r.set("time",performance.now()/1e3),r.set("aspectRatio",s.width/s.height),r.set("width",s.width),r.set("height",s.height),r.set("camPosX",l.pos.x),r.set("camPosY",l.pos.y),r.set("camPosZ",l.pos.z),r.set("camSphericalR",l.spherical.radius),r.set("camSphericalT",l.spherical.theta),r.set("camSphericalP",l.spherical.phi),r.set("camFov",l.fov)}function T({camera:l}){c(l);const b={colorAttachments:[{view:f?f.currentWriteTextureView:t.getCurrentTexture().createView(),loadOp:"clear",clearValue:{r:0,g:0,b:0,a:1},storeOp:"store"}]},y=o.createCommandEncoder(),p=y.beginRenderPass(b);p.setPipeline(g),p.setBindGroup(0,r.uniformBindGroup);const S=o.createBindGroup({layout:g.getBindGroupLayout(1),entries:x.getTextureEntries()});p.setBindGroup(1,S),f&&p.setBindGroup(2,f.currentBindGroupIn),p.draw(4,1,0,0),p.end(),f&&y.copyTextureToTexture({texture:f.currentWriteTexture},{texture:t.getCurrentTexture()},f.offscreenTextureSize),o.queue.submit([y.finish()]),f&&f.swap()}function w(l,h){r.set(l,h)}function P(l,h){x.setTexture(l,h)}return{render:T,setUniform:w,setTexture:P}}async function F(o){const t=await navigator.gpu.requestAdapter();if(!t)throw new Error("No adapter found");const s=t.features.has("texture-compression-bc");s||console.warn("shader-f16 not available");const i=await t.requestDevice({requiredFeatures:s?["shader-f16"]:[]}),n=navigator.gpu.getPreferredCanvasFormat(),a=o.getContext("webgpu");if(!a)throw new Error("No context found");return a.configure({device:i,format:n,alphaMode:"premultiplied",usage:GPUTextureUsage.RENDER_ATTACHMENT|GPUTextureUsage.COPY_DST}),{context:a,device:i,presentationFormat:n}}function L(o,e,t){o.pos||(o.pos={x:0,y:0,z:0}),o.color||(o.color={r:1,g:1,b:1}),o.rotation||(o.rotation={x:0,y:0,z:0});const s=e.registerUniform(`material${t}Px`,o.pos.x),i=e.registerUniform(`material${t}Py`,o.pos.y),n=e.registerUniform(`material${t}Pz`,o.pos.z),a=c=>{c.x!==void 0&&s(c.x),c.y!==void 0&&i(c.y),c.z!==void 0&&n(c.z)},r=e.registerUniform(`material${t}Rx`,o.rotation.x),v=e.registerUniform(`material${t}Ry`,o.rotation.y),u=e.registerUniform(`material${t}Rz`,o.rotation.z),x=c=>{c.x!==void 0&&r(c.x),c.y!==void 0&&v(c.y),c.z!==void 0&&u(c.z)},m=e.registerUniform(`material${t}Cr`,o.color.r),f=e.registerUniform(`material${t}Cg`,o.color.g),d=e.registerUniform(`material${t}Cb`,o.color.b);return{setPos:a,setRot:x,setColor:c=>{c.r!==void 0&&m(c.r),c.g!==void 0&&f(c.g),c.b!==void 0&&d(c.b)}}}class B{canvas;main;functions;render;initalCustomUniforms={};setUniform;materialFuncs=[];usePrevFrameTex;setDeviceTexure;texs;camera;constructor({canvas:e,main:t,functions:s,texs:i,usePrevFrameTex:n}){this.canvas=e,this.main=t,this.functions=s,this.camera={pos:{x:0,y:0,z:0},spherical:{radius:0,theta:0,phi:0},fov:90},this.texs=i??[],this.usePrevFrameTex=n}registerMaterial(e){if(this.render)throw new Error("Render already built");const t=this.materialFuncs.length,s=L(e,this,t);return this.materialFuncs.push({sdFunc:e.sdFunc,lightFunc:e.lightFunc}),s}setTex(e,t){if(!this.setDeviceTexure)throw new Error("Render not built");this.setDeviceTexure(e,t)}registerUniform(e,t){if(this.render)throw new Error("Render already built");return this.initalCustomUniforms[e]=t??0,i=>{if(!this.setUniform)throw new Error("Render not built");this.setUniform(e,i),this.initalCustomUniforms[e]=i}}async build(){const{device:e,context:t,presentationFormat:s}=await F(this.canvas),i=new _(e,{time:0,aspectRatio:this.canvas.width/this.canvas.height,width:this.canvas.width,height:this.canvas.height,camPosX:this.camera.pos.x??0,camPosY:this.camera.pos.y??0,camPosZ:this.camera.pos.z??0,camSphericalR:this.camera.spherical.radius??0,camSphericalT:this.camera.spherical.theta??0,camSphericalP:this.camera.spherical.phi??0,camFov:this.camera.fov??90,...this.initalCustomUniforms}),{render:n,setUniform:a,setTexture:r}=await N({device:e,presentationFormat:s,context:t,canvas:this.canvas,main:this.main,materialFuncs:this.materialFuncs,functions:this.functions,rtUniform:i,texs:this.texs,usePrevFrameTex:this.usePrevFrameTex});this.setUniform=a,this.render=n,this.setDeviceTexure=r}shoot(){this.render?.({camera:this.camera})}}function A({width:o,height:e,pixelated:t,useExactPixels:s}={}){const i=s?window.devicePixelRatio:1,n=document.createElement("canvas");return n.width=(o??window.innerWidth)*i,n.height=(e??window.innerHeight)*i,n.style.width="100vw",n.style.height="100vh",t&&(n.style.imageRendering="pixelated"),document.body.appendChild(n),n}export{B as R,A as f};
+      `)}return a&&(t=t.replace("// #INTERLACING",` let _prev_pix_ = getPrevFrameTexSample(uv);
+        if i32(U.height * uv.y) % 2 == i32(U.frame) % 2 {
+        return _prev_pix_;
+        }`)),n&&(t=t.replace("return vec4<f32>(0.0, 0.0, 0.0, 1.0); // #MAIN",n)),t}class M{device;buffer;uniform={};uniformBindGroupLayout;uniformBindGroup;constructor(e,r){this.device=e;const o=Object.keys(r);this.buffer=e.createBuffer({size:o.length*4,usage:GPUBufferUsage.UNIFORM|GPUBufferUsage.COPY_DST}),o.forEach((i,s)=>{this.uniform[i]={value:r[i],offSet:s*4},this.set(i,r[i])}),this.uniformBindGroupLayout=e.createBindGroupLayout({entries:[{binding:0,visibility:GPUShaderStage.FRAGMENT,buffer:{type:"uniform"}},{binding:1,visibility:GPUShaderStage.FRAGMENT,sampler:{type:"non-filtering"}}]}),this.uniformBindGroup=this.device.createBindGroup({layout:this.uniformBindGroupLayout,entries:[{binding:0,resource:{buffer:this.getBuffer()}},{binding:1,resource:this.device.createSampler({addressModeU:"repeat",addressModeV:"repeat",magFilter:"nearest",minFilter:"nearest"})}]})}getBuffer(){return this.buffer}getKeysSortedByOffset(){return Object.keys(this.uniform).toSorted((e,r)=>this.uniform[e].offSet-this.uniform[r].offSet)}set(e,r){if(!this.uniform[e])throw new Error(`Uniform ${e} not found`);this.uniform[e].value=r,this.device.queue.writeBuffer(this.buffer,this.uniform[e].offSet,new Float32Array([r]))}get(e){if(!this.uniform[e])throw new Error(`Uniform ${e} not found`);return this.uniform[e].value}}class N{texs;device;presentationFormat;textures;textureEntries;textureBindGroupLayout;constructor(e,r,o){this.texs=o,this.device=e,this.presentationFormat=r,this.textures=this.texs.map(({width:i,height:s})=>this.device.createTexture({size:[i,s,1],format:this.presentationFormat,usage:GPUTextureUsage.COPY_DST|GPUTextureUsage.TEXTURE_BINDING})),this.textureEntries=this.textures.map((i,s)=>({binding:s,resource:i.createView()})),this.textureBindGroupLayout=e.createBindGroupLayout({entries:o.map((i,s)=>({binding:s,visibility:GPUShaderStage.FRAGMENT,texture:{sampleType:"unfilterable-float"}}))})}setTexture(e,r){const o=this.texs[e].width,i=this.texs[e].height,s=this.textures[e];this.device.queue.writeTexture({texture:s},r,{offset:0,bytesPerRow:o*4,rowsPerImage:i},[o,i,1]),this.textureEntries[e].resource=s.createView()}getTextureEntries(){return this.textureEntries}}class D{pingPongBindGroupLayout;bindGroupPingIn;bindGroupPongIn;currentReadTexture;currentReadTextureView;currentWriteTexture;currentWriteTextureView;currentBindGroupIn;offscreenTextureSize;constructor(e,r,o){this.offscreenTextureSize=[e.width,e.height,1];const i=r.createTexture({size:this.offscreenTextureSize,format:o,usage:GPUTextureUsage.RENDER_ATTACHMENT|GPUTextureUsage.TEXTURE_BINDING|GPUTextureUsage.COPY_SRC}),s=r.createTexture({size:this.offscreenTextureSize,format:o,usage:GPUTextureUsage.RENDER_ATTACHMENT|GPUTextureUsage.TEXTURE_BINDING|GPUTextureUsage.COPY_SRC}),a=i.createView(),t=s.createView();this.pingPongBindGroupLayout=r.createBindGroupLayout({entries:[{binding:0,visibility:GPUShaderStage.FRAGMENT,texture:{sampleType:"unfilterable-float"}}]}),this.bindGroupPingIn=r.createBindGroup({layout:this.pingPongBindGroupLayout,entries:[{binding:0,resource:i.createView()}]}),this.bindGroupPongIn=r.createBindGroup({layout:this.pingPongBindGroupLayout,entries:[{binding:0,resource:s.createView()}]}),this.currentReadTexture=i,this.currentReadTextureView=a,this.currentWriteTexture=s,this.currentWriteTextureView=t,this.currentBindGroupIn=this.bindGroupPingIn}preSubmit(){}swap(){const e=this.currentReadTexture,r=this.currentReadTextureView,o=this.currentBindGroupIn;this.currentReadTexture=this.currentWriteTexture,this.currentReadTextureView=this.currentWriteTextureView,this.currentBindGroupIn=o===this.bindGroupPingIn?this.bindGroupPongIn:this.bindGroupPingIn,this.currentWriteTexture=e,this.currentWriteTextureView=r}}async function L({device:n,presentationFormat:e,context:r,canvas:o,main:i,materialFuncs:s,functions:a,rtUniform:t,texs:f,usePrevFrameTex:p,useInterlacing:v}){const m=new N(n,e,f),x=[t.uniformBindGroupLayout,m.textureBindGroupLayout];let l=null;p&&(l=new D(o,n,e),x.push(l.pingPongBindGroupLayout));const y=F({main:i,functions:a,materialFuncs:s,rtUniformKeys:t.getKeysSortedByOffset(),nTextures:f.length,usePrevFrameTex:p,useInterlacing:v}),c=n.createRenderPipeline({layout:n.createPipelineLayout({bindGroupLayouts:x}),vertex:{module:n.createShaderModule({code:R}),entryPoint:"main"},fragment:{module:n.createShaderModule({code:y}),entryPoint:"main",targets:[{format:e}]},primitive:{topology:"triangle-strip",frontFace:"ccw",stripIndexFormat:"uint32"}});let T=0;function w(u){t.set("frame",T),t.set("time",performance.now()/1e3),t.set("aspectRatio",o.width/o.height),t.set("width",o.width),t.set("height",o.height),t.set("camPosX",u.pos.x),t.set("camPosY",u.pos.y),t.set("camPosZ",u.pos.z),t.set("camSphericalR",u.spherical.radius),t.set("camSphericalT",u.spherical.theta),t.set("camSphericalP",u.spherical.phi),t.set("camFov",u.fov)}function b({camera:u}){w(u);const I={colorAttachments:[{view:l?l.currentWriteTextureView:r.getCurrentTexture().createView(),loadOp:"clear",clearValue:{r:0,g:0,b:0,a:1},storeOp:"store"}]},g=n.createCommandEncoder(),h=g.beginRenderPass(I);h.setPipeline(c),h.setBindGroup(0,t.uniformBindGroup);const z=n.createBindGroup({layout:c.getBindGroupLayout(1),entries:m.getTextureEntries()});h.setBindGroup(1,z),l&&h.setBindGroup(2,l.currentBindGroupIn),h.draw(4,1,0,0),h.end(),l&&g.copyTextureToTexture({texture:l.currentWriteTexture},{texture:r.getCurrentTexture()},l.offscreenTextureSize),n.queue.submit([g.finish()]),l&&l.swap(),T++}function P(u,d){t.set(u,d)}function S(u,d){m.setTexture(u,d)}return{render:b,setUniform:P,setTexture:S}}async function A(n){const r=await navigator.gpu.requestAdapter();if(!r)throw new Error("No adapter found");const o=r.features.has("texture-compression-bc");o||console.warn("shader-f16 not available");const i=await r.requestDevice({requiredFeatures:o?["shader-f16"]:[]}),s=navigator.gpu.getPreferredCanvasFormat(),a=n.getContext("webgpu");if(!a)throw new Error("No context found");return a.configure({device:i,format:s,alphaMode:"opaque",usage:GPUTextureUsage.RENDER_ATTACHMENT|GPUTextureUsage.COPY_DST}),{context:a,device:i,presentationFormat:s}}function E(n,e,r){n.pos||(n.pos={x:0,y:0,z:0}),n.color||(n.color={r:1,g:1,b:1}),n.rotation||(n.rotation={x:0,y:0,z:0});const o=e.registerUniform(`material${r}Px`,n.pos.x),i=e.registerUniform(`material${r}Py`,n.pos.y),s=e.registerUniform(`material${r}Pz`,n.pos.z),a=c=>{c.x!==void 0&&o(c.x),c.y!==void 0&&i(c.y),c.z!==void 0&&s(c.z)},t=e.registerUniform(`material${r}Rx`,n.rotation.x),f=e.registerUniform(`material${r}Ry`,n.rotation.y),p=e.registerUniform(`material${r}Rz`,n.rotation.z),v=c=>{c.x!==void 0&&t(c.x),c.y!==void 0&&f(c.y),c.z!==void 0&&p(c.z)},m=e.registerUniform(`material${r}Cr`,n.color.r),x=e.registerUniform(`material${r}Cg`,n.color.g),l=e.registerUniform(`material${r}Cb`,n.color.b);return{setPos:a,setRot:v,setColor:c=>{c.r!==void 0&&m(c.r),c.g!==void 0&&x(c.g),c.b!==void 0&&l(c.b)}}}class B{shoot;fps;fpsCounter=0;showFps;cb;constructor({cb:e,shoot:r,fps:o,showFps:i}){this.shoot=r,this.cb=e,this.fps=o,this.showFps=i}startFpsCounter(){const e=document.createElement("div");e.setAttribute("style",` position: absolute;
+        top: 0;
+        left: 0;
+        color: green;
+        background: black;
+        font-size: 16px;
+        font-family: monospace;
+        pointer-events: none;`),document.body.appendChild(e),setInterval(()=>{e.innerText=`FPS: ${this.fpsCounter}`,this.fpsCounter=0},1e3)}start(){this.showFps&&this.startFpsCounter();const e=this.cb,r=this.shoot,o=()=>{this.fpsCounter++},i=this.fps;let s=()=>{requestAnimationFrame(s),e(),r(),o()};if(i!==void 0){const a=1e3/i;let t=0;s=f=>{requestAnimationFrame(s);const p=f-t;p>a&&(t=f-p%a,e(),r(),o())}}requestAnimationFrame(s)}}function X(n){const e=document.createElement("canvas");return e.height=n??window.innerHeight,e.width=e.height*(window.innerWidth/window.innerHeight),e.style.width="100vw",e.style.height="100vh",n&&(e.style.imageRendering="pixelated"),document.body.appendChild(e),e}class ${canvas;main;functions;render;initalCustomUniforms={};setUniform;materialFuncs=[];usePrevFrameTex;useInterlacing;setDeviceTexure;texs;fps;showFps;camera={pos:{x:0,y:0,z:0},spherical:{radius:0,theta:0,phi:0},fov:90};constructor({main:e,functions:r,texs:o,usePrevFrameTex:i,useInterlacing:s,fps:a,height:t,showFps:f}={}){this.canvas=X(t),this.main=e,this.functions=r,this.texs=o??[],this.useInterlacing=s,this.usePrevFrameTex=this.useInterlacing||i,this.fps=a,this.showFps=f}registerMaterial(e){if(this.render)throw new Error("Render already built");const r=this.materialFuncs.length,o=E(e,this,r);return this.materialFuncs.push({sdFunc:e.sdFunc,lightFunc:e.lightFunc}),o}setTex(e,r){if(!this.setDeviceTexure)throw new Error("Render not built");this.setDeviceTexure(e,r)}registerUniform(e,r){if(this.render)throw new Error("Render already built");return this.initalCustomUniforms[e]=r??0,i=>{if(!this.setUniform)throw new Error("Render not built");this.setUniform(e,i),this.initalCustomUniforms[e]=i}}async build(){const{device:e,context:r,presentationFormat:o}=await A(this.canvas),i=new M(e,{frame:0,time:0,aspectRatio:this.canvas.width/this.canvas.height,width:this.canvas.width,height:this.canvas.height,camPosX:this.camera.pos.x??0,camPosY:this.camera.pos.y??0,camPosZ:this.camera.pos.z??0,camSphericalR:this.camera.spherical.radius??0,camSphericalT:this.camera.spherical.theta??0,camSphericalP:this.camera.spherical.phi??0,camFov:this.camera.fov??90,...this.initalCustomUniforms}),{render:s,setUniform:a,setTexture:t}=await L({device:e,presentationFormat:o,context:r,canvas:this.canvas,main:this.main,materialFuncs:this.materialFuncs,functions:this.functions,rtUniform:i,texs:this.texs,usePrevFrameTex:this.usePrevFrameTex,useInterlacing:this.useInterlacing});this.setUniform=a,this.render=s,this.setDeviceTexure=t}run(e=()=>{}){new B({cb:e,shoot:()=>{this.render?.({camera:this.camera})},fps:this.fps,showFps:this.showFps}).start()}async buildAndRun(e=()=>{}){await this.build(),this.run(e)}}export{$ as R};

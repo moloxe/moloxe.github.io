@@ -1,16 +1,16 @@
-import{R as t,f as a}from"./fsCanvas.MrD-UkXb.js";import{f as i,a as o}from"./freeControls.mEnd03r0.js";const r=new t({canvas:a()});r.registerMaterial({sdFunc:`
+import{R as e}from"./ReTina.Da95_7ih.js";import{f as t}from"./freeControls.BVGVdC3g.js";const r=new e({height:480,useInterlacing:!0,showFps:!0});r.registerMaterial({sdFunc:`
     var thres = length(pos) - 1.2;
     if thres > 0.2 {
         return thres;
     }
 
-    var power = 6 + 4 * sin(U.time * 0.4);
+    var power = 6 + 4 * sin(U.time * 0.1);
     var z = pos;
     var c = pos;
 
     var dr = 1.0;
     var r = 0.0;
-    for (var i: i32 = 0; i < 32; i++) {        
+    for (var i: i32 = 0; i < 128; i++) {
         r = length(z);
         if r > 2.0 { break; }
         var theta = acos(z.z / r);
@@ -31,7 +31,7 @@ import{R as t,f as a}from"./fsCanvas.MrD-UkXb.js";import{f as i,a as o}from"./fr
       // Material
       pos, diffuseColor, /* shininess */ 256,
       // Light
-      /* lightPos */ ro, /* lightColor */ vec3f(1), /* power */ 1,
+      /* lightPos */ ro, /* lightColor */ vec3f(1), /* power */ 0.8,
     );
     return vec4f(light, 1.);
-  `});await r.build();r.camera.spherical={phi:-.5,radius:1.8,theta:.4};i(r);const s=o();function e(){r.shoot(),requestAnimationFrame(e),s()}e();
+  `});r.camera.spherical={phi:-.5,radius:1.8,theta:.4};t(r);await r.buildAndRun();

@@ -1,4 +1,4 @@
-import{R as n,f as r}from"./fsCanvas.MrD-UkXb.js";import{l as a,T as s}from"./loadImage.DoVZmuyO.js";const t=await a(s.src),e=new n({canvas:r({width:128*(window.innerWidth/window.innerHeight),height:128,pixelated:!0}),texs:[{width:t.width,height:t.height}],usePrevFrameTex:!0,functions:`
+import{R as t}from"./ReTina.Da95_7ih.js";import{l as n,T as r}from"./loadImage.DoVZmuyO.js";const e=await n(r.src),i=new t({fps:24,height:128,texs:[{width:e.width,height:e.height}],usePrevFrameTex:!0,functions:`
     fn isPixAlive(uv: vec2f) -> bool {
       return getPrevFrameTexSample(uv).r > 0.5;
     }
@@ -37,4 +37,4 @@ import{R as n,f as r}from"./fsCanvas.MrD-UkXb.js";import{l as a,T as s}from"./lo
       }
       return vec4f(vec3f(newState), 1);
     }
-  `}),f=e.registerUniform("frame");await e.build();e.setTex(0,t.textureData);let i=0;setInterval(()=>{e.shoot(),i++,f(i)},1e3/24);
+  `});await i.build();i.setTex(0,e.textureData);i.run();

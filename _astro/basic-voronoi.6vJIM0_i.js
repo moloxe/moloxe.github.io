@@ -1,4 +1,4 @@
-import{R as s,f as n}from"./fsCanvas.MrD-UkXb.js";const e=new s({canvas:n(),functions:`
+import{R as o}from"./ReTina.Da95_7ih.js";const e=new o({functions:`
     fn pdist(pos1: vec2<f32>, pos2: vec2<f32>, p: f32) -> f32 {
       return pow(
         pow(abs(pos1.x - pos2.x), p) +
@@ -35,4 +35,4 @@ import{R as s,f as n}from"./fsCanvas.MrD-UkXb.js";const e=new s({canvas:n(),func
       log(minD / 10.) / 4.
     );
     return vec4<f32>(color, 1.0);
-  `}),t=e.registerUniform("mouseX"),r=e.registerUniform("mouseY");await e.build();document.addEventListener("mousemove",i=>{t(i.clientX),r(i.clientY)});function o(){e.shoot(),requestAnimationFrame(o)}o();
+  `}),n=e.registerUniform("mouseX"),s=e.registerUniform("mouseY");document.addEventListener("mousemove",i=>{n(i.clientX),s(i.clientY)});await e.buildAndRun();
