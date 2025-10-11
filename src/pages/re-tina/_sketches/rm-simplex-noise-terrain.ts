@@ -1,12 +1,9 @@
 import { ReTina } from '../_lib'
-import fsCanvas from './utils/fsCanvas'
 
 const rt = new ReTina({
-  canvas: fsCanvas({
-    width: 320 * (window.innerWidth / window.innerHeight),
-    height: 320,
-    pixelated: true,
-  }),
+  useInterlacing: true,
+  fps: 30,
+  height: 240,
   main: /* wgsl */ `
     let scene = calcScene(uv);
     var color = vec3<f32>(0.0);
@@ -54,15 +51,8 @@ rt.registerMaterial({
   lightFunc: 'return vec4f(1);',
 })
 
-await rt.build()
-
-function draw() {
+await rt.buildAndRun(() => {
   const t = performance.now() / 1000
   rt.camera.pos = { x: 0, y: 1, z: -t / 4 }
   rt.camera.spherical = { radius: -1e-4, theta: Math.sin(t / 2) / 2, phi: 0 }
-
-  rt.shoot()
-  requestAnimationFrame(draw)
-}
-
-requestAnimationFrame(draw)
+})

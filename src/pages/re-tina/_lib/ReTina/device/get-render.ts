@@ -16,6 +16,7 @@ type Props = {
   rtUniform: RTUniform
   texs: RTTex[]
   usePrevFrameTex?: boolean
+  useInterlacing?: boolean
 }
 
 async function getRender({
@@ -29,6 +30,7 @@ async function getRender({
   rtUniform,
   texs,
   usePrevFrameTex,
+  useInterlacing,
 }: Props) {
   const rtTexture = new RTTexture(device, presentationFormat, texs)
 
@@ -50,6 +52,7 @@ async function getRender({
     rtUniformKeys: rtUniform.getKeysSortedByOffset(),
     nTextures: texs.length,
     usePrevFrameTex,
+    useInterlacing,
   })
 
   const renderPipeline = device.createRenderPipeline({

@@ -1,11 +1,7 @@
 import { ReTina } from '@ReTina'
-import frameCounter from './utils/frameCounter'
 import freeControls from './utils/freeControls'
-import fsCanvas from './utils/fsCanvas'
 
-const rt = new ReTina({
-  canvas: fsCanvas(),
-})
+const rt = new ReTina()
 
 // Based on: https://shaders.skia.org/?id=ed72577c437c036447372e4c873462fc1bbfc0cb5e9fb0630ab1c07368a0db48
 rt.registerMaterial({
@@ -51,12 +47,4 @@ rt.camera.spherical = {
 }
 
 freeControls(rt)
-
-const increaseFrameCounter = frameCounter()
-function draw() {
-  rt.shoot()
-  requestAnimationFrame(draw)
-  increaseFrameCounter()
-}
-
-draw()
+rt.buildAndRun()

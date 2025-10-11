@@ -9,14 +9,18 @@ import getRender from './device/get-render'
 import prepareCanvas from './device/prepare-canvas'
 import buildMaterial from './utils/rt-material'
 import RTUniform from './utils/rt-uniform'
+import RTLoop from './utils/rt-loop'
+import { fumbFsCanvas } from './utils/utils'
 
 type Props = {
-  canvas: HTMLCanvasElement
+  height?: number
   main?: string
   functions?: string
   texs?: RTTex[]
   usePrevFrameTex?: boolean
   useInterlacing?: boolean
+  fps?: number
+  showFps?: boolean
 }
 
 class ReTina {
@@ -31,29 +35,32 @@ class ReTina {
   private useInterlacing?: boolean
   private setDeviceTexure?: (index: number, textureData: Uint8Array) => void
   private texs: RTTex[]
-  camera: RTCamera
+  private fps?: number
+  private showFps?: boolean
+  camera: RTCamera = {
+    pos: { x: 0, y: 0, z: 0 },
+    spherical: { radius: 0, theta: 0, phi: 0 },
+    fov: 90,
+  }
 
   constructor({
-    canvas,
     main,
     functions,
     texs,
     usePrevFrameTex,
     useInterlacing,
-  }: Props) {
-    this.canvas = canvas
+    fps,
+    height,
+    showFps,
+  }: Props = {}) {
+    this.canvas = fumbFsCanvas(height)
     this.main = main
     this.functions = functions
-    this.camera = {
-      pos: { x: 0, y: 0, z: 0 },
-      spherical: { radius: 0, theta: 0, phi: 0 },
-      fov: 90,
-    }
     this.texs = texs ?? []
-
     this.useInterlacing = useInterlacing
-    usePrevFrameTex = useInterlacing || usePrevFrameTex
-    this.usePrevFrameTex = usePrevFrameTex
+    this.usePrevFrameTex = this.useInterlacing || usePrevFrameTex
+    this.fps = fps
+    this.showFps = showFps
   }
 
   registerMaterial(partialMaterial: RTMaterialPartial) {
@@ -115,6 +122,7 @@ class ReTina {
       rtUniform,
       texs: this.texs,
       usePrevFrameTex: this.usePrevFrameTex,
+      useInterlacing: this.useInterlacing,
     })
 
     this.setUniform = setUniform
@@ -122,10 +130,23 @@ class ReTina {
     this.setDeviceTexure = setTexture
   }
 
-  shoot() {
-    this.render?.({
-      camera: this.camera,
+  run(cb = () => {}) {
+    const rtLoop = new RTLoop({
+      cb,
+      shoot: () => {
+        this.render?.({
+          camera: this.camera,
+        })
+      },
+      fps: this.fps,
+      showFps: this.showFps,
     })
+    rtLoop.start()
+  }
+
+  async buildAndRun(cb = () => {}) {
+    await this.build()
+    this.run(cb)
   }
 }
 

@@ -1,8 +1,6 @@
 import { ReTina } from '@ReTina'
-import fsCanvas from './utils/fsCanvas'
 
 const rt = new ReTina({
-  canvas: fsCanvas(),
   functions: /* wgsl */ `
     fn pdist(pos1: vec2<f32>, pos2: vec2<f32>, p: f32) -> f32 {
       return pow(
@@ -47,16 +45,9 @@ const rt = new ReTina({
 const setMouseX = rt.registerUniform('mouseX')
 const setMouseY = rt.registerUniform('mouseY')
 
-await rt.build()
-
 document.addEventListener('mousemove', (event) => {
   setMouseX(event.clientX)
   setMouseY(event.clientY)
 })
 
-function draw() {
-  rt.shoot()
-  requestAnimationFrame(draw)
-}
-
-draw()
+await rt.buildAndRun()

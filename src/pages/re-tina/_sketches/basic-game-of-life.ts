@@ -1,16 +1,12 @@
 import { ReTina } from '@ReTina'
 import TinaLogo from '@src/assets/img/tina.jpeg'
 import { loadImage } from './utils/loadImage'
-import fsCanvas from './utils/fsCanvas'
 
 const img = await loadImage(TinaLogo.src)
 
 const rt = new ReTina({
-  canvas: fsCanvas({
-    width: 128 * (window.innerWidth / window.innerHeight),
-    height: 128,
-    pixelated: true,
-  }),
+  fps: 24,
+  height: 128,
   texs: [{ width: img.width, height: img.height }],
   usePrevFrameTex: true,
   functions: /* wgsl */ `
@@ -59,7 +55,4 @@ const rt = new ReTina({
 await rt.build()
 
 rt.setTex(0, img.textureData)
-
-setInterval(() => {
-  rt.shoot()
-}, 1000 / 24)
+rt.run()

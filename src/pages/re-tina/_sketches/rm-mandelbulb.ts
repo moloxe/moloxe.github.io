@@ -1,11 +1,11 @@
 import { ReTina } from '@ReTina'
-import frameCounter from './utils/frameCounter'
 import freeControls from './utils/freeControls'
-import fsCanvas from './utils/fsCanvas'
 
 // Shader based on: https://webgpulab.xbdev.net/index.php?page=editor&id=mandelbulbbasic3&
 const rt = new ReTina({
-  canvas: fsCanvas(),
+  height: 480,
+  useInterlacing: true,
+  showFps: true,
 })
 
 rt.registerMaterial({
@@ -15,13 +15,13 @@ rt.registerMaterial({
         return thres;
     }
 
-    var power = 6 + 4 * sin(U.time * 0.4);
+    var power = 6 + 4 * sin(U.time * 0.1);
     var z = pos;
     var c = pos;
 
     var dr = 1.0;
     var r = 0.0;
-    for (var i: i32 = 0; i < 32; i++) {        
+    for (var i: i32 = 0; i < 128; i++) {
         r = length(z);
         if r > 2.0 { break; }
         var theta = acos(z.z / r);
@@ -43,13 +43,11 @@ rt.registerMaterial({
       // Material
       pos, diffuseColor, /* shininess */ 256,
       // Light
-      /* lightPos */ ro, /* lightColor */ vec3f(1), /* power */ 1,
+      /* lightPos */ ro, /* lightColor */ vec3f(1), /* power */ 0.8,
     );
     return vec4f(light, 1.);
   `,
 })
-
-await rt.build()
 
 rt.camera.spherical = {
   phi: -0.5,
@@ -59,11 +57,4 @@ rt.camera.spherical = {
 
 freeControls(rt)
 
-const increaseFrameCounter = frameCounter()
-function draw() {
-  rt.shoot()
-  requestAnimationFrame(draw)
-  increaseFrameCounter()
-}
-
-draw()
+await rt.buildAndRun()

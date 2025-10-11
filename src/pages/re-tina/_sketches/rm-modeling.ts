@@ -1,11 +1,7 @@
 import { ReTina } from '@ReTina'
-import frameCounter from './utils/frameCounter'
 import freeControls from './utils/freeControls'
-import fsCanvas from './utils/fsCanvas'
 
-const rt = new ReTina({
-  canvas: fsCanvas(),
-})
+const rt = new ReTina()
 
 // Based on ./src/pages/tina/_sketches/rm-modeling.js
 
@@ -77,8 +73,6 @@ rt.registerMaterial({
   `,
 })
 
-await rt.build()
-
 rt.camera.fov = 60
 rt.camera.pos.x = 0.2
 rt.camera.pos.z = 1.2
@@ -87,11 +81,4 @@ rt.camera.spherical.theta = 0.2
 
 freeControls(rt)
 
-const increaseFrameCounter = frameCounter()
-function draw() {
-  rt.shoot()
-  requestAnimationFrame(draw)
-  increaseFrameCounter()
-}
-
-draw()
+await rt.buildAndRun()

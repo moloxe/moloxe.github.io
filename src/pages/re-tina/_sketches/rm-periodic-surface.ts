@@ -1,10 +1,6 @@
-import { ReTina } from '../_lib'
-import fsCanvas from './utils/fsCanvas'
+import { ReTina } from '@ReTina'
 
-const canvas = fsCanvas({ useExactPixels: true })
-const rt = new ReTina({
-  canvas,
-})
+const rt = new ReTina()
 
 rt.registerMaterial({
   sdFunc: `
@@ -25,25 +21,17 @@ rt.registerMaterial({
 let pulse = 0
 const setUniformPulse = rt.registerUniform('pulse', pulse)
 
-canvas.addEventListener('click', () => {
+rt.canvas.addEventListener('click', () => {
   pulse = 1
   setUniformPulse(pulse)
 })
 
-await rt.build()
-
 let lastTime = performance.now()
-function draw() {
+await rt.buildAndRun(() => {
   const time = performance.now()
   const pulseSlowdown = 0.2 / (time - lastTime)
   lastTime = time
-
-  rt.shoot()
-  requestAnimationFrame(draw)
-
   pulse -= pulseSlowdown
   pulse = Math.max(0, pulse)
   setUniformPulse(pulse)
-}
-
-draw()
+})
