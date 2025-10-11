@@ -76,7 +76,9 @@ async function getRender({
     },
   })
 
+  let frame = 0
   function updateSceneUniforms(camera: RTCamera) {
+    rtUniform.set('frame', frame)
     rtUniform.set('time', performance.now() / 1000)
     rtUniform.set('aspectRatio', canvas.width / canvas.height)
     rtUniform.set('width', canvas.width)
@@ -142,6 +144,8 @@ async function getRender({
     if (rtPingPong) {
       rtPingPong.swap()
     }
+
+    frame++
   }
 
   function setUniform(name: string, value: number) {

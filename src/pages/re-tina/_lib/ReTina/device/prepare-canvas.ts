@@ -28,7 +28,7 @@ async function prepareCanvas(canvas: HTMLCanvasElement) {
   context.configure({
     device,
     format: presentationFormat,
-    alphaMode: 'premultiplied',
+    alphaMode: 'opaque',
     usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.COPY_DST,
   })
 

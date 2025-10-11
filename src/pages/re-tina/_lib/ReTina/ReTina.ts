@@ -77,6 +77,7 @@ class ReTina {
     )
 
     const rtUniform = new RTUniform(device, {
+      frame: 0,
       time: 0,
       aspectRatio: this.canvas.width / this.canvas.height,
       width: this.canvas.width,

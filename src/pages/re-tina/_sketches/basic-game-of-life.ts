@@ -56,15 +56,10 @@ const rt = new ReTina({
   `,
 })
 
-const setFrame = rt.registerUniform('frame')
-
 await rt.build()
 
 rt.setTex(0, img.textureData)
 
-let frame = 0
 setInterval(() => {
   rt.shoot()
-  frame++
-  setFrame(frame)
 }, 1000 / 24)
