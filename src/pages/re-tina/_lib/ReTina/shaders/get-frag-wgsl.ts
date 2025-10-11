@@ -10,6 +10,7 @@ type Props = {
   materialFuncs: RTMaterialFuncs[]
   nTextures: number
   usePrevFrameTex?: boolean
+  useInterlacing?: boolean
 }
 
 function getFragWGSL({
@@ -19,6 +20,7 @@ function getFragWGSL({
   materialFuncs,
   nTextures,
   usePrevFrameTex,
+  useInterlacing,
 }: Props) {
   let fragWGSL = fragTemplateWGSL
 
@@ -66,6 +68,16 @@ function getFragWGSL({
         return vec4<f32>(scene.color.rgb, 1.0);
       `
     }
+  }
+
+  if (useInterlacing) {
+    fragWGSL = fragWGSL.replace(
+      '// #INTERLACING',
+      ` let _prev_pix_ = getPrevFrameTexSample(uv);
+        if i32(U.height * uv.y) % 2 == i32(U.frame) % 2 {
+        return _prev_pix_;
+        }`
+    )
   }
 
   if (main) {

@@ -16,6 +16,7 @@ type Props = {
   functions?: string
   texs?: RTTex[]
   usePrevFrameTex?: boolean
+  useInterlacing?: boolean
 }
 
 class ReTina {
@@ -27,11 +28,19 @@ class ReTina {
   private setUniform?: (name: string, value: number) => void
   private materialFuncs: RTMaterialFuncs[] = []
   private usePrevFrameTex?: boolean
+  private useInterlacing?: boolean
   private setDeviceTexure?: (index: number, textureData: Uint8Array) => void
   private texs: RTTex[]
   camera: RTCamera
 
-  constructor({ canvas, main, functions, texs, usePrevFrameTex }: Props) {
+  constructor({
+    canvas,
+    main,
+    functions,
+    texs,
+    usePrevFrameTex,
+    useInterlacing,
+  }: Props) {
     this.canvas = canvas
     this.main = main
     this.functions = functions
@@ -41,6 +50,9 @@ class ReTina {
       fov: 90,
     }
     this.texs = texs ?? []
+
+    this.useInterlacing = useInterlacing
+    usePrevFrameTex = useInterlacing || usePrevFrameTex
     this.usePrevFrameTex = usePrevFrameTex
   }
 

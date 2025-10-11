@@ -12,7 +12,8 @@ struct GlobalUniform {
 // #RAY_MARCH_FUNCTIONS
 
 @fragment
-fn main(@location(0) fragCoord: vec2<f32>) -> @location(0) vec4<f32> {
+fn main(@location(0) fragCoord: vec2<f32>) -> @location(0) vec4f {
     let uv = 1. - fragCoord.xy;
+    // #INTERLACING
     return vec4<f32>(0.0, 0.0, 0.0, 1.0); // #MAIN
 }
