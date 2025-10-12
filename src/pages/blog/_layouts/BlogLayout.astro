@@ -1,0 +1,114 @@
+---
+import GenericImg from '@src/assets/img/generic.jpg'
+import Basic from '@src/layouts/Basic.astro'
+
+type Props = {
+  title: string
+  categories?: string[]
+  imageURL?: string
+  maxWidth?: string
+}
+
+const { title, categories } = Astro.props
+const maxWidth = Astro.props.maxWidth ?? 'max-w-3xl'
+
+const imageURL = Astro.props.imageURL ?? GenericImg.src
+
+const pageLinks = [
+  {
+    text: 'Inicio',
+    url: '/',
+  },
+  {
+    text: 'Blog',
+    url: '/blog',
+  },
+]
+
+const externalLinks = [
+  // TODO: Turn on when domain is ready
+  // {
+  //   text: 'Estadísticas',
+  //   url: 'https://librecounter.org/moloxe.io/show',
+  //   target: '_blank',
+  // },
+  {
+    text: 'Sobre mi',
+    url: '/blog/sobre-mi',
+    target: undefined,
+  },
+]
+
+const description = categories
+  ? `Tags: ${categories.map((c) => `#${c}`).join(' ')}`
+  : ''
+---
+
+<Basic title={title} showPaths seoDescription={description} seoImg={imageURL}>
+  <div
+    class={`flex flex-col w-full h-full print:max-w-full mx-auto ${maxWidth}`}
+  >
+    <slot />
+
+    <footer
+      class="flex flex-col gap-4 px-2 py-8 mt-8 border-t border-neutral-500 w-full text-neutral-500 text-xs print:hidden"
+    >
+      <div class="flex whitespace-nowrap">
+        <div class="flex-1 flex flex-col gap-1">
+          <!-- <p class="pl-2">Left</p> -->
+          <ul class="flex flex-col gap-1">
+            {
+              pageLinks.map((link) => (
+                <li>
+                  <a class="hover:text-white" href={link.url}>
+                    {link.text}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+        <div class="flex-1 flex flex-col gap-1 ml-auto text-right">
+          <!-- <p class="pr-2">Rright</p> -->
+          <ul class="flex flex-col gap-1 text-right [direction:rtl]">
+            {
+              externalLinks.map((link) => (
+                <li>
+                  <a
+                    class="hover:text-white"
+                    href={link.url}
+                    target={link.target}
+                  >
+                    {link.text}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+      <div class="flex justify-between w-full">
+        <p>
+          <!-- First post: /blog/sobre-mi -->
+          &copy; 2018.
+          <a
+            target="_blank"
+            href="https://creativecommons.org/licenses/by-sa/4.0/"
+            class="hover:text-white">CC BY-SA 4.0</a
+          >
+        </p>
+      </div>
+    </footer>
+  </div>
+</Basic>
+
+<style is:global>
+  :root {
+    font-weight: 200;
+    @apply font-mono;
+  }
+
+  .edit-block {
+    @apply shadow-xl rounded overflow-hidden;
+  }
+</style>

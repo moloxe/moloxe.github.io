@@ -1,0 +1,29 @@
+---
+import BlogLayout from '../_layouts/BlogLayout.astro'
+import PostService from '@src/pages/blog/_services/posts'
+import { getPosterFromPost } from '@src/pages/blog/_utils/post'
+import PostView from './_components/PostView.vue'
+
+export async function getStaticPaths() {
+  const cards = await PostService.getPostCards()
+  return cards.map(({ slugUrl }) => ({ params: { slugUrl } }))
+}
+
+const { slugUrl } = Astro.params
+if (!slugUrl) throw new Error('Post not found.')
+
+const post = await PostService.getPost(slugUrl)
+
+if (!post) throw new Error('Post not found.')
+
+const imageURL = (() => {
+  let url = getPosterFromPost(post) as string
+  const isRelativePath = url && url.startsWith('/')
+  if (isRelativePath) url = `https://moloxe.github.io${url}`
+  return url
+})()
+---
+
+<BlogLayout title={post.title} categories={post.categories} imageURL={imageURL}>
+  <PostView client:load post={post} />
+</BlogLayout>

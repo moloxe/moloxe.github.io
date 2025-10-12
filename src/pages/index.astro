@@ -1,0 +1,135 @@
+---
+import Basic from '@src/layouts/Basic.astro'
+import PostService from '@src/pages/blog/_services/posts'
+import PostCard from '@src/pages/blog/_components/PostCard.vue'
+import CastleImg from '@src/assets/img/profile/castle.jpg'
+import MeImg from '@src/assets/img/profile/me.jpg'
+import CameraImg from '@src/assets/img/profile/camera.jpg'
+import PhotoGallery from './_components/PhotoGallery'
+
+const blogCategories = await PostService.getCategories()
+const pinnedPostCards = await PostService.getPinnedPostCard()
+
+const EXPERIMENTS = [
+  {
+    href: '/re-tina/',
+    title: `ReTina (2025-08)`,
+  },
+  {
+    href: '/tina/',
+    title: `Tina (2024-08)`,
+  },
+  {
+    href: 'https://www.shadertoy.com/user/moloxe',
+    title: `Shadertoy's Profile`,
+    target: '_blank',
+  },
+  {
+    href: '/blog/oneko',
+    title: 'Oneko (2024-03)',
+  },
+  {
+    href: '/lab/say-yes',
+    title: 'Say yes (2023-12)',
+  },
+  {
+    href: '/lab/kruskal',
+    title: 'Kruskal (2019-08)',
+  },
+  {
+    href: '/lab/splines-cubicos',
+    title: 'Splines cúbicos (2019-05)',
+  },
+  {
+    href: '/lab/rain-code',
+    title: 'Rain code',
+  },
+  {
+    href: '/lab/virtual-pad',
+    title: 'Virtual pad',
+  },
+]
+---
+
+<!-- TODO: add title when domain is ready -->
+<Basic title="...">
+  <main class="flex flex-col gap-16 px-2 py-16 max-w-5xl m-auto">
+    <div
+      class="flex gap-12 w-full max-sm:flex-col-reverse min-h-[400px] max-sm:h-auto"
+    >
+      <div class="flex flex-col gap-12 w-1/2 max-sm:w-full">
+        <h1 class="font-mono">...</h1>
+        <div class="flex flex-col gap-6">
+          <p class="text-pretty">
+            Holas, este lugar es una especie de <code>lab</code>. Encontrarás
+            principalmente contenido sobre computación.
+          </p>
+        </div>
+      </div>
+      <div
+        class="relative flex items-center justify-center w-1/2 max-sm:w-auto max-sm:h-[60vh] max-sm:mx-[-0.5rem] max-sm:mt-[-4rem]"
+      >
+        <PhotoGallery
+          client:only="react"
+          photos={[CastleImg.src, MeImg.src, CameraImg.src]}
+        />
+      </div>
+    </div>
+
+    <hr />
+
+    <div class="flex flex-col gap-6">
+      <h1>
+        <a href="/blog" class="text-primary">Blog</a>
+      </h1>
+
+      <div class="flex flex-wrap gap-x-4">
+        {
+          blogCategories.map((category) => (
+            <a href={`/blog?c=${category}`}>#{category}</a>
+          ))
+        }
+      </div>
+
+      <h2>Fijados:</h2>
+
+      <div class="flex gap-12 overflow-x-scroll pb-6 max-sm:pb-4">
+        {
+          pinnedPostCards.map((postCard) => (
+            <div class="min-w-80 w-full">
+              <PostCard postCard={postCard} />
+            </div>
+          ))
+        }
+      </div>
+    </div>
+
+    <hr />
+
+    <div class="flex gap-12 max-sm:flex-col-reverse">
+      <iframe class="flex-1 min-h-80" src="/re-tina/rm-periodic-surface"></iframe>
+      <div class="flex-1 flex flex-col gap-2">
+        <h1>Experimentos</h1>
+        <p>Algunos experimentos recientes y otros del baúl:</p>
+        <ul>
+          {
+            EXPERIMENTS.map(({ href, title, target }) => (
+              <li>
+                <a class="text-primary" href={href} target={target}>
+                  {title}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+
+    <hr />
+
+    <footer class="text-sm leading-6 opacity-50 text-center text-pretty">
+      Aquí recopilo proyectos que me van interesando (los que se pueden 🥲). Hay
+      mucho para perderse...
+    </footer>
+  </main>
+</Basic>

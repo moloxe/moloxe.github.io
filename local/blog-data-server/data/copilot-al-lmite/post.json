@@ -1,0 +1,111 @@
+{
+  "title": "Copilot al límite",
+  "categories": [
+    "tech"
+  ],
+  "creationDate": "2024-02-26T23:21:13.880Z",
+  "lastUpdate": "2024-03-23T02:00:39.940Z",
+  "isPinned": false,
+  "container": [
+    {
+      "type": "MarkdownBlock",
+      "text": "Acabo de recibir un recibo más de Github Copilot ($10/mes 💀). Siempre digo que lo voy a desactivar porque no lo uso mucho, pero, su comodidad hace que me olvide...\n\n"
+    },
+    {
+      "type": "GiphyBlock",
+      "text": "7rJE4vH3ItKDu$%&Copilot"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "*GitHub Copilot es una herramienta de programación que utiliza inteligencia artificial para sugerir y completar código automáticamente.*"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Hoy vengo a poner a prueba sus poderes. Puntualmente en la refactorización de 612 líneas de código escritas en React con JavaScript, para ser transformado en un componente funcional con TypeScript.\n\n"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "*Spoiler: Termina con 113 líneas de código.*"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "El código no es presumible (code smell, redundancia, class components 🤮) y mi trabajo es revivirlo. Podría decirse que sé muy bien como repararlo (yo lo escribí 🤡). Sin embargo, ya que me duele mucho pagar por Copilot, lo dejaré en sus manos."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# Código deprecado (612 líneas de código)"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "En el código se pueden encontrar cosas como:\n```ts\nfor (let product of customer.products) {\n  let brand = product.brand;\n  let option = document.createElement(\"option\");\n  option.appendChild(document.createTextNode(brand));\n  option.setAttribute(\"brand\", brand);\n  select_product.appendChild(option);\n  this.brands[brand] = idx;\n  idx++;\n}\n```"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "No luce mal, fuera de que con react no tiene sentido hacer las cosas de esta forma. Hay muchas malas decisiones tomadas, por ejemplo, que solo se consideran happy paths."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Se pueden encontrar atrocidades como:\n```ts\nthis.statusBar.current.style.display = \"block\";\nthis.statusBar.current.innerText = \"Cargando datos\";\n```"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "O estas (esto lo hace en la función de un componente):\n```ts\nconst customer = await this.db.collection(\"customer\").findOne({\n  stitch_td_uid: this.client.auth.user.id,\n});\n```"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "5mentarios:\n```ts\nfor (let j = i + 1; j < indexes.length; j++) {\n  if (idx < indexes[j]) {\n    indexes[j]--;\n  }\n}\n```"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# Copilot"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Prompt: *\"Refactor this class component written in jsx to a functional component with typescript. Rename as many variables as you can to cammelcase. If you see that updates are made to the DOM with the document object, transform it into the equivalent using React.\"*"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# Resultados (276 líneas de código 💀)"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Funciona? Nope. Pero en un principio tampoco, así que, no hay problema.\n"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Lo interesante es que pasó de 612 líneas de código a 276 💀. Redujo el código un 55%.\n"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "- Muchas funciones que no entendió se las  comió (las dejó en *TODO: ...*).\n- Se inventó interfaces (no reutilizó tipados).\n- Muchos refs (no hizo mucho caso a utilizar React en vez del DOM).\n- Algunos let que podrían ser const. \n- No tomó en cuenta algunos servicios existentes (imagino que por usar sus interfaces)."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Lo más raro que encontré fue:\n```tsx\nconst [filter, setFilter] = useState<string | null>(null);\n// ...\nconst loadProduct = (filter: { type: string; val: string }) => {\n  setFilter(filter.val);\n};\n// ...\n<select\n  className=\"form-control\"\n  onChange={loadProduct}\n  ref={selectBrandsRef}\n  aria-describedby=\"brands\"\n/>\n```"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Lo cómico es que es elemento no carga productos, ni los filtra. Del estado solo se usa el `setFilter`. Los productos se cargan una vez, ese elemento es para filtrar el inventario."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Cosas raras, pero... lo hizo bastante limpio."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# Conclusión (113 líneas de código)"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Después de hacer que el código funcione, subió de 276 a 462 líneas. Por último, luego de su code splitting como Dios manda, pasó a 113."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Hay muchas cosas que copilot hace que no entiendo, pero es muy divertido ver las desgracias que genera."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "De cualquier forma se siente la ayuda que ofrece, es como encariñarse de una bicicleta sin frenos. Va quitar trabajos? Nope, es un idiota... pero es mi idiota."
+    }
+  ]
+}

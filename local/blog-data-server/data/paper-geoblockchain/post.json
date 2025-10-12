@@ -1,0 +1,168 @@
+{
+  "title": "Paper: GeoBlockchain",
+  "categories": [
+    "edu",
+    "tech"
+  ],
+  "creationDate": "2021-10-29T13:56:28.000Z",
+  "lastUpdate": "2024-06-05T18:00:33.118Z",
+  "isPinned": false,
+  "container": [
+    {
+      "type": "MarkdownBlock",
+      "text": "Enlace del paper: https://doi.org/10.5220/0011996600003467"
+    },
+    {
+      "text": "QuPrp3BI6cMe2lErCb$%&Publicado!",
+      "type": "GiphyBlock"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Este es el primer borrador que representa la propuesta inicial:"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# Prueba de trabajo imparcial basada en la geolocalización para la mitigación del control de las mining pools en el blockchain"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "### Introducción"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Las criptomonedas son el principal uso del blockchain en la actualidad. Grandes cantidades de dinero y poder computacional mantiene tranquilos a sus usuarios. Esto es debido a que es un sistema que se apoya en hechos y no en la confianza en terceros."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Las recompensas de la prueba de trabajo (proof-of-work) favorecen a los que tienen mayor poder computacional, es por ello que se implementaron las mining pools. Con el propósito de repartir la recompensa entre los nodos que pertenecen y minan dentro del pool.\n"
+    },
+    {
+      "type": "ImageBlock",
+      "text": "/clykw.jpg"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "<div align=\"right\">\nMining pools de bitcoin (últimos 3 días, 29/10/2021).\n\nFuente: https://btc.com/stats/pool\n</div>\n"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "### Problemática"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Si bien las criptomonedas se basan en un sistema que requiere de una capacidad de cómputo inalcanzable para ser corrompida, eso no las libra de los **ataques del 51%**. Este ataque significa controlar la mayor parte de los nodos en la red que se dedican a sostener y miniar dentro del blockchain."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Como se explica en el paper de bitcoin: “El sistema es seguro siempre que los **nodos honestos** controlen colectivamente más potencia de CPU que cualquier grupo cooperante de **nodos atacantes**.”\n"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Y se tiene la premisa que: “Si un atacante codicioso puede reunir más potencia de CPU que todos los nodos honestos, tendría que elegir entre usarla para **defraudar a las personas** robándoles sus pagos o usarla para **generar nuevas monedas**.”\n"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Punto en el cual se tiene que **confiar** en que un atacante, que logre controlar la red, tome la decisión de tener más recompensa en vez de alterar los bloques a su conveniencia.\n"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "### Descripción de la propuesta"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "#### Descripción"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "En este proyecto se propone una solución al problema de **ataques del 51%**. Partiendo de la premisa de que los sistemas de blockchain, como las criptomonedas, se protegen de este tipo de ataques **confiando** en que dicho atacante prefiera una opción en la que obtenga mayores recompensas.\n"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "La presente propuesta solo permite la minería a nodos que se encuentren en zonas geográficas válidas. Siendo las segmentadas aleatoriamente basadas en el “hash root” del Markle tree del bloque a minar.\n"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "### Solución propuesta"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "La solución propuesta consta de segmentar aleatoriamente el planeta y de esta forma solo permitir minar a un nodo cuando se encuentre dentro de las zonas permitidas."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Al profundizar en la solución se considera que el patrón aleatorio debe ser accesible por toda la red. De esta forma saber si un nodo será aceptado como minero y posible ganador de la recompensa.\n"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "El número aleatorio propuesto se basa en el “hash root” del Merkle Tree de un bloque a minar (el cual está compuesto de los hashes de las transacciones). De esta forma todos los nodos que deseen minar podrán saber si son elegidos para participar en el minado. También, de esta manera el valor será aleatorio e impredecible para toda la red en todo momento.\n"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Además, se deberá adentrar en lo que implica para un nodo estar dentro de una zona permitida. Al estar basado en una red P2P, se puede obtener la geolocalización de un nodo basado en su dirección IP. Los demás nodos tendrán que recibir directamente el bloque minado del nodo que lo encontró, para así poder validar si su ubicación pertenece al segmento permitido.\n"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "#### Descripción General"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Con esta propuesta se busca modelar un sistema para mitigar el control que las mining pools podrían tener sobre una red descentralizada al realizar un **ataque del 51%**. De este modo, contar con una red resistente y segura frente a estos ataques. Al punto de necesitar tener control total de la red para poder vulnerarla."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Para el desarrollo de la propuesta, basado en el funcionamiento de un blockchain, se añaden 2 partes fundamentales:"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "**1. Algoritmo de segmentación geográfica**"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Un algoritmo para segmentar el planeta en base al “hash root” del Markle tree del bloque a minar, junto con validaciones para saber si una IP se encuentra dentro de las zonas válidas. Al utilizar el “hash root” como semilla (seed), para obtener números aleatorios, se puede generar un mapa en 2 dimensiones el cual sirve para determinar las zonas válidas."
+    },
+    {
+      "type": "ImageBlock",
+      "text": "/eqq6d.jpg"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "<div align=\"right\">\nFuentes:\n\nhttps://geology.com/world/world-map.shtml\n\nhttps://www.researchgate.net/publication/309285851_Adaptive_Hierarchical_Mesh_Detail_Mapping_and_Deformation/figures\n\n</div>"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Con ello se puede sincronizar y obtener ubicaciones aleatorias para el minado. Luego un nodo podrá obtener su ubicación (longitud y latitud) basado en su IP y saber si le está permitido participar en el minado."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "**2. Sistema de distribución de nuevo bloque**\n\n"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Cuando un nodo se encuentre dentro de una zona de minado válida y consiga encontrar un hash para el bloque, debe comunicarlo a la red para que sea aceptado. Además, los demás nodos de la red deben ser capaces de validar de forma remota que el hash encontrado proviene de un nodo válido."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Es suficiente con consultar el bloque y la IP del nodo que minó, verificando con el algoritmo de segmentación. Sin embargo, esto podría saturar al nodo que encontró el hash de muchas peticiones. Es necesario que la IP que figure en el nuevo bloque sea la misma que la del nodo que lo comunica, por lo que es una situación que necesita ser evaluada."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Se propone un sistema de 2 fases. En la primera se intentaría distribuir el bloque (los nodos directos podrían hacer la validación en ese mismo momento) y en la segunda validar con el nodo que minó el bloque.\n"
+    },
+    {
+      "type": "ImageBlock",
+      "text": "/ymlpu.jpg"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "<div align=\"right\">\nFuente: creación propia\n</div>"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "### Referencias"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "- Nakamoto, S., (2008). Bitcoin: A Peer-to-Peer Electronic Cash System. Interventions, DOI: 10.21428/9610ddb2.a6a2490c.\n- Wikipedia.org. Merkle tree. Disponible en: https://en.wikipedia.org/wiki/Merkle_tree\n- Wikipedia.org. Blockchain. Disponible en: https://en.wikipedia.org/wiki/Blockchain\n- Wkipedia.org. Peer-to-peer. Disponible en: https://en.wikipedia.org/wiki/Peer-to-peer \n- Wkipedia.org. IP address. Disponible en: https://en.wikipedia.org/wiki/IP_address\n- Wkipedia.org. Internet geolocation. Disponible en: https://en.wikipedia.org/wiki/Internet_geolocation\n- Wkipedia.org. Proof of work. Disponible en: https://en.wikipedia.org/wiki/Proof_of_work\n"
+    }
+  ]
+}

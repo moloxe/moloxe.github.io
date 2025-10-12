@@ -1,0 +1,23 @@
+---
+import Basic from '@src/layouts/Basic.astro'
+import SayYesComponent from '@src/pages/lab/say-yes/_components/SayYes'
+---
+
+<Basic title="Say yes">
+  <div class="flex flex-col w-full h-full">
+    <SayYesComponent client:load />
+
+    <footer class="mt-auto flex text-xs justify-between p-2 opacity-30">
+      <p>
+        Inspired by
+        <a href="https://www.instagram.com/reel/C1IDqsst7kg" target="_blank"
+          >@elifandcode</a
+        >
+      </p>
+      <p>
+        Build by
+        <a href="/">this guy</a>
+      </p>
+    </footer>
+  </div>
+</Basic>

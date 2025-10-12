@@ -1,0 +1,205 @@
+{
+  "title": "What does 10/10 mean in a game?",
+  "categories": [
+    "tech",
+    "games",
+    "disclaimed"
+  ],
+  "creationDate": "2022-02-11T05:00:02.000Z",
+  "lastUpdate": "2024-08-05T19:21:46.453Z",
+  "isPinned": false,
+  "container": [
+    {
+      "type": "MarkdownBlock",
+      "text": "Walking around the web I found a video that expressed something that you don't think about when you see reviews of video games, movies, etc..."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "What does it mean for a video game to have a 9/10? or 4/5? or even worse... 8.7/10?"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Answers? They do not exist."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "\nThanks to websites that are dedicated to collecting ratings, it is possible to have a better purchase decision. But there is something very strange about that, you find things like these:"
+    },
+    {
+      "type": "ImageBlock",
+      "text": "/fs5ml.jpg"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Is ocarina of time the best game in the world? Nope, at least not for many and that is why we end up finding things like:"
+    },
+    {
+      "type": "ImageBlock",
+      "text": "/ul5vg.jpg"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Yes, it's toxic, but I also feel the same 😂"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "So there should be a saner way to rate games, right? Well, that's why you're here."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# Rank Based Scoring"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "A recent trend that is gaining traction is tier lists. Like this:"
+    },
+    {
+      "type": "ImageBlock",
+      "text": "/1xvks.jpg"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "They are so simple to understand and give a lot of information."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "So that motivated me to think that maybe this could be the solution..."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Artistic moment 🥲🎨"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Imagine the scenario where we only have these games to be rated:"
+    },
+    {
+      "type": "ImageBlock",
+      "text": "/2z8jo.jpg"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "...and we only have 2 reviewers (reviewer A and reviewer B) and their ranking/tier-list/scoring is as follows:"
+    },
+    {
+      "type": "ImageBlock",
+      "text": "/gf08w.jpg"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "If you realize there are games that were not criticized. Maybe because they didn't play it. To be fair, all games that are not played by the critic will have the worst position."
+    },
+    {
+      "type": "ImageBlock",
+      "text": "/t0k0l.jpg"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "And finally, the score of a game would be obtained simply by adding the ranking considered by the critics. We will obtain the \"Global score\"."
+    },
+    {
+      "type": "ImageBlock",
+      "text": "/vum9m.jpg"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "## And this really works?"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Instead of waiting for someone to start a company that collects tier-lists, it is simpler to use an existing one."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Metacritic has a lot of reviews, with a scraping you can get a \"tier-list\" of the games from each magazine."
+    },
+    {
+      "type": "ImageBlock",
+      "text": "/wh6j9.jpg"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "\"Quite easy\""
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "It is important to mention that I only considered critic reviews and not user reviews."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "## Yes, it works 😃"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Scraped pages: 52\n\nGames per pages: 100\n\nScraped games: 5200"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "And the top rated games are (2022/02/12):"
+    },
+    {
+      "type": "ImageBlock",
+      "text": "/wgq9y.jpg"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "And where is Ocarina of time? Well..."
+    },
+    {
+      "type": "ImageBlock",
+      "text": "/ep4xj.jpg"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "So what makes Uncharted 2 so much \"better\" than Ocarina of Time?"
+    },
+    {
+      "type": "ImageBlock",
+      "text": "/jf7pk.jpg"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Well, many critics put Uncharted 2 closer to its 1st place, which leads me to think that something strange is going on with the Metacritic reviews. But hey, we have a more homogeneous ranking!"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# Conclusions"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "This \"Rank Based Scoring\" or \"Tier Based Scoring\" is clearer than giving weird ratings to video games."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Although Metacritic helped this experiment, the reviews feel very obfuscated. It would be great if there was a website dedicated to collecting rankings in this way. I'm tempted to do it, there's talent but no \"time\" 💸."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "# Bonus\nThe best rated games of the 8th generation:\n\n"
+    },
+    {
+      "type": "ImageBlock",
+      "text": "/e0dqj.jpg"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Due to the number of ties around Ocarina of Time, an improvement in the calculation of the score is necessary."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Considering that a game would be top rated if it was #1 by reviewers, then the distance to this supposed top rated game would be the score."
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "Assuming the following: Game G1, G2 and G3.\n<br/>\n<br/>\nAnd the ranking:\n\n- Best (1, 1)\n- G1 (1, 3)\n- G2 (2, 2)\n- G3 (3, 1)"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "With the previous marker there would have been a tie between all the games. Now using a Euclidean distance to Best (1, 1) the scoring would be as follows:\n\n- G1: 2\n- G2: 1.41\n- G3: 2"
+    },
+    {
+      "type": "MarkdownBlock",
+      "text": "The advantage it offers is obvious.\n\n*...work in progress*"
+    }
+  ]
+}
