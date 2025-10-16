@@ -8,6 +8,18 @@ fn toSpherical(pos: vec3<f32>) -> vec3<f32> {
     return vec3<f32>(r, theta, phi);
 }
 
+fn toCartesian(sph: vec3<f32>) -> vec3<f32> {
+    let r = sph.x;
+    let theta = sph.y;
+    let phi = sph.z;
+    let sinTheta = sin(theta);
+    return vec3<f32>(
+        r * sinTheta * cos(phi),
+        r * sinTheta * sin(phi),
+        r * cos(theta)
+    );
+}
+
 fn rotate(pos: vec3<f32>, rot: vec3<f32>) -> vec3<f32> {
     var result = pos;
     // Rotation around the Z axis

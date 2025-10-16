@@ -3,7 +3,7 @@ import freeControls from './utils/freeControls'
 
 // Shader based on: https://webgpulab.xbdev.net/index.php?page=editor&id=mandelbulbbasic3&
 const rt = new ReTina({
-  height: 480,
+  height: 600,
   useInterlacing: true,
   showFps: true,
 })
@@ -37,13 +37,14 @@ rt.registerMaterial({
   `,
   lightFunc: /* wgsl */ `
     let diffuseColor = hsv2rgb(vec3f(toSpherical(pos).y + U.time * 0.3, 0.5, 0.8));
+    let lightPos = toCartesian(vec3f(2, toSpherical(ro).yz));
     let light = blinnPhong(
       // Environment
       rd, normal, /* minBright */ 0,
       // Material
       pos, diffuseColor, /* shininess */ 256,
       // Light
-      /* lightPos */ ro, /* lightColor */ vec3f(1), /* power */ 0.8,
+      /* lightPos */ lightPos, /* lightColor */ vec3f(1), /* power */ 2,
     );
     return vec4f(light, 1.);
   `,
