@@ -21,7 +21,7 @@ rt.registerMaterial({
 
     var dr = 1.0;
     var r = 0.0;
-    for (var i: i32 = 0; i < 128; i++) {
+    for (var i: i32 = 0; i < 32; i++) {
         r = length(z);
         if r > 2.0 { break; }
         var theta = acos(z.z / r);
@@ -36,24 +36,34 @@ rt.registerMaterial({
     return 0.5 * log(r) * r / dr;
   `,
   lightFunc: /* wgsl */ `
-    let diffuseColor = hsv2rgb(vec3f(toSpherical(pos).y + U.time * 0.3, 0.5, 0.8));
     let lightPos = toCartesian(vec3f(2, toSpherical(ro).yz));
+    let hue = toSpherical(pos).y + U.time * 0.2;
+    let diffuseColor = hsv2rgb(vec3f(hue, 0.5, 1));
+    let lightColor = hsv2rgb(vec3f(0.2));
     let light = blinnPhong(
       // Environment
       rd, normal, /* minBright */ 0,
       // Material
-      pos, diffuseColor, /* shininess */ 256,
+      pos, diffuseColor, /* shininess */ 128,
       // Light
-      /* lightPos */ lightPos, /* lightColor */ vec3f(1), /* power */ 2,
+      lightPos, lightColor, /* power */ 8,
     );
     return vec4f(light, 1.);
   `,
 })
 
-rt.camera.spherical = {
-  phi: -0.5,
-  radius: 1.8,
-  theta: 0.4,
+rt.camera = {
+  fov: 60,
+  pos: {
+    x: 0.6,
+    y: 0.8,
+    z: 1.5,
+  },
+  spherical: {
+    phi: -0.5,
+    radius: 0,
+    theta: 0.4,
+  },
 }
 
 freeControls(rt)
