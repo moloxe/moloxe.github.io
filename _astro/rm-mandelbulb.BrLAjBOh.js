@@ -1,4 +1,4 @@
-import{R as e}from"./ReTina.B45RerBY.js";import{f as t}from"./freeControls.BVGVdC3g.js";const r=new e({height:600,useInterlacing:!0,showFps:!0});r.registerMaterial({sdFunc:`
+import{R as e}from"./ReTina.B5Rdf2Fp.js";import{f as t}from"./freeControls.BVGVdC3g.js";const r=new e({height:600,useInterlacing:!0,showFps:!0});r.registerMaterial({sdFunc:`
     var thres = length(pos) - 1.2;
     if thres > 0.2 {
         return thres;
@@ -10,7 +10,7 @@ import{R as e}from"./ReTina.B45RerBY.js";import{f as t}from"./freeControls.BVGVd
 
     var dr = 1.0;
     var r = 0.0;
-    for (var i: i32 = 0; i < 128; i++) {
+    for (var i: i32 = 0; i < 32; i++) {
         r = length(z);
         if r > 2.0 { break; }
         var theta = acos(z.z / r);
@@ -24,15 +24,17 @@ import{R as e}from"./ReTina.B45RerBY.js";import{f as t}from"./freeControls.BVGVd
     }
     return 0.5 * log(r) * r / dr;
   `,lightFunc:`
-    let diffuseColor = hsv2rgb(vec3f(toSpherical(pos).y + U.time * 0.3, 0.5, 0.8));
     let lightPos = toCartesian(vec3f(2, toSpherical(ro).yz));
+    let hue = toSpherical(pos).y + U.time * 0.2;
+    let diffuseColor = hsv2rgb(vec3f(hue, 0.5, 1));
+    let lightColor = hsv2rgb(vec3f(0.2));
     let light = blinnPhong(
       // Environment
       rd, normal, /* minBright */ 0,
       // Material
-      pos, diffuseColor, /* shininess */ 256,
+      pos, diffuseColor, /* shininess */ 128,
       // Light
-      /* lightPos */ lightPos, /* lightColor */ vec3f(1), /* power */ 2,
+      lightPos, lightColor, /* power */ 8,
     );
     return vec4f(light, 1.);
-  `});r.camera.spherical={phi:-.5,radius:1.8,theta:.4};t(r);await r.buildAndRun();
+  `});r.camera={fov:60,pos:{x:.6,y:.8,z:1.5},spherical:{phi:-.5,radius:0,theta:.4}};t(r);await r.buildAndRun();
