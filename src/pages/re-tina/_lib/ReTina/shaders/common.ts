@@ -138,8 +138,13 @@ fn opSmoothUnion(d1: f32, d2: f32, k: f32) -> f32 {
     return mix(d2, d1, h) - k * h * (1.0 - h);
 }
 
+fn opSmoothSubtraction(d1: f32, d2: f32, k: f32) -> f32 {
+    return -opSmoothUnion(d1, -d2, k);
+}
+
+// https://gist.github.com/munrocket/236ed5ba7e409b8bdf1ff6eca5dcdc39#simplex-noise
+
 //  MIT License. © Ian McEwan, Stefan Gustavson, Munrocket, Johan Helsing
-//
 fn mod289(x: vec2f) -> vec2f {
     return x - floor(x * (1. / 289.)) * 289.;
 }
@@ -151,8 +156,6 @@ fn mod289_3(x: vec3f) -> vec3f {
 fn permute3(x: vec3f) -> vec3f {
     return mod289_3(((x * 34.) + 1.) * x);
 }
-
-// https://gist.github.com/munrocket/236ed5ba7e409b8bdf1ff6eca5dcdc39#simplex-noise
 //  MIT License. © Ian McEwan, Stefan Gustavson, Munrocket
 fn snoise(v: vec2f) -> f32 {
     let C = vec4(
@@ -200,7 +203,8 @@ fn snoise(v: vec2f) -> f32 {
     return 130. * dot(m, g);
 }
 
-// Translated from: https://github.com/ashima/webgl-noise/blob/master/src/noise3D.glsl
+// Translated from:
+// https://github.com/ashima/webgl-noise/blob/master/src/noise3D.glsl
 fn mod289_v3(x: vec3<f32>) -> vec3<f32> {
   return x - floor(x * (1.0 / 289.0)) * 289.0;
 }
