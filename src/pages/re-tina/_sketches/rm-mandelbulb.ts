@@ -11,17 +11,12 @@ const rt = new ReTina({
 rt.registerMaterial({
   sdFunc: /* wgsl */ `
     var thres = length(pos) - 1.2;
-    if thres > 0.2 {
-        return thres;
-    }
-
     var power = 6 + 4 * sin(U.time * 0.1);
     var z = pos;
     var c = pos;
-
     var dr = 1.0;
     var r = 0.0;
-    for (var i: i32 = 0; i < 32; i++) {
+    for (var i: i32 = 0; i < 16; i++) {
         r = length(z);
         if r > 2.0 { break; }
         var theta = acos(z.z / r);
