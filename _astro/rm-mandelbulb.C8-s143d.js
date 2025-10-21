@@ -1,16 +1,11 @@
 import{R as e}from"./ReTina.B5Rdf2Fp.js";import{f as t}from"./freeControls.BVGVdC3g.js";const r=new e({height:600,useInterlacing:!0,showFps:!0});r.registerMaterial({sdFunc:`
     var thres = length(pos) - 1.2;
-    if thres > 0.2 {
-        return thres;
-    }
-
     var power = 6 + 4 * sin(U.time * 0.1);
     var z = pos;
     var c = pos;
-
     var dr = 1.0;
     var r = 0.0;
-    for (var i: i32 = 0; i < 32; i++) {
+    for (var i: i32 = 0; i < 16; i++) {
         r = length(z);
         if r > 2.0 { break; }
         var theta = acos(z.z / r);
