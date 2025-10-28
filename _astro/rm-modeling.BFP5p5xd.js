@@ -1,7 +1,23 @@
-import{R as o}from"./ReTina.B5Rdf2Fp.js";import{f as r}from"./freeControls.BVGVdC3g.js";const e=new o;e.registerMaterial({color:{r:.5,g:.5,b:.5},sdFunc:`
+import{R as o}from"./ReTina.B5Rdf2Fp.js";import{f as t}from"./freeControls.BVGVdC3g.js";const e=new o;e.registerMaterial({color:{r:.5,g:.5,b:.5},sdFunc:`
     let dBox = sdBox(pos, vec3<f32>(0.26, 0.14, 0.08));
     let dSphere = sdSphere(pos, 0.1);
     return opSmoothUnion(dBox, dSphere, 0.5);
+  `,lightFunc:`
+    let minBright = 0.4;
+    let diffuseColor = color;
+    let shininess = 1024.;
+    let lightPos = toCartesian(vec3f(1.3, PI / 2., PI / 2.));
+    let lightColor = vec3f(1);
+    let power = 1.;
+    let light = blinnPhong(
+      // Environment
+      rd, normal, minBright,
+      // Material
+      pos, diffuseColor, shininess,
+      // Light
+      lightPos, lightColor, power,
+    );
+    return vec4f(light, 1.);
   `});e.registerMaterial({pos:{x:0,y:.03,z:.22},color:{r:0,g:0,b:0},lightFunc:`
     let minBright = 0.1;
     let diffuseColor = color;
@@ -40,4 +56,4 @@ import{R as o}from"./ReTina.B5Rdf2Fp.js";import{f as r}from"./freeControls.BVGVd
     let dFloor = sdBox(pos - vec3<f32>(0, -1, 0), vec3<f32>(1, 0.01, 1));
     let dWall = sdBox(pos - vec3<f32>(0, 0, -1), vec3<f32>(1, 1, 0.01));
     return min(dFloor, dWall);
-  `});e.camera.fov=60;e.camera.pos.x=.2;e.camera.pos.z=1.2;e.camera.spherical.phi=-.1;e.camera.spherical.theta=.2;r(e);await e.buildAndRun();
+  `});e.camera.fov=60;e.camera.pos.x=.2;e.camera.pos.z=1.2;e.camera.spherical.phi=-.1;e.camera.spherical.theta=.2;t(e);await e.buildAndRun();
