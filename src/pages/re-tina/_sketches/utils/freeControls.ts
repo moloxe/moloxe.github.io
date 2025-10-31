@@ -5,33 +5,51 @@ function freeControls(rt: ReTina) {
   canvas.style.cursor = 'grab'
 
   let mousePressed = false
-  let prevMouseX: number
-  let prevMouseY: number
+  let prevX: number
+  let prevY: number
 
-  document.addEventListener('mousedown', (event) => {
+  function actionDown(coord: { x: number; y: number }) {
     mousePressed = true
-    prevMouseX = event.clientX
-    prevMouseY = event.clientY
+    prevX = coord.x
+    prevY = coord.y
+  }
+
+  document.addEventListener('mousedown', ({ clientX, clientY }) => {
+    actionDown({ x: clientX, y: clientY })
     canvas.style.cursor = 'grabbing'
   })
+  document.addEventListener('touchstart', ({ changedTouches }) => {
+    const touch = changedTouches[0]
+    actionDown({ x: touch.clientX, y: touch.clientY })
+  })
+
+  function actionMove(coord: { x: number; y: number }) {
+    rt.camera.spherical.theta += (3 * (prevX - coord.x)) / window.innerWidth
+    rt.camera.spherical.phi += (3 * (prevY - coord.y)) / window.innerHeight
+    prevX = coord.x
+    prevY = coord.y
+  }
 
   document.addEventListener('mousemove', (event) => {
     if (!mousePressed) return
-    rt.camera.spherical.theta +=
-      (3 * (prevMouseX - event.clientX)) / window.innerWidth
-    rt.camera.spherical.phi +=
-      (3 * (prevMouseY - event.clientY)) / window.innerHeight
-    prevMouseX = event.clientX
-    prevMouseY = event.clientY
+    actionMove({ x: event.clientX, y: event.clientY })
+  })
+  document.addEventListener('touchmove', (event) => {
+    if (!mousePressed) return
+    const touch = event.changedTouches[0]
+    actionMove({ x: touch.clientX, y: touch.clientY })
   })
 
   document.addEventListener('mouseup', () => {
     mousePressed = false
     canvas.style.cursor = 'grab'
   })
+  document.addEventListener('touchend', () => {
+    mousePressed = false
+  })
 
   document.addEventListener('wheel', (event) => {
-    rt.camera.spherical.radius += event.deltaY * 0.01
+    rt.camera.spherical.radius += event.deltaY * 0.001
   })
 
   const vel = [0, 0, 0]
