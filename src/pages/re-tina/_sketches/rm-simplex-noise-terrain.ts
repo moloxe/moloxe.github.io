@@ -2,7 +2,7 @@ import { ReTina } from '../_lib'
 
 const rt = new ReTina({
   useInterlacing: true,
-  height: 240,
+  height: 256,
   main: /* wgsl */ `
     let scene = calcScene(uv);
     var color = vec3f(0);

@@ -3,7 +3,7 @@ import freeControls from './utils/freeControls'
 
 const rt = new ReTina({
   showFps: true,
-  height: 600,
+  height: 512,
   useInterlacing: true,
 })
 

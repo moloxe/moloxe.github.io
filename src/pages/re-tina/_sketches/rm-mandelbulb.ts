@@ -3,7 +3,7 @@ import freeControls from './utils/freeControls'
 
 // Shader based on: https://webgpulab.xbdev.net/index.php?page=editor&id=mandelbulbbasic3&
 const rt = new ReTina({
-  height: 600,
+  height: 512,
   useInterlacing: true,
   showFps: true,
 })
