@@ -1,4 +1,4 @@
-import{R as r}from"./ReTina.DegRo32d.js";import{f as s}from"./freeControls.BVGVdC3g.js";const o=new r({showFps:!0,height:600,useInterlacing:!0});o.registerMaterial({sdFunc:`
+import{R as r}from"./ReTina.DI9oI4V-.js";import{f as s}from"./freeControls.DLvYuove.js";const o=new r({showFps:!0,height:512,useInterlacing:!0});o.registerMaterial({sdFunc:`
     pos.z -= U.time * 0.5;
     pos = asin(sin(pos)) - vec3<f32>(3.0);
     for (var i = 0; i < 9; i++) {
