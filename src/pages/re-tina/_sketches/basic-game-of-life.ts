@@ -10,44 +10,44 @@ const rt = new ReTina({
   texs: [{ width: img.width, height: img.height }],
   usePrevFrameTex: true,
   functions: /* wgsl */ `
-    fn isPixAlive(uv: vec2f) -> bool {
-      return getPrevFrameTexSample(uv).r > 0.5;
+    fn isPixAlive(pos: vec2f) -> vec3f {
+      return step(vec3f(0.5), getPrevFrameTexSample(pos).rgb);
+    }
+    fn golRule(_isAlive: f32, _nCount: f32) -> f32 {
+      let isAlive = round(_isAlive) > 0.5;
+      let nCount = round(_nCount);
+      if isAlive {
+        if nCount == 2 || nCount == 3 {
+          return 1f;
+        }
+      } else if nCount == 3 {
+        return 1f;
+      }
+      return 0f;
     }
   `,
   main: /* wgsl */ `
     if (U.time < 1) {
-      let pix = getTex0Sample(uv).rgb;
-      if rgb2hsv(pix).b > 0.5 {
-        return vec4f(1);
-      }
-      return vec4f(0, 0, 0, 1);
+      return getTex0Sample(uv).bgra; // TODO: bgra?
     } else {
       let res = vec2f(U.width, U.height);
-      var nCount = 0;
-
+      var nCount = vec3f(0);
       for (var i = -1; i <= 1; i = i + 1) {
         for (var j = -1; j <= 1; j = j + 1) {
           if (i == 0 && j == 0) {
             continue;
           }
-          if isPixAlive(uv + vec2f(f32(i), f32(j)) / res) {
-            nCount = nCount + 1;
-          }
+          let pos = uv + vec2f(f32(i), f32(j)) / res;
+          nCount += isPixAlive(pos);
         }
       }
-
       let isAlive = isPixAlive(uv);
-      var newState = 0f;
-      if isAlive {
-        if nCount == 2 || nCount == 3 {
-          newState = 1;
-        }
-      } else {
-        if nCount == 3 {
-          newState = 1;
-        }
-      }
-      return vec4f(vec3f(newState), 1);
+      let newState = vec3f(
+        golRule(isAlive.x, nCount.x),
+        golRule(isAlive.y, nCount.y),
+        golRule(isAlive.z, nCount.z)
+      );
+      return vec4f(newState, 1);
     }
   `,
 })
