@@ -6,7 +6,7 @@ import type {
   RTTex,
 } from './types'
 import getRender from './device/get-render'
-import prepareCanvas from './device/prepare-canvas'
+import getDevice from './device/get-device'
 import buildMaterial from './utils/rt-material'
 import RTUniform from './utils/rt-uniform'
 import RTLoop from './utils/rt-loop'
@@ -91,9 +91,20 @@ class ReTina {
   }
 
   async build() {
-    const { device, context, presentationFormat } = await prepareCanvas(
-      this.canvas
-    )
+    const { device, presentationFormat } = await getDevice()
+
+    const context = this.canvas.getContext('webgpu')
+
+    if (!context) {
+      throw new Error('No context found')
+    }
+
+    context.configure({
+      device,
+      format: presentationFormat,
+      alphaMode: 'opaque',
+      usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.COPY_DST,
+    })
 
     const rtUniform = new RTUniform(device, {
       frame: 0,
