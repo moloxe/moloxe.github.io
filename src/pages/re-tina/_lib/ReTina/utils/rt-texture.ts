@@ -52,6 +52,10 @@ class RTTexture {
   getTextureEntries() {
     return this.textureEntries
   }
+
+  length() {
+    return this.texs.length
+  }
 }
 
 export default RTTexture

@@ -11,6 +11,7 @@ import buildMaterial from './utils/rt-material'
 import RTUniform from './utils/rt-uniform'
 import RTLoop from './utils/rt-loop'
 import { fumbFsCanvas } from './utils/utils'
+import RTTexture from './utils/rt-texture'
 
 type Props = {
   height?: number
@@ -122,7 +123,9 @@ class ReTina {
       ...this.initalCustomUniforms,
     })
 
-    const { render, setUniform, setTexture } = await getRender({
+    const rtTexture = new RTTexture(device, presentationFormat, this.texs)
+
+    this.render = await getRender({
       device,
       presentationFormat,
       context,
@@ -131,14 +134,16 @@ class ReTina {
       materialFuncs: this.materialFuncs,
       functions: this.functions,
       rtUniform,
-      texs: this.texs,
+      rtTexture,
       usePrevFrameTex: this.usePrevFrameTex,
       useInterlacing: this.useInterlacing,
     })
-
-    this.setUniform = setUniform
-    this.render = render
-    this.setDeviceTexure = setTexture
+    this.setUniform = (name: string, value: number) => {
+      rtUniform.set(name, value)
+    }
+    this.setDeviceTexure = (index: number, textureData: Uint8Array) => {
+      rtTexture.setTexture(index, textureData)
+    }
   }
 
   run(cb = () => {}) {

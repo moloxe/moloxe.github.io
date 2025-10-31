@@ -1,4 +1,4 @@
-import type { RenderProps, RTCamera, RTMaterialFuncs, RTTex } from '../types'
+import type { RenderProps, RTCamera, RTMaterialFuncs } from '../types'
 import vertWGSL from './../shaders/vert.wgsl?raw'
 import getFragWGSL from '../shaders/get-frag-wgsl'
 import RTUniform from '../utils/rt-uniform'
@@ -14,7 +14,7 @@ type Props = {
   functions?: string
   materialFuncs: RTMaterialFuncs[]
   rtUniform: RTUniform
-  texs: RTTex[]
+  rtTexture: RTTexture
   usePrevFrameTex?: boolean
   useInterlacing?: boolean
 }
@@ -28,12 +28,10 @@ async function getRender({
   materialFuncs,
   functions,
   rtUniform,
-  texs,
+  rtTexture,
   usePrevFrameTex,
   useInterlacing,
 }: Props) {
-  const rtTexture = new RTTexture(device, presentationFormat, texs)
-
   const bindGroupLayouts = [
     rtUniform.uniformBindGroupLayout,
     rtTexture.textureBindGroupLayout,
@@ -50,7 +48,7 @@ async function getRender({
     functions,
     materialFuncs,
     rtUniformKeys: rtUniform.getKeysSortedByOffset(),
-    nTextures: texs.length,
+    nTextures: rtTexture.length(),
     usePrevFrameTex,
     useInterlacing,
   })
@@ -151,15 +149,7 @@ async function getRender({
     frame++
   }
 
-  function setUniform(name: string, value: number) {
-    rtUniform.set(name, value)
-  }
-
-  function setTexture(index: number, textureData: Uint8Array) {
-    rtTexture.setTexture(index, textureData)
-  }
-
-  return { render, setUniform, setTexture }
+  return render
 }
 
 export default getRender
