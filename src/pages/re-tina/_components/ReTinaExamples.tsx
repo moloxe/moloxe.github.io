@@ -19,12 +19,7 @@ type Props = {
 }
 
 const ReTinaExamples: FC<Props> = ({ examples }) => {
-  const [currentExample, setCurrentExample] = useState(
-    Math.max(
-      0,
-      examples.findIndex(({ route }) => route === 'rm-periodic-surface')
-    )
-  )
+  const [currentExample, setCurrentExample] = useState(0)
   const example = examples[currentExample]
   const code = parseSketch(example.sketch)
 
