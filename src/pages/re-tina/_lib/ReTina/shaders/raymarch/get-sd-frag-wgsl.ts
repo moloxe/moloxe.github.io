@@ -1,4 +1,4 @@
-import type { RTMaterialFuncs } from '../types'
+import type { RTMaterialFuncs } from '../../types'
 import raymarchFunctionsFrag from './raymarch-functions-frag'
 
 function getSdFragWGSL(materialFuncs: RTMaterialFuncs[]) {

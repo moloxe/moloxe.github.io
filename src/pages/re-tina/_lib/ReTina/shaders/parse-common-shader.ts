@@ -1,5 +1,5 @@
 import commonTemplateWGSL from './../shaders/common.wgsl?raw'
-import getSdFragWGSL from '../raymarch/get-sd-frag-wgsl'
+import getSdFragWGSL from './raymarch/get-sd-frag-wgsl'
 import type { RTMaterialFuncs } from '../types'
 
 type Props = {
