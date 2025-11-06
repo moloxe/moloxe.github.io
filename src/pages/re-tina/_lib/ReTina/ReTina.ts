@@ -7,7 +7,7 @@ import type {
 } from './types'
 import getRender from './device/get-render'
 import getDevice from './device/get-device'
-import buildMaterial from './utils/rt-material'
+import RTMaterial from './utils/rt-material'
 import RTUniform from './utils/rt-uniform'
 import RTLoop from './utils/rt-loop'
 import { fumbFsCanvas } from './utils/utils'
@@ -67,7 +67,11 @@ class ReTina {
   registerMaterial(partialMaterial: RTMaterialPartial) {
     if (this.render) throw new Error('Render already built')
     const index = this.materialFuncs.length
-    const material = buildMaterial(partialMaterial, this, index)
+    const material = new RTMaterial({
+      rt: this,
+      material: partialMaterial,
+      index,
+    })
     this.materialFuncs.push({
       sdFunc: partialMaterial.sdFunc,
       lightFunc: partialMaterial.lightFunc,
