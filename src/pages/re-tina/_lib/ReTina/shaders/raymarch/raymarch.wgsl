@@ -3,17 +3,18 @@ struct SdMaterial {
     dist: f32,
     pos: vec3<f32>,
     color: vec3<f32>,
+    collisionGroup: i32,
 }
 
 // #SD-INDIVIDUAL-MATERIALS
 
 fn sdMaterials(pos: vec3<f32>) -> SdMaterial {
-    return SdMaterial(-1, 0., vec3<f32>(0.), vec3<f32>(1.)); // #SD-MATERIALS-FUNC
+    // #SD-MATERIALS-FUNC
 }
 
 // This function is exclusive for calcNormal
 fn map(pos: vec3<f32>) -> f32 {
-    return 0.; // #MAP
+    // #MAP
 }
 
 fn calcNormal(pos: vec3<f32>) -> vec3<f32> {
@@ -37,7 +38,7 @@ fn calcLight(
     color: vec3<f32>,
     materialIndex: i32
 ) -> vec4<f32> {
-    return vec4<f32>(0.0); // #LIGHT-MATERIALS-FUNC
+    // #LIGHT-MATERIALS-FUNC
 }
 
 struct Scene {
@@ -52,7 +53,7 @@ const RM_MIN_DIST: f32 = 1e-4;
 const RM_MAX_DIST: f32 = 1e4;
 fn rayMarch(ro: vec3<f32>, rd: vec3<f32>) -> SdMaterial {
     var totalDist = 0.0;
-    var material = SdMaterial(-1, 0.0, vec3<f32>(0.0), vec3<f32>(0.0));
+    var material = SdMaterial(-1, 0.0, vec3<f32>(0.0), vec3<f32>(0.0), -1);
     for (var i: i32 = 0; i < RM_MAX_ITER; i++) {
         let pos = ro + rd * totalDist;
         material = sdMaterials(pos);
@@ -66,7 +67,7 @@ fn rayMarch(ro: vec3<f32>, rd: vec3<f32>) -> SdMaterial {
             break;
         }
     }
-    return SdMaterial(-1, -1.0, vec3<f32>(0.0), vec3<f32>(0.0));
+    return SdMaterial(-1, -1.0, vec3<f32>(0.0), vec3<f32>(0.0), -1);
 }
 
 fn calcScene(uv: vec2<f32>) -> Scene {
