@@ -1,4 +1,12 @@
-const commonFrag = /* wgsl */ `
+struct GlobalUniform {
+    UNIFORMS: f32, // #UNIFORMS
+};
+
+@group(0) @binding(0) var <uniform> U: GlobalUniform;
+@group(0) @binding(1) var u_sampler: sampler;
+// #GROUP-1-BINDING-X
+// #GROUP-2-BINDING-X
+
 const PI = f32(3.1415926535897932384626433832795);
 
 fn toSpherical(pos: vec3<f32>) -> vec3<f32> {
@@ -262,6 +270,6 @@ fn snoise3d(v: vec3<f32>) -> f32 {
   m = m * m;
   return 105.0 * dot(m * m, vec4<f32>(dot(p0_norm, x0), dot(p1_norm, x1), dot(p2_norm, x2), dot(p3_norm, x3)));
 }
-`
 
-export default commonFrag
+// #FUNCTIONS
+// #RAY_MARCH_FUNCTIONS

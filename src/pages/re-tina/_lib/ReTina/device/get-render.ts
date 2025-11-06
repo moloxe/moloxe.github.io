@@ -1,6 +1,6 @@
 import type { RenderProps, RTCamera, RTMaterialFuncs } from '../types'
 import vertWGSL from './../shaders/vert.wgsl?raw'
-import getFragWGSL from '../shaders/get-frag-wgsl'
+import parseFragmentShader from '../shaders/parse-fragment-shader'
 import RTUniform from '../utils/rt-uniform'
 import RTTexture from '../utils/rt-texture'
 import RTPingPong from '../utils/rt-ping-pong'
@@ -43,7 +43,7 @@ async function getRender({
     bindGroupLayouts.push(rtPingPong.pingPongBindGroupLayout)
   }
 
-  const fragWGSL = getFragWGSL({
+  const fragWGSL = parseFragmentShader({
     main,
     functions,
     materialFuncs,
