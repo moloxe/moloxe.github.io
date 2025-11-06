@@ -1,5 +1,3 @@
-const raymarchFunctionsFrag = /* wgsl */ `
-
 struct SdMaterial {
     index: i32,
     dist: f32,
@@ -110,6 +108,3 @@ fn calcScene(uv: vec2<f32>) -> Scene {
 
     return Scene(material.dist, finalPos, finalNormal, finalColor);
 }
-`
-
-export default raymarchFunctionsFrag

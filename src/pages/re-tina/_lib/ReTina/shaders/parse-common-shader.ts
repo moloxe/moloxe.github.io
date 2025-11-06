@@ -1,5 +1,5 @@
 import commonTemplateWGSL from './../shaders/common.wgsl?raw'
-import getSdFragWGSL from './raymarch/get-sd-frag-wgsl'
+import parseSDWGSL from './raymarch/parse-sd-wgsl'
 import type { RTMaterialFuncs } from '../types'
 
 type Props = {
@@ -53,8 +53,8 @@ function parseCommonShader({
   }
 
   if (materialFuncs.length > 0) {
-    const sdFragWGSL = getSdFragWGSL(materialFuncs)
-    fragWGSL = fragWGSL.replace('// #RAY_MARCH_FUNCTIONS', sdFragWGSL)
+    const sdWGSL = parseSDWGSL(materialFuncs)
+    fragWGSL = fragWGSL.replace('// #RAY_MARCH_FUNCTIONS', sdWGSL)
   }
 
   return fragWGSL

@@ -1,8 +1,8 @@
 import type { RTMaterialFuncs } from '../../types'
-import raymarchFunctionsFrag from './raymarch-functions-frag'
+import raymarchWGSL from './raymarch.wgsl?raw'
 
-function getSdFragWGSL(materialFuncs: RTMaterialFuncs[]) {
-  let sdFragWGSL = raymarchFunctionsFrag
+function parseSDWGSL(materialFuncs: RTMaterialFuncs[]) {
+  let sdWGSL = raymarchWGSL
   const materialSdFunctions = materialFuncs.map((m) => m.sdFunc)
   const materialLightFunctions = materialFuncs.map((m) => m.lightFunc)
 
@@ -23,7 +23,7 @@ function getSdFragWGSL(materialFuncs: RTMaterialFuncs[]) {
       })
       .join('\n')
 
-    sdFragWGSL = sdFragWGSL.replace(
+    sdWGSL = sdWGSL.replace(
       '// #SD-INDIVIDUAL-MATERIALS',
       sdIndividualMaterials
     )
@@ -55,7 +55,7 @@ function getSdFragWGSL(materialFuncs: RTMaterialFuncs[]) {
     return material;
   `
 
-    sdFragWGSL = sdFragWGSL.replace(
+    sdWGSL = sdWGSL.replace(
       'return SdMaterial(-1, 0., vec3<f32>(0.), vec3<f32>(1.)); // #SD-MATERIALS-FUNC',
       sdMaterialsFunc
     )
@@ -72,7 +72,7 @@ function getSdFragWGSL(materialFuncs: RTMaterialFuncs[]) {
     return dist;
   `
 
-    sdFragWGSL = sdFragWGSL.replace('return 0.; // #MAP', map)
+    sdWGSL = sdWGSL.replace('return 0.; // #MAP', map)
   }
 
   // LIGHT
@@ -96,7 +96,7 @@ function getSdFragWGSL(materialFuncs: RTMaterialFuncs[]) {
       })
       .join('\n')
 
-    sdFragWGSL = sdFragWGSL.replace(
+    sdWGSL = sdWGSL.replace(
       '// #LIGHT-INDIVIDUAL-MATERIALS',
       lightIndividualMaterials
     )
@@ -115,13 +115,13 @@ function getSdFragWGSL(materialFuncs: RTMaterialFuncs[]) {
       return finalColor;
     `
 
-    sdFragWGSL = sdFragWGSL.replace(
+    sdWGSL = sdWGSL.replace(
       'return vec4<f32>(0.0); // #LIGHT-MATERIALS-FUNC',
       lightMaterialsFunc
     )
   }
 
-  return sdFragWGSL
+  return sdWGSL
 }
 
-export default getSdFragWGSL
+export default parseSDWGSL
