@@ -22,10 +22,7 @@ export type RTMaterial = {
   pos: RTCoord
   color: RTColor
   rotation: RTCoord
-  // TODO: Implement grouping
-  // group = -1,
-  // TODO: Implement physics?
-  // collisionGroup = -1,
+  collisionGroup: number
 }
 
 export type RTMaterialPartial = Pick<RTMaterial, 'sdFunc'> &
