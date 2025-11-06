@@ -1,4 +1,4 @@
-export function fumbFsCanvas(height?: number) {
+export function dumbFsCanvas(height?: number) {
   const canvas = document.createElement('canvas')
 
   canvas.height = height ?? window.innerHeight

@@ -10,7 +10,7 @@ import getDevice from './device/get-device'
 import RTMaterial from './utils/rt-material'
 import RTUniform from './utils/rt-uniform'
 import RTLoop from './utils/rt-loop'
-import { fumbFsCanvas } from './utils/utils'
+import { dumbFsCanvas } from './utils/utils'
 import RTTexture from './utils/rt-texture'
 
 type Props = {
@@ -54,7 +54,7 @@ class ReTina {
     height,
     showFps,
   }: Props = {}) {
-    this.canvas = fumbFsCanvas(height)
+    this.canvas = dumbFsCanvas(height)
     this.main = main
     this.functions = functions
     this.texs = texs ?? []
