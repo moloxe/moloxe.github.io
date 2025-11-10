@@ -10,7 +10,6 @@ const rt = new ReTina({
 
 rt.registerMaterial({
   sdFunc: /* wgsl */ `
-    var thres = length(pos) - 1.2;
     var power = 6 + 4 * sin(U.time * 0.1);
     var z = pos;
     var c = pos;
