@@ -4,7 +4,10 @@ struct GlobalUniform {
 
 @group(0) @binding(0) var <uniform> U: GlobalUniform;
 @group(0) @binding(1) var u_sampler: sampler;
+
+// Textures template:
 // #GROUP-1-BINDING-X
+// Prev. frame (ping-pong) template:
 // #GROUP-2-BINDING-X
 
 const PI = f32(3.1415926535897932384626433832795);
