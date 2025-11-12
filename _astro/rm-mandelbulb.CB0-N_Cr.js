@@ -1,5 +1,4 @@
-import{R as e}from"./ReTina.DI9oI4V-.js";import{f as t}from"./freeControls.DLvYuove.js";const r=new e({height:512,useInterlacing:!0,showFps:!0});r.registerMaterial({sdFunc:`
-    var thres = length(pos) - 1.2;
+import{R as e}from"./ReTina.DpIR3iFu.js";import{f as t}from"./freeControls.DLvYuove.js";const r=new e({height:512,useInterlacing:!0,showFps:!0});r.registerMaterial({sdFunc:`
     var power = 6 + 4 * sin(U.time * 0.1);
     var z = pos;
     var c = pos;
