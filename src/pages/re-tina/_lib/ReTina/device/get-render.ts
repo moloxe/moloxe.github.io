@@ -78,9 +78,12 @@ async function getRender({
   })
 
   let frame = 0
+  const initTime = performance.now() / 1000
   function updateSceneUniforms(camera: RTCamera) {
+    const now = performance.now() / 1000
+    const time = now - initTime
     rtUniform.set('frame', frame)
-    rtUniform.set('time', performance.now() / 1000)
+    rtUniform.set('time', time)
     rtUniform.set('aspectRatio', canvas.width / canvas.height)
     rtUniform.set('width', canvas.width)
     rtUniform.set('height', canvas.height)
