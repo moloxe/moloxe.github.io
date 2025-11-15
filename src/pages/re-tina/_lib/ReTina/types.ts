@@ -23,6 +23,7 @@ export type RTMaterial = {
   color: RTColor
   rotation: RTCoord
   collisionGroup: number
+  enableCollisions: boolean
 }
 
 export type RTMaterialPartial = Pick<RTMaterial, 'sdFunc'> &

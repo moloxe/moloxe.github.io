@@ -7,7 +7,7 @@ import type {
 } from './types'
 import getRender from './device/get-render'
 import getDevice from './device/get-device'
-import RTMaterial from './utils/rt-material'
+import RTMaterial, { type RTCollisionCheckerProps } from './utils/rt-material'
 import RTUniform from './utils/rt-uniform'
 import RTLoop from './utils/rt-loop'
 import { dumbFsCanvas } from './utils/utils'
@@ -38,6 +38,10 @@ class ReTina {
   private texs: RTTex[]
   private fps?: number
   private showFps?: boolean
+  private collisionsAfterBuild: Array<
+    (props: RTCollisionCheckerProps) => void
+  > = []
+
   camera: RTCamera = {
     pos: { x: 0, y: 0, z: 0 },
     spherical: { radius: 0, theta: 0, phi: 0 },
@@ -76,6 +80,11 @@ class ReTina {
       sdFunc: partialMaterial.sdFunc,
       lightFunc: partialMaterial.lightFunc,
     })
+    if (partialMaterial.enableCollisions) {
+      this.collisionsAfterBuild.push((props) => {
+        material.buildCollisionChecker(props)
+      })
+    }
     return material
   }
 
@@ -129,8 +138,14 @@ class ReTina {
 
     const rtTexture = new RTTexture(device, presentationFormat, this.texs)
 
+    const bindGroupLayouts = [
+      rtUniform.uniformBindGroupLayout,
+      rtTexture.textureBindGroupLayout,
+    ]
+
     this.render = await getRender({
       device,
+      bindGroupLayouts,
       presentationFormat,
       context,
       canvas: this.canvas,
@@ -148,6 +163,18 @@ class ReTina {
     this.setDeviceTexure = (index: number, textureData: Uint8Array) => {
       rtTexture.setTexture(index, textureData)
     }
+    this.collisionsAfterBuild.forEach((buildCollisionChecker) => {
+      buildCollisionChecker({
+        device,
+        rtUniformKeys: rtUniform.getKeysSortedByOffset(),
+        functions: this.functions,
+        materialFuncs: this.materialFuncs,
+        nTextures: this.texs.length,
+        usePrevFrameTex: this.usePrevFrameTex,
+        rtUniform,
+        rtTexture,
+      })
+    })
   }
 
   run(cb = () => {}) {

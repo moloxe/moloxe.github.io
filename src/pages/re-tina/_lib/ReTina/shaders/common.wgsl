@@ -4,6 +4,7 @@ struct GlobalUniform {
 
 @group(0) @binding(0) var <uniform> U: GlobalUniform;
 @group(0) @binding(1) var u_sampler: sampler;
+@group(0) @binding(2) var<storage, read_write> arbitrary_result: array<f32>;
 
 // Textures template:
 // #GROUP-1-BINDING-X
