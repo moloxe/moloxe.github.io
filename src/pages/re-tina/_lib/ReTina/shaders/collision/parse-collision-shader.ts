@@ -53,7 +53,7 @@ function parseCollisionShader({
     const COLLISION_GROUP: i32 = ${collisionGroup};
 
     fn sdInternalCollisionGroup(pos: vec3f) -> SdMaterial {
-      var material = SdMaterial(-1, 1e10, vec3f(0.), vec3f(0.));
+      var material = SdMaterial(-1, INF, vec3f(0.), vec3f(0.));
       var curDist: f32;
 
       ${materialSdFunctions
@@ -64,7 +64,7 @@ function parseCollisionShader({
     }
 
     fn sdExternalCollisionGroup(pos: vec3f) -> SdMaterial {
-      var material = SdMaterial(-1, 1e10, vec3f(0.), vec3f(0.));
+      var material = SdMaterial(-1, INF, vec3f(0.), vec3f(0.));
       var curDist: f32;
 
       ${materialSdFunctions
@@ -110,7 +110,7 @@ function parseCollisionShader({
         if t > RM_MAX_DIST { break; }
         t = t + curMaterial.dist;
       }
-      return 1e10;
+      return INF;
     }
 
     struct CollisionResult {
@@ -131,7 +131,7 @@ function parseCollisionShader({
         U.material${collisionGroup}Pz,
       );
 
-      var collision = CollisionResult(-1, 1e10, vec3f(0));
+      var collision = CollisionResult(-1, INF, vec3f(0));
       let externalMaterial = sdExternalCollisionGroup(pos);
       let colPos = calcColisionPos(pos, externalMaterial);
       let colDir = normalize(pos - colPos);
