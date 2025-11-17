@@ -12,6 +12,7 @@ struct GlobalUniform {
 // #GROUP-2-BINDING-X
 
 const PI = f32(3.1415926535897932384626433832795);
+const INF = f32(1e10);
 
 fn toSpherical(pos: vec3<f32>) -> vec3<f32> {
     let r = length(pos);
@@ -148,10 +149,6 @@ fn sdCapsule(p: vec3f, a: vec3f, b: vec3f, r: f32) -> f32 {
 fn opSmoothUnion(d1: f32, d2: f32, k: f32) -> f32 {
     let h = clamp(0.5 + 0.5 * (d2 - d1) / k, 0.0, 1.0);
     return mix(d2, d1, h) - k * h * (1.0 - h);
-}
-
-fn opXor(d1: f32, d2: f32) -> f32 {
-    return max(min(d1, d2), -max(d1, d2));
 }
 
 fn opSmoothSubtraction(d1: f32, d2: f32, k: f32) -> f32 {

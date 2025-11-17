@@ -19,7 +19,7 @@ class RTMaterial {
     if (!material.pos) material.pos = { x: 0, y: 0, z: 0 }
     if (!material.color) material.color = { r: 1, g: 1, b: 1 }
     if (!material.rotation) material.rotation = { x: 0, y: 0, z: 0 }
-    if (!material.collisionGroup) material.collisionGroup = -1
+    if (material.collisionGroup === undefined) material.collisionGroup = -1
 
     const setPosX = rt.registerUniform(`material${index}Px`, material.pos.x)
     const setPosY = rt.registerUniform(`material${index}Py`, material.pos.y)

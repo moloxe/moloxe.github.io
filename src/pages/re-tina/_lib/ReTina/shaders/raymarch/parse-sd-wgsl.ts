@@ -48,7 +48,7 @@ function PARSE_MATERIALS({ sdWGSL, materialSdFunctions }: ParserProps) {
   }
 
   const sdMaterialsFunc = /* wgsl */ `
-      var material = SdMaterial(-1, 1e10, vec3<f32>(0.), vec3<f32>(0.), -1);
+      var material = SdMaterial(-1, 1e10, vec3<f32>(0.), vec3<f32>(0.));
       var curDist: f32;
 
       ${materialSdFunctions
