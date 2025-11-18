@@ -75,6 +75,49 @@ class RTUniform {
     if (!this.uniform[key]) throw new Error(`Uniform ${key} not found`)
     return this.uniform[key].value
   }
+  getCustomBindingsForCollisions(resultBuffer: GPUBuffer) {
+    const uniformBindGroupLayout = this.device.createBindGroupLayout({
+      entries: [
+        {
+          binding: 0,
+          visibility: GPUShaderStage.COMPUTE,
+          buffer: { type: 'uniform' },
+        },
+        {
+          binding: 1,
+          visibility: GPUShaderStage.COMPUTE,
+          sampler: { type: 'non-filtering' },
+        },
+        {
+          binding: 2,
+          visibility: GPUShaderStage.COMPUTE,
+          buffer: { type: 'storage' },
+        },
+      ],
+    })
+
+    const uniformBindGroup = this.device.createBindGroup({
+      layout: uniformBindGroupLayout,
+      entries: [
+        { binding: 0, resource: { buffer: this.getBuffer() } },
+        {
+          binding: 1,
+          resource: this.device.createSampler({
+            addressModeU: 'repeat',
+            addressModeV: 'repeat',
+            magFilter: 'nearest',
+            minFilter: 'nearest',
+          }),
+        },
+        { binding: 2, resource: { buffer: resultBuffer } },
+      ],
+    })
+
+    return {
+      uniformBindGroupLayout,
+      uniformBindGroup,
+    }
+  }
 }
 
 export default RTUniform

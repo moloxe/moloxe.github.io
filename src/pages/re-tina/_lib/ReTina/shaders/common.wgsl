@@ -12,6 +12,7 @@ struct GlobalUniform {
 // #GROUP-2-BINDING-X
 
 const PI = f32(3.1415926535897932384626433832795);
+const TWO_PI = f32(6.283185307179586476925286766559);
 const INF = f32(1e10);
 
 fn toSpherical(pos: vec3<f32>) -> vec3<f32> {
