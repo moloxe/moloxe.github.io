@@ -112,8 +112,8 @@ function keyboardListener(
   })
   function update() {
     cb({
-      UP: codes['Space'],
-      DOWN: codes['MetaLeft'] || codes['ControlLeft'],
+      UP: codes['KeyE'],
+      DOWN: codes['KeyQ'],
       FRONT: codes['KeyW'],
       BACK: codes['KeyS'],
       LEFT: codes['KeyA'],
