@@ -12,26 +12,24 @@ rt.registerMaterial({
   lightFunc: `
     var c = normal * .5 + .5;
     let dist = length(pos - ro);
-    let bri = pow(sin(dist * PI / 6.), 6.);
-    c *= (bri + U.pulse);
+    let bri = pow(max(0, sin(dist * PI / 6.)), 6.) + U.pulse;
+    c *= bri;
     return vec4(c, 1.);
   `,
 })
 
 let pulse = 0
-const setUniformPulse = rt.registerUniform('pulse', pulse)
+const setPulse = rt.registerUniform('pulse', pulse)
 
 rt.canvas.addEventListener('click', () => {
   pulse = 1
-  setUniformPulse(pulse)
 })
 
 let lastTime = performance.now()
 await rt.buildAndRun(() => {
   const time = performance.now()
-  const pulseSlowdown = 0.2 / (time - lastTime)
+  const pulseSlowdown = 0.5 / (time - lastTime)
+  pulse = Math.max(0, pulse - pulseSlowdown)
+  setPulse(pulse)
   lastTime = time
-  pulse -= pulseSlowdown
-  pulse = Math.max(0, pulse)
-  setUniformPulse(pulse)
 })
