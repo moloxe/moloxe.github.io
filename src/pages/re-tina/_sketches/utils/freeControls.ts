@@ -3,6 +3,8 @@ import type { ReTina } from '../../_lib'
 function freeControls(rt: ReTina) {
   const canvas = rt.canvas
   canvas.style.cursor = 'grab'
+  canvas.style.userSelect = 'none'
+  canvas.style.touchAction = 'manipulation'
 
   let mousePressed = false
   let prevX: number
