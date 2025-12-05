@@ -1,0 +1,136 @@
+import { ReTina } from '../_lib'
+import freeControls from './utils/freeControls'
+
+const rt = new ReTina({
+  height: 128,
+  showFps: true,
+  useInterlacing: true,
+  main: /* wgsl */ `
+    let scene = calcScene(uv);
+    var color = vec3f(0);
+    if scene.dist > 0 {
+        color = scene.color.rgb; 
+        // Fog
+        let dist = scene.dist;
+        let fogAmount = 1.0 - exp(-dist * 0.1);
+        let fogColor = vec3f(0.5, 0.6, 0.7);
+        color = mix(color, fogColor, fogAmount);
+    } else {
+        // Sky color
+        color = vec3f(0.5, 0.6, 0.7) - uv.y * 0.2;
+    }
+    return vec4f(color, 1);
+  `,
+  functions: /* wgsl */ `
+    const lightColor = vec3f(1.0, 0.9, 0.8);
+    const lightPower = 40.0;
+    fn getLightPos() -> vec3f {
+      return vec3f(0, 8, U.camPosZ - 5);
+    }
+
+    // Fractal Brownian Motion
+    fn fbm(p: vec3f) -> f32 {
+        var value: f32 = 0.0;
+        var amplitude: f32 = 0.5;
+        var frequency: f32 = 1.0;
+        var shift = vec3f(100.0);
+        var p_curr = p;
+        for (var i: i32 = 0; i < 4; i++) {
+            value += amplitude * snoise3d(p_curr);
+            p_curr = p_curr * 2.0 + shift;
+            amplitude *= 0.5;
+        }
+        return value;
+    }
+  `,
+})
+
+// Grass
+rt.registerMaterial({
+  sdFunc: /* wgsl */ `
+    let height = fbm(pos * 0.5) * 2.0;
+    var terrain = pos.y - height + 0.2;
+    let zone = sdSphere(pos, 2);
+    terrain = max(zone, terrain);
+    return terrain * 0.2;
+  `,
+  lightFunc: /* wgsl */ `
+    let minBright = 0.1;
+    let diffuseColor = vec3f(0.5, 1., 0.5);
+    let shininess = 32.0;
+    let lightPos = getLightPos();
+    let light = blinnPhong(
+      // Environment
+      rd, normal, minBright,
+      // Material
+      pos, diffuseColor, shininess,
+      // Light
+      lightPos, lightColor, lightPower,
+    );
+    return vec4f(light, 1);
+  `,
+})
+
+// Watter
+rt.registerMaterial({
+  sdFunc: /* wgsl */ `
+    let zone = sdSphere(pos, 2);
+    return max(zone, pos.y);
+  `,
+  lightFunc: /* wgsl */ `
+    let minBright = 0.1;
+    let diffuseColor = vec3f(0.4, 0.8, 1.);
+    let shininess = 512.0;
+    let lightPos = getLightPos();
+    let n = pos + snoise3d(pos);
+    let t = U.time * 5;
+    let waves = vec3f(sin(n.x * 25 - t) * 0.1, pos.y, cos(n.z * 25 + t) * 0.1);
+    let light = blinnPhong(
+      // Environment
+      rd, normalize(normal + waves), minBright,
+      // Material
+      pos, diffuseColor, shininess,
+      // Light
+      lightPos, lightColor, lightPower,
+    );
+    return vec4f(light, 1);
+  `,
+})
+
+// Clouds
+rt.registerMaterial({
+  sdFunc: /* wgsl */ `
+    let zone = sdSphere(pos, 2);
+    pos.x += U.time / 20;
+    pos.x /= 2;
+    pos.z /= 2;
+    var cloud =
+      pos.y -
+      fbm(pos) * 2.0 +
+      fbm((vec3f(pos.x, pos.y + U.time / 20, pos.z)) * 2.0) * 0.5;
+    cloud = opSmoothSubtraction(pos.y - 0.65, cloud, 0.3);
+    cloud = max(zone, cloud);
+    return cloud * 0.2;
+  `,
+  lightFunc: /* wgsl */ `
+    let minBright = 0.8;
+    let diffuseColor = vec3f(0.9, 0.9, 0.9);
+    let shininess = 64.0;
+    let lightPos = getLightPos();
+    let light = blinnPhong(
+      // Environment
+      rd, normal, minBright,
+      // Material
+      pos, diffuseColor, shininess,
+      // Light
+      lightPos, lightColor, lightPower,
+    );
+    return vec4f(light, 1);
+  `,
+})
+
+rt.camera.fov = 60
+rt.camera.spherical = { radius: 4, theta: 0, phi: -0.4 }
+
+freeControls(rt)
+await rt.buildAndRun()
