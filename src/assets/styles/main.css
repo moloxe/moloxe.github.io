@@ -6,8 +6,8 @@
   color-scheme: dark;
   --code-background: #282c34;
   @apply touch-manipulation;
-  --primary: hsl(180deg 40% 40%);
-  --contrast: hsl(220deg 30% 8%);
+  --primary: hsl(10, 80%, 60%);
+  --app-bg: hsl(0, 0%, 10%);
 }
 
 @layer base {
@@ -19,7 +19,7 @@
     @apply h-full w-full relative;
   }
   body {
-    @apply bg-[var(--contrast)] text-white;
+    @apply bg-[var(--app-bg)] text-white;
   }
 
   :not(pre) > code {
@@ -79,19 +79,13 @@
   .text-primary {
     @apply text-[var(--primary)];
   }
-  .text-contrast {
-    @apply text-[var(--contrast)];
+  .text-app-bg {
+    @apply text-[var(--app-bg)];
   }
   .bg-primary {
     @apply bg-[var(--primary)];
   }
-  .bg-contrast {
-    @apply bg-[var(--contrast)];
-  }
   .border-primary {
     @apply border-[var(--primary)];
-  }
-  .border-contrast {
-    @apply border-[var(--contrast)];
   }
 }
