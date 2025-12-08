@@ -48,7 +48,7 @@ function PARSE_MATERIALS({ sdWGSL, materialSdFunctions }: ParserProps) {
   }
 
   const sdMaterialsFunc = /* wgsl */ `
-      var material = SdMaterial(-1, 1e10, vec3<f32>(0.), vec3<f32>(0.), -1);
+      var material = SdMaterial(-1, INF, vec3<f32>(0.), vec3<f32>(0.));
       var curDist: f32;
 
       ${materialSdFunctions
@@ -69,7 +69,7 @@ function PARSE_MAP({ materialSdFunctions, sdWGSL }: ParserProps) {
   }
 
   const map = /* wgsl */ `
-      var dist: f32 = 1e10;
+      var dist: f32 = INF;
       var accDist: f32;
 
       ${materialSdFunctions.map((_, index) => parseMap(index)).join('\n')}
