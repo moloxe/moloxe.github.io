@@ -6,8 +6,8 @@
   color-scheme: dark;
   --code-background: #282c34;
   @apply touch-manipulation;
-  --primary: hsl(10, 80%, 60%);
-  --app-bg: hsl(0, 0%, 10%);
+  --primary: hsl(10, 85%, 60%);
+  --app-bg: hsl(0, 0%, 5%);
 }
 
 @layer base {
