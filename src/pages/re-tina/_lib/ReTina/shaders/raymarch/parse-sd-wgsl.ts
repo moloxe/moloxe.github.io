@@ -86,8 +86,9 @@ function PARSE_LIGHT({ materialLightFunctions, sdWGSL }: ParserProps) {
     if (!lightFunc) {
       lightFunc = /* wgsl */ `
           let lamb = dot(normal, -rd); // Camera as light
-          let finalColor = max(color * 0.2, color * lamb);
-          return vec4<f32>(finalColor, 1.);`
+          let aoFactor = calculateDFAO(pos, normal);
+          let finalColor = mix(color * aoFactor, color * lamb, 0.5);
+          return vec4f(finalColor, 1.);`
     }
 
     return /* wgsl */ `
