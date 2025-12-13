@@ -1,4 +1,4 @@
-import{R as t}from"./ReTina.Bp3DGIDB.js";import{f as o}from"./freeControls.qr04tydI.js";const e=new t({showFps:!0,height:512,useInterlacing:!0});e.registerMaterial({color:{r:.5,g:.5,b:.5},sdFunc:`
+import{R as o}from"./ReTina.BzMgQPp_.js";import{f as t}from"./freeControls.qr04tydI.js";const e=new o({showFps:!0});e.registerMaterial({color:{r:.5,g:.5,b:.5},sdFunc:`
     let dBox = sdBox(pos, vec3<f32>(0.26, 0.14, 0.08));
     let dSphere = sdSphere(pos, 0.1);
     return opSmoothUnion(dBox, dSphere, 0.5);
@@ -52,8 +52,8 @@ import{R as t}from"./ReTina.Bp3DGIDB.js";import{f as o}from"./freeControls.qr04t
     let c = hsv2rgb(vec3<f32>(pos.y + U.time, 1.0 - n, n));
     let lambertian = dot(normal, -rd);
     return vec4<f32>(c * lambertian, 1.);
-  `});e.registerMaterial({color:{r:.4,g:.4,b:.4},sdFunc:`
-    let dFloor = sdBox(pos - vec3<f32>(0, -1, 0), vec3<f32>(1, 0.01, 1));
-    let dWall = sdBox(pos - vec3<f32>(0, 0, -1), vec3<f32>(1, 1, 0.01));
+  `});e.registerMaterial({color:{r:.4,g:.6,b:.6},sdFunc:`
+    let dFloor = sdBox(pos - vec3<f32>(0, -0.6, 0), vec3<f32>(1, 0.01, 0.3));
+    let dWall = sdBox(pos - vec3<f32>(0, 0, -0.3), vec3<f32>(1, 0.6, 0.01));
     return min(dFloor, dWall);
-  `});e.camera.fov=60;e.camera.spherical.radius=1.2;e.camera.spherical.theta=.3;o(e);await e.buildAndRun();
+  `});e.camera.fov=60;e.camera.spherical.radius=1.2;e.camera.spherical.theta=.3;t(e);await e.buildAndRun();
