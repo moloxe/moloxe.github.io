@@ -1,4 +1,4 @@
-import{R as r}from"./ReTina.Bq-JBTFe.js";import{f as s}from"./freeControls.qr04tydI.js";const o=new r({showFps:!0,height:512,useInterlacing:!0});o.registerMaterial({sdFunc:`
+import{R as r}from"./ReTina.CcSvD2eI.js";import{f as s}from"./freeControls.qr04tydI.js";const o=new r({showFps:!0,height:512,useInterlacing:!0});o.registerMaterial({sdFunc:`
     pos.z -= U.time * 0.5;
     pos = asin(sin(pos)) - vec3<f32>(3.0);
     for (var i = 0; i < 9; i++) {
@@ -26,4 +26,4 @@ import{R as r}from"./ReTina.Bq-JBTFe.js";import{f as s}from"./freeControls.qr04t
     out = hsv2rgb(vec3<f32>(out.x + U.time * .2 + sin(pos.x + pos.y) / 4., .6, .6));
     out = (out * lambertian + spec) / dd;
     return vec4<f32>(out, 1.);
-  `});await o.build();o.camera.fov=100;o.camera.spherical={radius:0,phi:0,theta:.2};s(o);o.buildAndRun();
+  `});o.camera.fov=100;o.camera.spherical={radius:0,phi:0,theta:.2};s(o);o.start();

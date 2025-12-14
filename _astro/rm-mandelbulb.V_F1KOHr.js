@@ -1,4 +1,4 @@
-import{R as e}from"./ReTina.Bq-JBTFe.js";import{f as t}from"./freeControls.qr04tydI.js";const r=new e({height:512,useInterlacing:!0,showFps:!0});r.registerMaterial({sdFunc:`
+import{R as e}from"./ReTina.CcSvD2eI.js";import{f as t}from"./freeControls.qr04tydI.js";const r=new e({height:512,useInterlacing:!0,showFps:!0});r.registerMaterial({sdFunc:`
     var power = 6 + 4 * sin(U.time * 0.1);
     var z = pos;
     var c = pos;
@@ -31,4 +31,4 @@ import{R as e}from"./ReTina.Bq-JBTFe.js";import{f as t}from"./freeControls.qr04t
       lightPos, lightColor, /* power */ 8,
     );
     return vec4f(light, 1.);
-  `});r.camera={fov:60,pos:{x:.6,y:.8,z:1.5},spherical:{phi:-.5,radius:0,theta:.4}};t(r);await r.buildAndRun();
+  `});r.camera={fov:60,pos:{x:.6,y:.8,z:1.5},spherical:{phi:-.5,radius:0,theta:.4}};t(r);r.start();

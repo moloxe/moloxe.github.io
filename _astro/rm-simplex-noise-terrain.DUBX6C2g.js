@@ -1,4 +1,4 @@
-import{R as r}from"./ReTina.Bq-JBTFe.js";const e=new r({useInterlacing:!0,height:256,main:`
+import{R as r}from"./ReTina.CcSvD2eI.js";const e=new r({useInterlacing:!0,height:256,main:`
     let scene = calcScene(uv);
     var color = vec3f(0);
     if scene.dist > 0 {
@@ -29,4 +29,4 @@ import{R as r}from"./ReTina.Bq-JBTFe.js";const e=new r({useInterlacing:!0,height
       lightPos, lightColor, power,
     );
     return vec4f(light, 1);
-  `});await e.buildAndRun(()=>{const t=performance.now()/1e3;e.camera.pos={x:0,y:.6,z:-t/4},e.camera.spherical={radius:.1,theta:Math.sin(t/2)/2,phi:-.3}});
+  `});e.start({onFrame(){const t=performance.now()/1e3;e.camera.pos={x:0,y:.6,z:-t/4},e.camera.spherical={radius:.1,theta:Math.sin(t/2)/2,phi:-.3}}});

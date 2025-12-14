@@ -1,4 +1,4 @@
-import{R as o}from"./ReTina.Bq-JBTFe.js";const e=new o({functions:`
+import{R as o}from"./ReTina.CcSvD2eI.js";const e=new o({functions:`
     const nPoints = 12;
     const power = 2f;
     fn pdist(pos1: vec2f, pos2: vec2f) -> f32 {
@@ -34,4 +34,4 @@ import{R as o}from"./ReTina.Bq-JBTFe.js";const e=new o({functions:`
       log(minD / 10) / 4
     );
     return vec4f(color, 1);
-  `}),s=e.registerUniform("mouseX"),t=e.registerUniform("mouseY");document.addEventListener("mousemove",i=>{s(i.clientX),t(i.clientY)});await e.buildAndRun();
+  `}),s=e.registerUniform("mouseX"),t=e.registerUniform("mouseY");document.addEventListener("mousemove",i=>{s(i.clientX),t(i.clientY)});e.start();

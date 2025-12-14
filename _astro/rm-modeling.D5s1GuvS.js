@@ -1,4 +1,4 @@
-import{R as o}from"./ReTina.Bq-JBTFe.js";import{f as t}from"./freeControls.qr04tydI.js";const e=new o({showFps:!0});e.registerMaterial({color:{r:.5,g:.5,b:.5},sdFunc:`
+import{R as o}from"./ReTina.CcSvD2eI.js";import{f as t}from"./freeControls.qr04tydI.js";const e=new o({showFps:!0});e.registerMaterial({color:{r:.5,g:.5,b:.5},sdFunc:`
     let dBox = sdBox(pos, vec3<f32>(0.26, 0.14, 0.08));
     let dSphere = sdSphere(pos, 0.1);
     return opSmoothUnion(dBox, dSphere, 0.5);
@@ -56,4 +56,4 @@ import{R as o}from"./ReTina.Bq-JBTFe.js";import{f as t}from"./freeControls.qr04t
     let dFloor = sdBox(pos - vec3<f32>(0, -0.6, 0), vec3<f32>(1, 0.01, 0.3));
     let dWall = sdBox(pos - vec3<f32>(0, 0, -0.3), vec3<f32>(1, 0.6, 0.01));
     return min(dFloor, dWall);
-  `});e.camera.fov=60;e.camera.spherical.radius=1.2;e.camera.spherical.theta=.3;t(e);await e.buildAndRun();
+  `});e.camera.fov=60;e.camera.spherical.radius=1.2;e.camera.spherical.theta=.3;t(e);e.start();
