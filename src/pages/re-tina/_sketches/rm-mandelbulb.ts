@@ -62,4 +62,4 @@ rt.camera = {
 
 freeControls(rt)
 
-await rt.buildAndRun()
+rt.start()

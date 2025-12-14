@@ -95,7 +95,7 @@ class ReTina {
     return setter
   }
 
-  async build() {
+  private async build() {
     const { device, presentationFormat } = await getDevice()
 
     const context = this.canvas.getContext('webgpu')
@@ -150,9 +150,23 @@ class ReTina {
     }
   }
 
-  run(cb = () => {}) {
+  async start(props?: {
+    onBuild?: () => void
+    onFrame?: () => void
+    once?: boolean
+  }) {
+    await this.build()
+    props?.onBuild?.()
+
+    if (props?.once) {
+      this.render?.({
+        camera: this.camera,
+      })
+      return
+    }
+
     const rtLoop = new RTLoop({
-      cb,
+      cb: props?.onFrame ?? (() => {}),
       shoot: () => {
         this.render?.({
           camera: this.camera,
@@ -162,11 +176,6 @@ class ReTina {
       showFps: this.showFps,
     })
     rtLoop.start()
-  }
-
-  async buildAndRun(cb = () => {}) {
-    await this.build()
-    this.run(cb)
   }
 }
 

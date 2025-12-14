@@ -96,4 +96,4 @@ rt.camera.spherical.theta = 0.3
 
 freeControls(rt)
 
-await rt.buildAndRun()
+rt.start()

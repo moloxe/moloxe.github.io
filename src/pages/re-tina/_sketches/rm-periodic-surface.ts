@@ -26,10 +26,12 @@ rt.canvas.addEventListener('click', () => {
 })
 
 let lastTime = performance.now()
-await rt.buildAndRun(() => {
-  const time = performance.now()
-  const pulseSlowdown = 0.5 / (time - lastTime)
-  pulse = Math.max(0, pulse - pulseSlowdown)
-  setPulse(pulse)
-  lastTime = time
+rt.start({
+  onFrame() {
+    const time = performance.now()
+    const pulseSlowdown = 0.5 / (time - lastTime)
+    pulse = Math.max(0, pulse - pulseSlowdown)
+    setPulse(pulse)
+    lastTime = time
+  },
 })

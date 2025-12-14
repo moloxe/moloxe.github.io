@@ -41,8 +41,6 @@ rt.registerMaterial({
   `,
 })
 
-await rt.build()
-
 rt.camera.fov = 100
 rt.camera.spherical = {
   radius: 0,
@@ -51,4 +49,4 @@ rt.camera.spherical = {
 }
 
 freeControls(rt)
-rt.buildAndRun()
+rt.start()
