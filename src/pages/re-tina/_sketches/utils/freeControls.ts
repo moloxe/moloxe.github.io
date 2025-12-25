@@ -3,6 +3,8 @@ import type { ReTina } from '../../_lib'
 function freeControls(rt: ReTina) {
   const canvas = rt.canvas
   canvas.style.cursor = 'grab'
+  canvas.style.userSelect = 'none'
+  canvas.style.touchAction = 'manipulation'
 
   let mousePressed = false
   let prevX: number
@@ -112,8 +114,8 @@ function keyboardListener(
   })
   function update() {
     cb({
-      UP: codes['Space'],
-      DOWN: codes['MetaLeft'] || codes['ControlLeft'],
+      UP: codes['KeyE'],
+      DOWN: codes['KeyQ'],
       FRONT: codes['KeyW'],
       BACK: codes['KeyS'],
       LEFT: codes['KeyA'],

@@ -57,8 +57,8 @@ function parseCollisionShader({
       var curDist: f32;
 
       ${materialSdFunctions
-        .map((_, index) => parseSdMaterials(index, '=='))
-        .join('\n')}
+      .map((_, index) => parseSdMaterials(index, '=='))
+      .join('\n')}
 
       return material;
     }
@@ -68,24 +68,10 @@ function parseCollisionShader({
       var curDist: f32;
 
       ${materialSdFunctions
-        .map((_, index) => parseSdMaterials(index, '!='))
-        .join('\n')}
+      .map((_, index) => parseSdMaterials(index, '!='))
+      .join('\n')}
 
       return material;
-    }
-
-    fn calcColisionPos(_pos: vec3f, externalMaterial: SdMaterial) -> vec3f {
-      var pos = _pos;
-      for (var i: i32 = 0; i < RM_MAX_ITER; i++) {
-        let material = sdExternalCollisionGroup(pos);
-        let dist = material.dist;
-        if abs(dist) < RM_MIN_DIST { break; }
-        if i == 0 && abs(dist) > RM_MAX_DIST { break; }
-        // Moving 'pos' in the direction that reduces the distance most quickly:
-        let normal = calcExternalNormal(pos);
-        pos = pos - normal * dist;
-      }
-      return pos;
     }
 
     fn calcExternalNormal(pos: vec3f) -> vec3f {
@@ -99,18 +85,15 @@ function parseCollisionShader({
       );
     }
 
-    fn calcCollisionDist(colPos: vec3f, colDir: vec3f) -> f32 {
-      var t: f32 = 0.0;
-      for (var i: i32 = 0; i < RM_MAX_ITER; i++) {
-        let pos = colPos + colDir * t;
-        let curMaterial = sdInternalCollisionGroup(pos);
-        if abs(curMaterial.dist) < RM_MIN_DIST {
-          return t;
-        }
-        if t > RM_MAX_DIST { break; }
-        t = t + curMaterial.dist;
-      }
-      return INF;
+    fn calcInternalNormal(pos: vec3f) -> vec3f {
+      var h = 1e-4;
+      var k = vec2f(1., -1.);
+      return normalize(
+          k.xyy * sdInternalCollisionGroup(pos + k.xyy * h).dist +
+          k.yyx * sdInternalCollisionGroup(pos + k.yyx * h).dist +
+          k.yxy * sdInternalCollisionGroup(pos + k.yxy * h).dist +
+          k.xxx * sdInternalCollisionGroup(pos + k.xxx * h).dist
+      );
     }
 
     struct CollisionResult {
@@ -121,35 +104,39 @@ function parseCollisionShader({
 
     @compute @workgroup_size(1)
     fn main(@builtin(global_invocation_id) globalId: vec3<u32>) {
-      // A more precise center could be calculated,
-      // something like finding the most negative position with raymarch
-      // ...it could be over-engineering.
-      // Simply use the position of the element that has collisions enabled.
-      let pos = vec3f(
+      var pos = vec3f(
         U.material${collisionGroup}Px,
         U.material${collisionGroup}Py,
         U.material${collisionGroup}Pz,
       );
 
       var collision = CollisionResult(-1, INF, vec3f(0));
-      let externalMaterial = sdExternalCollisionGroup(pos);
-      let colPos = calcColisionPos(pos, externalMaterial);
-      let colDir = normalize(pos - colPos);
 
-      if externalMaterial.dist > 0 {
-        collision.dist = calcCollisionDist(colPos, colDir);
-        if collision.dist < RM_MIN_DIST {
+      for (var i: i32 = 0; i < RM_MAX_ITER; i++) {
+        let externalMaterial = sdExternalCollisionGroup(pos);
+        let internalMaterial = sdInternalCollisionGroup(pos);
+        
+        let d = max(externalMaterial.dist, internalMaterial.dist);
+
+        if d < RM_MIN_DIST {
           collision.index = externalMaterial.index;
-          collision.normal = calcExternalNormal(colPos);
+          collision.dist = d;
+          collision.normal = calcExternalNormal(pos);
+          break;
         }
-      } else {
-        collision.dist = calcCollisionDist(colPos, -colDir);
-        if collision.dist < RM_MIN_DIST {
-          collision.index = externalMaterial.index;
-          collision.normal = calcExternalNormal(colPos);
+
+        if d > RM_MAX_DIST {
+          break;
+        }
+
+        var normal: vec3f;
+        if externalMaterial.dist > internalMaterial.dist {
+          normal = calcExternalNormal(pos);
         } else {
-          collision.dist = -INF; // bruh
+          normal = calcInternalNormal(pos);
         }
+
+        pos = pos - normal * d;
       }
 
       arbitrary_result[0] = f32(collision.index);
