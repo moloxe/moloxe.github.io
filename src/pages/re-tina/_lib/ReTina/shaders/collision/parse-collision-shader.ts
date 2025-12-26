@@ -7,7 +7,6 @@ type Props = {
   materialFuncs: RTMaterialFuncs[]
   nTextures: number
   usePrevFrameTex?: boolean
-  collisionGroup: number
 }
 
 // Using opIntersection would be more "accurate". Anyways...
@@ -17,7 +16,6 @@ function parseCollisionShader({
   materialFuncs,
   nTextures,
   usePrevFrameTex,
-  collisionGroup,
 }: Props) {
   const commonWGSL = parseCommonShader({
     functions,
@@ -32,7 +30,7 @@ function parseCollisionShader({
   function parseSdMaterials(index: number, condition: '==' | '!=') {
     return /* wgsl */ `
       curDist = sdMaterial${index}(pos);
-      if curDist < material.dist && i32(U.material${index}CollisionGroup) ${condition} COLLISION_GROUP {
+      if curDist < material.dist && i32(U.material${index}CollisionGroup) ${condition} params.collisionGroup {
         material.index = ${index};
         material.dist = curDist;
         material.pos = vec3f(
@@ -50,7 +48,13 @@ function parseCollisionShader({
 
   const colWGSL = /* wgsl */ `
     ${commonWGSL}
-    const COLLISION_GROUP: i32 = ${collisionGroup};
+    
+    struct CollisionParams {
+      collisionGroup: i32,
+      pos: vec3f,
+    }
+
+    @group(2) @binding(0) var<uniform> params: CollisionParams;
 
     fn sdInternalCollisionGroup(pos: vec3f) -> SdMaterial {
       var material = SdMaterial(-1, INF, vec3f(0.), vec3f(0.));
@@ -104,11 +108,7 @@ function parseCollisionShader({
 
     @compute @workgroup_size(1)
     fn main(@builtin(global_invocation_id) globalId: vec3<u32>) {
-      var pos = vec3f(
-        U.material${collisionGroup}Px,
-        U.material${collisionGroup}Py,
-        U.material${collisionGroup}Pz,
-      );
+      var pos = params.pos;
 
       var collision = CollisionResult(-1, INF, vec3f(0));
 

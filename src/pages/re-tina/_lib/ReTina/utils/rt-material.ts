@@ -1,6 +1,5 @@
 import type ReTina from '../ReTina'
 import type { RTColor, RTCoord, RTMaterialPartial } from '../types'
-import RTCollision, { type RTCollisionProps } from './rt-collision'
 
 type Props = {
   material: RTMaterialPartial
@@ -8,7 +7,6 @@ type Props = {
   index: number
   enableCollisions?: boolean
 }
-export type RTCollisionCheckerProps = Omit<RTCollisionProps, 'collisionGroup'>
 
 class RTMaterial {
   setPos: (p: Partial<RTCoord>) => void
@@ -17,10 +15,11 @@ class RTMaterial {
   setCollisionGroup: (cg: number) => void
   checkForCollisions?: () => void
   private collisionGroup: number = -1
-  private rtCollision?: RTCollision
   private index: number
+  private rt: ReTina
 
   constructor({ material, rt, index }: Props) {
+    this.rt = rt
     if (!material.pos) material.pos = { x: 0, y: 0, z: 0 }
     if (!material.color) material.color = { r: 1, g: 1, b: 1 }
     if (!material.rotation) material.rotation = { x: 0, y: 0, z: 0 }
@@ -76,16 +75,8 @@ class RTMaterial {
     this.index = index
   }
 
-  buildCollisionChecker(props: RTCollisionCheckerProps) {
-    this.rtCollision = new RTCollision({
-      ...props,
-      collisionGroup: this.collisionGroup,
-    })
-  }
-
   checkCollision() {
-    if (!this.rtCollision) throw new Error('Collision checker not built')
-    return this.rtCollision.checkCollision()
+    return this.rt.checkCollision(this.index)
   }
 
   getIndex() {
