@@ -3,7 +3,7 @@ class RTLoop {
   private fps?: number
   private fpsCounter = 0
   private showFps?: boolean
-  private cb: () => void
+  private cb: () => void | Promise<void>
 
   constructor({
     cb,
@@ -11,7 +11,7 @@ class RTLoop {
     fps,
     showFps,
   }: {
-    cb: () => void
+    cb: () => void | Promise<void>
     shoot: () => void
     fps?: number
     showFps?: boolean
@@ -51,9 +51,9 @@ class RTLoop {
     }
     const FPS = this.fps
 
-    let loop: FrameRequestCallback = () => {
+    let loop: FrameRequestCallback = async () => {
       requestAnimationFrame(loop)
-      cb()
+      await cb()
       shoot()
       increaseFpsCounter()
     }
@@ -61,12 +61,12 @@ class RTLoop {
     if (FPS !== undefined) {
       const fpsInterval = 1000 / FPS
       let lastFrameTime = 0
-      loop = (currentTime: number) => {
+      loop = async (currentTime: number) => {
         requestAnimationFrame(loop)
         const delta = currentTime - lastFrameTime
         if (delta > fpsInterval) {
           lastFrameTime = currentTime - (delta % fpsInterval)
-          cb()
+          await cb()
           shoot()
           increaseFpsCounter()
         }
