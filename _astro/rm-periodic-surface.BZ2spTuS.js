@@ -1,4 +1,4 @@
-import{R as n}from"./ReTina.CcSvD2eI.js";const t=new n;t.registerMaterial({sdFunc:`
+import{R as n}from"./ReTina.CJM8xYaF.js";const t=new n;t.registerMaterial({sdFunc:`
     let t = U.time * .3;
     pos = rotate(pos, vec3<f32>(0, t, -t));
     pos += vec3<f32>(cos(-t) * 16, 2.4, sin(-t) * 16);
