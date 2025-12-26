@@ -48,8 +48,10 @@ rt.registerMaterial({
   `,
 })
 
-await rt.buildAndRun(() => {
-  const t = performance.now() / 1000
-  rt.camera.pos = { x: 0, y: 0.6, z: -t / 4 }
-  rt.camera.spherical = { radius: 0.1, theta: Math.sin(t / 2) / 2, phi: -0.3 }
+rt.start({
+  onFrame() {
+    const t = performance.now() / 1000
+    rt.camera.pos = { x: 0, y: 0.6, z: -t / 4 }
+    rt.camera.spherical = { radius: 0.1, theta: Math.sin(t / 2) / 2, phi: -0.3 }
+  },
 })

@@ -52,7 +52,8 @@ const rt = new ReTina({
   `,
 })
 
-await rt.build()
-
-rt.setTex(0, img.textureData)
-rt.run()
+rt.start({
+  onBuild() {
+    rt.setTex(0, img.textureData)
+  },
+})

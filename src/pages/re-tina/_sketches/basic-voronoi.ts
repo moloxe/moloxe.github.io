@@ -49,4 +49,4 @@ document.addEventListener('mousemove', (event) => {
   setMouseY(event.clientY)
 })
 
-await rt.buildAndRun()
+rt.start()

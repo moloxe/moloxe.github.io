@@ -133,4 +133,4 @@ rt.camera.fov = 60
 rt.camera.spherical = { radius: 4, theta: 0, phi: -0.4 }
 
 freeControls(rt)
-await rt.buildAndRun()
+rt.start()

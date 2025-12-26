@@ -21,7 +21,7 @@
           :key="category"
           :class="`flex rounded-full px-2 border border-primary ${
             selectedCategories.includes(category)
-              ? 'bg-primary text-contrast'
+              ? 'bg-primary text-app-bg'
               : 'text-primary'
           }`"
           @click="() => onClickCategory(category)"

@@ -3,8 +3,6 @@ import freeControls from './utils/freeControls'
 
 const rt = new ReTina({
   showFps: true,
-  height: 512,
-  useInterlacing: true,
 })
 
 // Head
@@ -84,10 +82,10 @@ rt.registerMaterial({
 
 // Environment
 rt.registerMaterial({
-  color: { r: 0.4, g: 0.4, b: 0.4 },
+  color: { r: 0.4, g: 0.6, b: 0.6 },
   sdFunc: /* wgsl */ `
-    let dFloor = sdBox(pos - vec3<f32>(0, -1, 0), vec3<f32>(1, 0.01, 1));
-    let dWall = sdBox(pos - vec3<f32>(0, 0, -1), vec3<f32>(1, 1, 0.01));
+    let dFloor = sdBox(pos - vec3<f32>(0, -0.6, 0), vec3<f32>(1, 0.01, 0.3));
+    let dWall = sdBox(pos - vec3<f32>(0, 0, -0.3), vec3<f32>(1, 0.6, 0.01));
     return min(dFloor, dWall);
   `,
 })
@@ -98,4 +96,4 @@ rt.camera.spherical.theta = 0.3
 
 freeControls(rt)
 
-await rt.buildAndRun()
+rt.start()

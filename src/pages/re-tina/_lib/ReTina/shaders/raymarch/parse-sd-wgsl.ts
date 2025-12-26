@@ -84,10 +84,12 @@ function PARSE_MAP({ materialSdFunctions, sdWGSL }: ParserProps) {
 function PARSE_LIGHT({ materialLightFunctions, sdWGSL }: ParserProps) {
   function parseMaterialLight(lightFunc: string | undefined, index: number) {
     if (!lightFunc) {
+      // Default light function
       lightFunc = /* wgsl */ `
           let lamb = dot(normal, -rd); // Camera as light
-          let finalColor = max(color * 0.2, color * lamb);
-          return vec4<f32>(finalColor, 1.);`
+          let aoFactor = calculateDFAO(pos, normal);
+          let finalColor = color * sqrt(lamb) * aoFactor;
+          return vec4f(finalColor, 1.);`
     }
 
     return /* wgsl */ `
