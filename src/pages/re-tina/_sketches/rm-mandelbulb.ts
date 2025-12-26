@@ -27,7 +27,7 @@ rt.registerMaterial({
         z = zr * vec3(sin(theta) * cos(phi), sin(phi) * sin(theta), cos(theta));
         z += c;
     }
-    return 0.5 * log(r) * r / dr;
+    return 0.5 * log(r) * r / dr - 0.001;
   `,
   lightFunc: /* wgsl */ `
     let lightPos = toCartesian(vec3f(2, toSpherical(ro).yz));
