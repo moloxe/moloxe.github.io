@@ -16,17 +16,14 @@ type Spherical = {
   phi: number
 }
 
-export type RTMaterial = {
+export type RTMaterialPartial = {
   sdFunc: string
-  lightFunc: string
-  pos: RTCoord
-  color: RTColor
-  rotation: RTCoord
-  collisionGroup: number
+  lightFunc?: string
+  pos?: RTCoord
+  color?: RTColor
+  rotation?: RTCoord
+  enableCollisions?: boolean
 }
-
-export type RTMaterialPartial = Pick<RTMaterial, 'sdFunc'> &
-  Partial<Omit<RTMaterial, 'sdFunc'>>
 
 export type RTMaterialFuncs = {
   sdFunc: string

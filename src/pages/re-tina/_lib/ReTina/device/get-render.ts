@@ -17,6 +17,7 @@ type Props = {
   rtTexture: RTTexture
   usePrevFrameTex?: boolean
   useInterlacing?: boolean
+  bindGroupLayouts: GPUBindGroupLayout[]
 }
 
 async function getRender({
@@ -31,13 +32,10 @@ async function getRender({
   rtTexture,
   usePrevFrameTex,
   useInterlacing,
+  bindGroupLayouts,
 }: Props) {
-  const bindGroupLayouts = [
-    rtUniform.uniformBindGroupLayout,
-    rtTexture.textureBindGroupLayout,
-  ]
-
   let rtPingPong: RTPingPong | null = null
+
   if (usePrevFrameTex) {
     rtPingPong = new RTPingPong(canvas, device, presentationFormat)
     bindGroupLayouts.push(rtPingPong.pingPongBindGroupLayout)

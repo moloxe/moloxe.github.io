@@ -8,6 +8,7 @@ import type {
 import getRender from './device/get-render'
 import getDevice from './device/get-device'
 import RTMaterial from './utils/rt-material'
+import RTCollision from './utils/rt-collision'
 import RTUniform from './utils/rt-uniform'
 import RTLoop from './utils/rt-loop'
 import { dumbFsCanvas } from './utils/utils'
@@ -38,6 +39,9 @@ class ReTina {
   private texs: RTTex[]
   private fps?: number
   private showFps?: boolean
+  private rtCollision?: RTCollision
+  private rtUniform?: RTUniform
+
   camera: RTCamera = {
     pos: { x: 0, y: 0, z: 0 },
     spherical: { radius: 0, theta: 0, phi: 0 },
@@ -127,10 +131,18 @@ class ReTina {
       ...this.initalCustomUniforms,
     })
 
+    this.rtUniform = rtUniform
+
     const rtTexture = new RTTexture(device, presentationFormat, this.texs)
+
+    const bindGroupLayouts = [
+      rtUniform.uniformBindGroupLayout,
+      rtTexture.textureBindGroupLayout,
+    ]
 
     this.render = await getRender({
       device,
+      bindGroupLayouts,
       presentationFormat,
       context,
       canvas: this.canvas,
@@ -148,6 +160,28 @@ class ReTina {
     this.setDeviceTexure = (index: number, textureData: Uint8Array) => {
       rtTexture.setTexture(index, textureData)
     }
+
+    this.rtCollision = new RTCollision({
+      device,
+      rtUniformKeys: rtUniform.getKeysSortedByOffset(),
+      functions: this.functions,
+      materialFuncs: this.materialFuncs,
+      nTextures: this.texs.length,
+      usePrevFrameTex: this.usePrevFrameTex,
+      rtUniform,
+      rtTexture,
+    })
+  }
+
+  checkCollision(index: number) {
+    if (!this.rtCollision || !this.rtUniform) throw new Error('Render not built')
+    
+    // Get current pos from uniforms
+    const x = this.rtUniform.get(`material${index}Px`)
+    const y = this.rtUniform.get(`material${index}Py`)
+    const z = this.rtUniform.get(`material${index}Pz`)
+
+    return this.rtCollision.checkCollision(index, { x, y, z })
   }
 
   async start(props?: {

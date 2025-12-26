@@ -3,7 +3,6 @@ struct SdMaterial {
     dist: f32,
     pos: vec3<f32>,
     color: vec3<f32>,
-    collisionGroup: i32,
 }
 
 // #SD-INDIVIDUAL-MATERIALS
@@ -70,7 +69,7 @@ const RM_MIN_DIST: f32 = 1e-4;
 const RM_MAX_DIST: f32 = 1e4;
 fn rayMarch(ro: vec3<f32>, rd: vec3<f32>) -> SdMaterial {
     var totalDist = 0.0;
-    var material = SdMaterial(-1, 0.0, vec3<f32>(0.0), vec3<f32>(0.0), -1);
+    var material = SdMaterial(-1, 0.0, vec3<f32>(0.0), vec3<f32>(0.0));
     for (var i: i32 = 0; i < RM_MAX_ITER; i++) {
         let pos = ro + rd * totalDist;
         material = sdMaterials(pos);
@@ -84,7 +83,7 @@ fn rayMarch(ro: vec3<f32>, rd: vec3<f32>) -> SdMaterial {
             break;
         }
     }
-    return SdMaterial(-1, -1.0, vec3<f32>(0.0), vec3<f32>(0.0), -1);
+    return SdMaterial(-1, -1.0, vec3<f32>(0.0), vec3<f32>(0.0));
 }
 
 fn calcScene(uv: vec2<f32>) -> Scene {
