@@ -1,4 +1,4 @@
-import{R as e}from"./ReTina.CJM8xYaF.js";import{f as t}from"./freeControls.qr04tydI.js";const r=new e({height:512,useInterlacing:!0,showFps:!0});r.registerMaterial({sdFunc:`
+import{R as e}from"./ReTina.DUZmNRbc.js";import{f as t}from"./freeControls.qr04tydI.js";const r=new e({height:512,useInterlacing:!0,showFps:!0});r.registerMaterial({sdFunc:`
     var power = 6 + 4 * sin(U.time * 0.1);
     var z = pos;
     var c = pos;
@@ -16,7 +16,7 @@ import{R as e}from"./ReTina.CJM8xYaF.js";import{f as t}from"./freeControls.qr04t
         z = zr * vec3(sin(theta) * cos(phi), sin(phi) * sin(theta), cos(theta));
         z += c;
     }
-    return 0.5 * log(r) * r / dr;
+    return 0.5 * log(r) * r / dr - 0.001;
   `,lightFunc:`
     let lightPos = toCartesian(vec3f(2, toSpherical(ro).yz));
     let hue = toSpherical(pos).y + U.time * 0.2;
