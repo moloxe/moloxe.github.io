@@ -2,34 +2,50 @@ import { ReTina } from '@ReTina'
 
 const rt = new ReTina({ showFps: true })
 
-rt.camera.pos.y = 0.2
-rt.camera.fov = 100
+rt.camera.pos.x = -0.25
+rt.camera.spherical.theta = -0.4
+rt.camera.fov = 60
 
-const sphere = rt.registerMaterial({
-  sdFunc: /* wgsl */ `
-    return sdSphere(pos, 0.1);
-  `,
-  enableCollisions: true,
-})
+const N = 6
+
+const spheres = new Array(N).fill(0).map(() =>
+  rt.registerMaterial({
+    sdFunc: 'return sdSphere(pos, 0.05);',
+    enableCollisions: true,
+  })
+)
 
 rt.registerMaterial({
+  pos: { x: 0, y: -0.3, z: -0.5 },
   sdFunc: /* wgsl */ `
-    return (pos.y - sin(pos.x * 15 + U.time) / 10) * 0.5;
+    return sdBox(pos, vec3f(0.01, 0.15, 0.1));
   `,
 })
 
-window.addEventListener('mousemove', async (event) => {
-  const mouseX = event.clientX / window.innerWidth
-  const mouseY = event.clientY / window.innerHeight
-  sphere.setPos({ x: mouseX - 0.5, y: 0.7 - mouseY, z: -0.5 })
-})
+setInterval(() => {
+  for (let index = 0; index < spheres.length; index++) {
+    const sphere = spheres[index]
+    sphere.checkCollision().then((result) => {
+      if (result.materialIndex !== -1) {
+        sphere.setColor({ r: 0.3, g: 0.9, b: 0.3 })
+      } else {
+        sphere.setColor({ r: 1, g: 1, b: 1 })
+      }
+    })
+  }
+}, 1000 / 30)
 
 await rt.buildAndRun(async () => {
-  const result = await sphere.checkCollision()
-  if (result.materialIndex === 1) {
-    console.log(result)
-    sphere.setColor({ r: 0.3, g: 0.9, b: 0.3 })
-  } else {
-    sphere.setColor({ r: 1, g: 1, b: 1 })
+  const t = performance.now() / 1000
+
+  for (let index = 0; index < spheres.length; index++) {
+    const sphere = spheres[index]
+    const angle = t / 2 + (2 * Math.PI * index) / N
+
+    sphere.setPos({
+      x: Math.cos(angle) * 0.2,
+      y: Math.sin(angle) * 0.2 + 0.05,
+      z: -0.5,
+    })
   }
 })
