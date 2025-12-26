@@ -35,17 +35,19 @@ setInterval(() => {
   }
 }, 1000 / 30)
 
-await rt.buildAndRun(async () => {
-  const t = performance.now() / 1000
+rt.start({
+  onFrame() {
+    const t = performance.now() / 1000
 
-  for (let index = 0; index < spheres.length; index++) {
-    const sphere = spheres[index]
-    const angle = t / 2 + (2 * Math.PI * index) / N
+    for (let index = 0; index < spheres.length; index++) {
+      const sphere = spheres[index]
+      const angle = t / 2 + (2 * Math.PI * index) / N
 
-    sphere.setPos({
-      x: Math.cos(angle) * 0.2,
-      y: Math.sin(angle) * 0.2 + 0.05,
-      z: -0.5,
-    })
-  }
+      sphere.setPos({
+        x: Math.cos(angle) * 0.2,
+        y: Math.sin(angle) * 0.2 + 0.05,
+        z: -0.5,
+      })
+    }
+  },
 })
