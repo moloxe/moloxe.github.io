@@ -46,7 +46,7 @@ class RTTexture {
       { offset: 0, bytesPerRow: width * 4, rowsPerImage: height },
       [width, height, 1]
     )
-    this.textureEntries[index].resource = texture.createView()
+    // Texture view doesn't need to be recreated, it points to the same texture object
   }
 
   getTextureEntries() {

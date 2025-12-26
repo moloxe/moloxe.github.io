@@ -94,6 +94,11 @@ async function getRender({
     rtUniform.set('camFov', camera.fov)
   }
 
+  const textureBindGroup = device.createBindGroup({
+    layout: renderPipeline.getBindGroupLayout(1),
+    entries: rtTexture.getTextureEntries(),
+  })
+
   function render({ camera }: RenderProps) {
     updateSceneUniforms(camera)
 
@@ -119,11 +124,6 @@ async function getRender({
     renderPass.setPipeline(renderPipeline)
 
     renderPass.setBindGroup(0, rtUniform.uniformBindGroup)
-
-    const textureBindGroup = device.createBindGroup({
-      layout: renderPipeline.getBindGroupLayout(1),
-      entries: rtTexture.getTextureEntries(),
-    })
     renderPass.setBindGroup(1, textureBindGroup)
 
     if (rtPingPong) {
