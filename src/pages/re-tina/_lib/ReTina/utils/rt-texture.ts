@@ -19,7 +19,7 @@ class RTTexture {
     this.textures = this.texs.map(({ width, height }) =>
       this.device.createTexture({
         size: [width, height, 1],
-        format: this.presentationFormat,
+        format: 'rgba8unorm',
         usage: GPUTextureUsage.COPY_DST | GPUTextureUsage.TEXTURE_BINDING,
       })
     )

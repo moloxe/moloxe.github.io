@@ -28,7 +28,7 @@ const rt = new ReTina({
   `,
   main: /* wgsl */ `
     if (U.time < 1) {
-      return getTex0Sample(uv).bgra; // TODO: bgra?
+      return getTex0Sample(uv);
     } else {
       let res = vec2f(U.width, U.height);
       var nCount = vec3f(0);
