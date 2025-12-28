@@ -27,7 +27,7 @@ const rt = new ReTina({
     }
   `,
   main: /* wgsl */ `
-    if (U.time < 1) {
+    if (U.time < 1 || U.frame < 60) {
       return getTex0Sample(uv);
     } else {
       let res = vec2f(U.width, U.height);
