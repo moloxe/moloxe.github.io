@@ -29,15 +29,15 @@ const rt = new ReTina({
     }
 
     // Fractal Brownian Motion
-    fn fbm(p: vec3f) -> f32 {
-        var value: f32 = 0.0;
-        var amplitude: f32 = 0.5;
-        var frequency: f32 = 1.0;
-        var shift = vec3f(100.0);
-        var p_curr = p;
-        for (var i: i32 = 0; i < 4; i++) {
-            value += amplitude * snoise3d(p_curr);
-            p_curr = p_curr * 2.0 + shift;
+    fn fbm(p_in: vec3f, OCTAVES: i32) -> f32 {
+        var value = 0.0;
+        var amplitude = 0.5;
+        var frequency = 1.0;
+        var p = p_in;
+        for (var i = 0; i < OCTAVES; i++) {
+            value += amplitude * snoise3d(p * frequency);
+            p = p * 2.0;
+            frequency *= 1.2;
             amplitude *= 0.5;
         }
         return value;
@@ -48,7 +48,7 @@ const rt = new ReTina({
 // Grass
 rt.registerMaterial({
   sdFunc: /* wgsl */ `
-    let height = fbm(pos * 0.5) * 2.0;
+    let height = fbm(pos * 0.5, 4) * 2.0;
     var terrain = pos.y - height + 0.2;
     let zone = sdSphere(pos, 2);
     terrain = max(zone, terrain);
@@ -79,7 +79,7 @@ rt.registerMaterial({
   `,
   lightFunc: /* wgsl */ `
     let minBright = 0.1;
-    let diffuseColor = vec3f(0.4, 0.8, 1.);
+    let diffuseColor = vec3f(0.2, 0.6, 1.);
     let shininess = 512.0;
     let lightPos = getLightPos();
     let n = pos + snoise3d(pos);
@@ -101,13 +101,13 @@ rt.registerMaterial({
 rt.registerMaterial({
   sdFunc: /* wgsl */ `
     let zone = sdSphere(pos, 2);
-    pos.x += U.time / 20;
-    pos.x /= 2;
-    pos.z /= 2;
+    pos.x += U.time / 30;
+    pos.x /= 3;
+    pos.z /= 3;
     var cloud =
       pos.y -
-      fbm(pos) * 2.0 +
-      fbm((vec3f(pos.x, pos.y + U.time / 20, pos.z)) * 2.0) * 0.5;
+      fbm(pos, 4) * 2.0 +
+      snoise3d((vec3f(pos.x, pos.y + U.time / 20, pos.z)) * 2.0) * 0.5;
     cloud = opSmoothSubtraction(pos.y - 0.65, cloud, 0.3);
     cloud = max(zone, cloud);
     return cloud * 0.2;
@@ -129,8 +129,8 @@ rt.registerMaterial({
   `,
 })
 
-rt.camera.fov = 60
-rt.camera.spherical = { radius: 4, theta: 0, phi: -0.4 }
+rt.camera.fov = 50
+rt.camera.spherical = { radius: 5, theta: 0.5, phi: -0.5 }
 
 freeControls(rt)
 rt.start()
