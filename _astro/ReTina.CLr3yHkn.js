@@ -410,10 +410,7 @@ fn calcNormal(pos: vec3<f32>) -> vec3<f32> {\r
     var h = 1e-4;\r
     var k = vec2<f32>(1., -1.);\r
     return normalize(\r
-        k.xyy * map(pos + k.xyy * h) +\r
-        k.yyx * map(pos + k.yyx * h) +\r
-        k.yxy * map(pos + k.yxy * h) +\r
-        k.xxx * map(pos + k.xxx * h)\r
+        k.xyy * map(pos + k.xyy * h) + k.yyx * map(pos + k.yyx * h) + k.yxy * map(pos + k.yxy * h) + k.xxx * map(pos + k.xxx * h)\r
     );\r
 }\r
 \r
@@ -455,9 +452,9 @@ fn calcScene(uv: vec2<f32>) -> Scene {\r
     var rd = normalize(vec3<f32>(dir2d, -focalLength));\r
     rd = rotateXY(rd, spherical.z, spherical.y);\r
 \r
-    let material = rayMarch(ro, rd);\r
+    // let material = rayMarch(ro, rd);\r
     // TODO: Play with this XD\r
-    // let material = rayMarchDDA(ro, rd, 0.1);\r
+    let material = rayMarchDDA(ro, rd, 0.1);\r
 \r
     var finalPos: vec3<f32>;\r
     var finalNormal: vec3<f32>;\r
