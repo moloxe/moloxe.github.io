@@ -31,7 +31,7 @@ let lastTime = performance.now()
 rt.start({
   onFrame() {
     const time = performance.now()
-    const pulseSlowdown = 0.5 / (time - lastTime)
+    const pulseSlowdown = 0.1 / (time - lastTime)
     pulse = Math.max(0, pulse - pulseSlowdown)
     setPulse(pulse)
     lastTime = time
