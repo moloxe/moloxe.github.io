@@ -2,6 +2,13 @@ struct GlobalUniform {
     UNIFORMS: f32, // #UNIFORMS
 };
 
+struct SdMaterial {
+    index: i32,
+    dist: f32,
+    pos: vec3<f32>,
+    color: vec3<f32>,
+}
+
 @group(0) @binding(0) var <uniform> U: GlobalUniform;
 @group(0) @binding(1) var u_sampler: sampler;
 @group(0) @binding(2) var<storage, read_write> arbitrary_result: array<f32>;
@@ -92,17 +99,17 @@ fn rgb2hsv(c: vec3f) -> vec3<f32> {
 
 fn blinnPhong(
   // Environment
-  rd: vec3<f32>,
-  normal: vec3<f32>,
-  minBright: f32,
+    rd: vec3<f32>,
+    normal: vec3<f32>,
+    minBright: f32,
   // Material
-  pos: vec3<f32>,
-  diffuseColor: vec3<f32>,
-  shininess: f32,
+    pos: vec3<f32>,
+    diffuseColor: vec3<f32>,
+    shininess: f32,
   // Light
-  lightPos: vec3<f32>,
-  lightColor: vec3<f32>,
-  power: f32,
+    lightPos: vec3<f32>,
+    lightColor: vec3<f32>,
+    power: f32,
 ) -> vec3<f32> {
     let viewDir = -rd;
     var lightDir = lightPos - pos;
@@ -119,7 +126,7 @@ fn blinnPhong(
 
     let lightPower = lightColor * power / distance;
     let ambientColor = minBright * mix(diffuseColor, lightColor, .5);
-
+    
     let colorLinear = ambientColor +
       (
         diffuseColor *    lambertian * lightPower +
@@ -129,10 +136,96 @@ fn blinnPhong(
     return colorLinear;
 }
 
+const RM_MAX_ITER: i32 = 1024;
+const RM_MIN_DIST: f32 = 1e-4;
+const RM_MAX_DIST: f32 = 1e4;
+fn rayMarch(ro: vec3<f32>, rd: vec3<f32>) -> SdMaterial {
+    var totalDist = 0.0;
+    var material = SdMaterial(-1, 0.0, vec3<f32>(0.0), vec3<f32>(0.0));
+    for (var i: i32 = 0; i < RM_MAX_ITER; i++) {
+        let pos = ro + rd * totalDist;
+        material = sdMaterials(pos);
+        let currDist = material.dist;
+        if currDist < RM_MIN_DIST {
+            material.dist = totalDist;
+            return material;
+        }
+        totalDist += currDist;
+        if totalDist > RM_MAX_DIST {
+            break;
+        }
+    }
+    return SdMaterial(-1, -1.0, vec3<f32>(0.0), vec3<f32>(0.0));
+}
+
+fn rayMarchDDA(ro: vec3<f32>, rd: vec3<f32>, voxelSize: f32) -> SdMaterial {
+    let ro_grid = ro / voxelSize;
+    var mapPos = floor(ro_grid);
+    let deltaDist = abs(vec3<f32>(1.0) / rd);
+    let rayStep = sign(rd);
+    var sideDist = (rayStep * (mapPos - ro_grid) + (rayStep * 0.5) + 0.5) * deltaDist;
+    var mask = vec3<f32>(0.0);
+
+    for (var i: i32 = 0; i < RM_MAX_ITER; i++) {
+        if any(mapPos < vec3<f32>(-100.0 / voxelSize)) || any(mapPos > vec3<f32>(100.0 / voxelSize)) { break; }
+
+        let voxelCenter = (mapPos + 0.5) * voxelSize;
+        var material = sdMaterials(voxelCenter);
+
+        if material.dist < (voxelSize * 0.5) {
+            var dist = 0.0;
+            if mask.x > 0.5 { dist = sideDist.x - deltaDist.x; } else if mask.y > 0.5 { dist = sideDist.y - deltaDist.y; } else { dist = sideDist.z - deltaDist.z; }
+            material.dist = dist * voxelSize;
+            return material;
+        }
+
+        if sideDist.x < sideDist.y {
+            if sideDist.x < sideDist.z {
+                sideDist.x += deltaDist.x;
+                mapPos.x += rayStep.x;
+                mask = vec3<f32>(1.0, 0.0, 0.0);
+            } else {
+                sideDist.z += deltaDist.z;
+                mapPos.z += rayStep.z;
+                mask = vec3<f32>(0.0, 0.0, 1.0);
+            }
+        } else {
+            if sideDist.y < sideDist.z {
+                sideDist.y += deltaDist.y;
+                mapPos.y += rayStep.y;
+                mask = vec3<f32>(0.0, 1.0, 0.0);
+            } else {
+                sideDist.z += deltaDist.z;
+                mapPos.z += rayStep.z;
+                mask = vec3<f32>(0.0, 0.0, 1.0);
+            }
+        }
+    }
+
+    return SdMaterial(-1, -1.0, vec3<f32>(0.0), vec3<f32>(0.0));
+}
+
+fn calculateDFAO(pos: vec3<f32>, normal: vec3<f32>) -> f32 {
+    let AO_RADIUS = 1.;
+    let AO_EPSILON = 1e-4;
+    let numSamples = 8;
+    var aoSum = 0.0;
+    for (var i: i32 = 0; i < numSamples; i++) {
+        let t_ratio = f32(i + 1) / f32(numSamples - 1);
+        let t_real_dist = AO_EPSILON + t_ratio * (AO_RADIUS - AO_EPSILON);
+        let samplePos = pos + normal * t_real_dist;
+        let dist = sdMaterials(samplePos).dist;
+        let visibility = clamp(dist / t_real_dist, 0f, 1f);
+        aoSum += (1f - visibility) * (1f - t_ratio);
+    }
+    let aoFactor = 1f - aoSum / f32(numSamples);
+    return clamp(aoFactor, 0f, 1f);
+}
+
 // https://iquilezles.org/articles/distfunctions/ 💪
 
 fn sdSphere(p: vec3f, s: f32) -> f32 {
-  return length(p) - s;
+    return length(p) - s;
 }
 
 fn sdBox(p: vec3f, b: vec3f) -> f32 {
@@ -220,61 +313,61 @@ fn snoise(v: vec2f) -> f32 {
 // Translated from:
 // https://github.com/ashima/webgl-noise/blob/master/src/noise3D.glsl
 fn mod289_v3(x: vec3<f32>) -> vec3<f32> {
-  return x - floor(x * (1.0 / 289.0)) * 289.0;
+    return x - floor(x * (1.0 / 289.0)) * 289.0;
 }
 fn mod289_v4(x: vec4<f32>) -> vec4<f32> {
-  return x - floor(x * (1.0 / 289.0)) * 289.0;
+    return x - floor(x * (1.0 / 289.0)) * 289.0;
 }
 fn permute(x: vec4<f32>) -> vec4<f32> {
-  return mod289_v4((x * 34.0 + 10.0) * x);
+    return mod289_v4((x * 34.0 + 10.0) * x);
 }
 fn taylorInvSqrt(r: vec4<f32>) -> vec4<f32> {
-  return 1.79284291400159 - 0.85373472095314 * r;
+    return 1.79284291400159 - 0.85373472095314 * r;
 }
 fn snoise3d(v: vec3<f32>) -> f32 {
   let C: vec2<f32> = vec2<f32>(1.0/6.0, 1.0/3.0);
-  let D: vec4<f32> = vec4<f32>(0.0, 0.5, 1.0, 2.0);
-  var i: vec3<f32> = floor(v + dot(v, vec3<f32>(C.y)));
-  let x0: vec3<f32> = v - i + dot(i, vec3<f32>(C.x));
-  let g: vec3<f32> = step(x0.yzx, x0.xyz);
-  let l: vec3<f32> = 1.0 - g;
-  let i1: vec3<f32> = min(g.xyz, l.zxy);
-  let i2: vec3<f32> = max(g.xyz, l.zxy);
-  let x1: vec3<f32> = x0 - i1 + vec3<f32>(C.x);
-  let x2: vec3<f32> = x0 - i2 + vec3<f32>(C.y);
-  let x3: vec3<f32> = x0 - vec3<f32>(D.y);
-  i = mod289_v3(i);
+    let D: vec4<f32> = vec4<f32>(0.0, 0.5, 1.0, 2.0);
+    var i: vec3<f32> = floor(v + dot(v, vec3<f32>(C.y)));
+    let x0: vec3<f32> = v - i + dot(i, vec3<f32>(C.x));
+    let g: vec3<f32> = step(x0.yzx, x0.xyz);
+    let l: vec3<f32> = 1.0 - g;
+    let i1: vec3<f32> = min(g.xyz, l.zxy);
+    let i2: vec3<f32> = max(g.xyz, l.zxy);
+    let x1: vec3<f32> = x0 - i1 + vec3<f32>(C.x);
+    let x2: vec3<f32> = x0 - i2 + vec3<f32>(C.y);
+    let x3: vec3<f32> = x0 - vec3<f32>(D.y);
+    i = mod289_v3(i);
   let p: vec4<f32> = permute(permute(permute(
       i.z + vec4<f32>(0.0, i1.z, i2.z, 1.0))
       + i.y + vec4<f32>(0.0, i1.y, i2.y, 1.0))
       + i.x + vec4<f32>(0.0, i1.x, i2.x, 1.0));
   let n_: f32 = 0.142857142857;
-  let ns: vec3<f32> = n_ * D.wyz - D.xzx;
-  let j: vec4<f32> = p - 49.0 * floor(p * ns.z * ns.z);
-  let x_: vec4<f32> = floor(j * ns.z);
-  let y_: vec4<f32> = floor(j - 7.0 * x_);
-  let x: vec4<f32> = x_ * ns.x + vec4<f32>(ns.y);
-  let y: vec4<f32> = y_ * ns.x + vec4<f32>(ns.y);
-  let h: vec4<f32> = 1.0 - abs(x) - abs(y);
-  let b0: vec4<f32> = vec4<f32>(x.xy, y.xy);
-  let b1: vec4<f32> = vec4<f32>(x.zw, y.zw);
-  let s0: vec4<f32> = floor(b0) * 2.0 + 1.0;
-  let s1: vec4<f32> = floor(b1) * 2.0 + 1.0;
-  let sh: vec4<f32> = -step(h, vec4<f32>(0.0));
-  let a0: vec4<f32> = b0.xzyw + s0.xzyw * sh.xxyy;
-  let a1: vec4<f32> = b1.xzyw + s1.xzyw * sh.zzww;
-  let p0: vec3<f32> = vec3<f32>(a0.xy, h.x);
-  let p1: vec3<f32> = vec3<f32>(a0.zw, h.y);
-  let p2: vec3<f32> = vec3<f32>(a1.xy, h.z);
-  let p3: vec3<f32> = vec3<f32>(a1.zw, h.w);
-  let norm: vec4<f32> = taylorInvSqrt(vec4<f32>(dot(p0, p0), dot(p1, p1), dot(p2, p2), dot(p3, p3)));
-  let p0_norm: vec3<f32> = p0 * norm.x;
-  let p1_norm: vec3<f32> = p1 * norm.y;
-  let p2_norm: vec3<f32> = p2 * norm.z;
-  let p3_norm: vec3<f32> = p3 * norm.w;
-  var m: vec4<f32> = max(0.5 - vec4<f32>(dot(x0, x0), dot(x1, x1), dot(x2, x2), dot(x3, x3)), vec4<f32>(0.0));
-  m = m * m;
-  return 105.0 * dot(m * m, vec4<f32>(dot(p0_norm, x0), dot(p1_norm, x1), dot(p2_norm, x2), dot(p3_norm, x3)));
+    let ns: vec3<f32> = n_ * D.wyz - D.xzx;
+    let j: vec4<f32> = p - 49.0 * floor(p * ns.z * ns.z);
+    let x_: vec4<f32> = floor(j * ns.z);
+    let y_: vec4<f32> = floor(j - 7.0 * x_);
+    let x: vec4<f32> = x_ * ns.x + vec4<f32>(ns.y);
+    let y: vec4<f32> = y_ * ns.x + vec4<f32>(ns.y);
+    let h: vec4<f32> = 1.0 - abs(x) - abs(y);
+    let b0: vec4<f32> = vec4<f32>(x.xy, y.xy);
+    let b1: vec4<f32> = vec4<f32>(x.zw, y.zw);
+    let s0: vec4<f32> = floor(b0) * 2.0 + 1.0;
+    let s1: vec4<f32> = floor(b1) * 2.0 + 1.0;
+    let sh: vec4<f32> = -step(h, vec4<f32>(0.0));
+    let a0: vec4<f32> = b0.xzyw + s0.xzyw * sh.xxyy;
+    let a1: vec4<f32> = b1.xzyw + s1.xzyw * sh.zzww;
+    let p0: vec3<f32> = vec3<f32>(a0.xy, h.x);
+    let p1: vec3<f32> = vec3<f32>(a0.zw, h.y);
+    let p2: vec3<f32> = vec3<f32>(a1.xy, h.z);
+    let p3: vec3<f32> = vec3<f32>(a1.zw, h.w);
+    let norm: vec4<f32> = taylorInvSqrt(vec4<f32>(dot(p0, p0), dot(p1, p1), dot(p2, p2), dot(p3, p3)));
+    let p0_norm: vec3<f32> = p0 * norm.x;
+    let p1_norm: vec3<f32> = p1 * norm.y;
+    let p2_norm: vec3<f32> = p2 * norm.z;
+    let p3_norm: vec3<f32> = p3 * norm.w;
+    var m: vec4<f32> = max(0.5 - vec4<f32>(dot(x0, x0), dot(x1, x1), dot(x2, x2), dot(x3, x3)), vec4<f32>(0.0));
+    m = m * m;
+    return 105.0 * dot(m * m, vec4<f32>(dot(p0_norm, x0), dot(p1_norm, x1), dot(p2_norm, x2), dot(p3_norm, x3)));
 }
 
 // #FUNCTIONS

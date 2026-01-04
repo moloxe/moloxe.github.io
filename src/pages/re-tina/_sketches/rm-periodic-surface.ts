@@ -10,7 +10,9 @@ rt.registerMaterial({
     return (sin(pos.y) - (cos(pos.x) + cos(pos.y) + cos(pos.z))) * .6;
   `,
   lightFunc: `
-    var c = normal * .5 + .5;
+    let lamb = dot(normal, -rd);
+    let aoFactor = calculateDFAO(pos, normal);
+    var c = (normal * .5 + .5) * sqrt(lamb) * aoFactor;
     let dist = length(pos - ro);
     let bri = pow(max(0, sin(dist * PI / 6.)), 6.) + U.pulse;
     c *= bri;
