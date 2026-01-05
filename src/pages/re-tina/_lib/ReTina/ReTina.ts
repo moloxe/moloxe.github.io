@@ -161,21 +161,24 @@ class ReTina {
       rtTexture.setTexture(index, textureData)
     }
 
-    this.rtCollision = new RTCollision({
-      device,
-      rtUniformKeys: rtUniform.getKeysSortedByOffset(),
-      functions: this.functions,
-      materialFuncs: this.materialFuncs,
-      nTextures: this.texs.length,
-      usePrevFrameTex: this.usePrevFrameTex,
-      rtUniform,
-      rtTexture,
-    })
+    if (this.materialFuncs.length > 0) {
+      this.rtCollision = new RTCollision({
+        device,
+        rtUniformKeys: rtUniform.getKeysSortedByOffset(),
+        functions: this.functions,
+        materialFuncs: this.materialFuncs,
+        nTextures: this.texs.length,
+        usePrevFrameTex: this.usePrevFrameTex,
+        rtUniform,
+        rtTexture,
+      })
+    }
   }
 
   checkCollision(index: number) {
-    if (!this.rtCollision || !this.rtUniform) throw new Error('Render not built')
-    
+    if (!this.rtCollision || !this.rtUniform)
+      throw new Error('Render not built')
+
     // Get current pos from uniforms
     const x = this.rtUniform.get(`material${index}Px`)
     const y = this.rtUniform.get(`material${index}Py`)

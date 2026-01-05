@@ -76,9 +76,10 @@ async function getRender({
   })
 
   let frame = 0
-  const initTime = performance.now() / 1000
+  let initTime: number | null = null
   function updateSceneUniforms(camera: RTCamera) {
     const now = performance.now() / 1000
+    if (initTime === null) initTime = performance.now() / 1000
     const time = now - initTime
     rtUniform.set('frame', frame)
     rtUniform.set('time', time)

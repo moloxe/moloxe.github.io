@@ -44,9 +44,11 @@ const rt = new ReTina({
 const setMouseX = rt.registerUniform('mouseX')
 const setMouseY = rt.registerUniform('mouseY')
 
-document.addEventListener('mousemove', (event) => {
-  setMouseX(event.clientX)
-  setMouseY(event.clientY)
+rt.start({
+  onBuild() {
+    document.addEventListener('mousemove', (event) => {
+      setMouseX(event.clientX)
+      setMouseY(event.clientY)
+    })
+  },
 })
-
-rt.start()
