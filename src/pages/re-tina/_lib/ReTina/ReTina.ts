@@ -133,7 +133,7 @@ class ReTina {
 
     this.rtUniform = rtUniform
 
-    const rtTexture = new RTTexture(device, presentationFormat, this.texs)
+    const rtTexture = new RTTexture(device, this.texs)
 
     const bindGroupLayouts = [
       rtUniform.uniformBindGroupLayout,

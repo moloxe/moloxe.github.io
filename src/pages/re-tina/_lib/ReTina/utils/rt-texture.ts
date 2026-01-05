@@ -3,19 +3,13 @@ import type { RTTex } from '../types'
 class RTTexture {
   private texs: RTTex[]
   private device: GPUDevice
-  private presentationFormat: GPUTextureFormat
   private textures: GPUTexture[]
   private textureEntries: GPUBindGroupEntry[]
   textureBindGroupLayout: GPUBindGroupLayout
 
-  constructor(
-    device: GPUDevice,
-    presentationFormat: GPUTextureFormat,
-    texs: RTTex[]
-  ) {
+  constructor(device: GPUDevice, texs: RTTex[]) {
     this.texs = texs
     this.device = device
-    this.presentationFormat = presentationFormat
     this.textures = this.texs.map(({ width, height }) =>
       this.device.createTexture({
         size: [width, height, 1],
