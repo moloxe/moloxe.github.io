@@ -1,3 +1,9 @@
+struct SdMaterial {
+    index: i32,
+    dist: f32,
+    pos: vec3<f32>,
+    color: vec3<f32>,
+}
 
 // #SD-INDIVIDUAL-MATERIALS
 
@@ -14,10 +20,7 @@ fn calcNormal(pos: vec3<f32>) -> vec3<f32> {
     var h = 1e-4;
     var k = vec2<f32>(1., -1.);
     return normalize(
-        k.xyy * map(pos + k.xyy * h) +
-        k.yyx * map(pos + k.yyx * h) +
-        k.yxy * map(pos + k.yxy * h) +
-        k.xxx * map(pos + k.xxx * h)
+        k.xyy * map(pos + k.xyy * h) + k.yyx * map(pos + k.yyx * h) + k.yxy * map(pos + k.yxy * h) + k.xxx * map(pos + k.xxx * h)
     );
 }
 
@@ -32,6 +35,92 @@ fn calcLight(
     materialIndex: i32
 ) -> vec4<f32> {
     // #LIGHT-MATERIALS-FUNC
+}
+
+const RM_MAX_ITER: i32 = 1024;
+const RM_MIN_DIST: f32 = 1e-4;
+const RM_MAX_DIST: f32 = 1e4;
+fn rayMarch(ro: vec3<f32>, rd: vec3<f32>) -> SdMaterial {
+    var totalDist = 0.0;
+    var material = SdMaterial(-1, 0.0, vec3<f32>(0.0), vec3<f32>(0.0));
+    for (var i: i32 = 0; i < RM_MAX_ITER; i++) {
+        let pos = ro + rd * totalDist;
+        material = sdMaterials(pos);
+        let currDist = material.dist;
+        if currDist < RM_MIN_DIST {
+            material.dist = totalDist;
+            return material;
+        }
+        totalDist += currDist;
+        if totalDist > RM_MAX_DIST {
+            break;
+        }
+    }
+    return SdMaterial(-1, -1.0, vec3<f32>(0.0), vec3<f32>(0.0));
+}
+
+fn rayMarchDDA(ro: vec3<f32>, rd: vec3<f32>, voxelSize: f32) -> SdMaterial {
+    let ro_grid = ro / voxelSize;
+    var mapPos = floor(ro_grid);
+    let deltaDist = abs(vec3<f32>(1.0) / rd);
+    let rayStep = sign(rd);
+    var sideDist = (rayStep * (mapPos - ro_grid) + (rayStep * 0.5) + 0.5) * deltaDist;
+    var mask = vec3<f32>(0.0);
+
+    for (var i: i32 = 0; i < RM_MAX_ITER; i++) {
+        if any(mapPos < vec3<f32>(-100.0 / voxelSize)) || any(mapPos > vec3<f32>(100.0 / voxelSize)) { break; }
+
+        let voxelCenter = (mapPos + 0.5) * voxelSize;
+        var material = sdMaterials(voxelCenter);
+
+        if material.dist < (voxelSize * 0.5) {
+            var dist = 0.0;
+            if mask.x > 0.5 { dist = sideDist.x - deltaDist.x; } else if mask.y > 0.5 { dist = sideDist.y - deltaDist.y; } else { dist = sideDist.z - deltaDist.z; }
+            material.dist = dist * voxelSize;
+            return material;
+        }
+
+        if sideDist.x < sideDist.y {
+            if sideDist.x < sideDist.z {
+                sideDist.x += deltaDist.x;
+                mapPos.x += rayStep.x;
+                mask = vec3<f32>(1.0, 0.0, 0.0);
+            } else {
+                sideDist.z += deltaDist.z;
+                mapPos.z += rayStep.z;
+                mask = vec3<f32>(0.0, 0.0, 1.0);
+            }
+        } else {
+            if sideDist.y < sideDist.z {
+                sideDist.y += deltaDist.y;
+                mapPos.y += rayStep.y;
+                mask = vec3<f32>(0.0, 1.0, 0.0);
+            } else {
+                sideDist.z += deltaDist.z;
+                mapPos.z += rayStep.z;
+                mask = vec3<f32>(0.0, 0.0, 1.0);
+            }
+        }
+    }
+
+    return SdMaterial(-1, -1.0, vec3<f32>(0.0), vec3<f32>(0.0));
+}
+
+fn calculateDFAO(pos: vec3<f32>, normal: vec3<f32>) -> f32 {
+    let AO_RADIUS = 1.;
+    let AO_EPSILON = 1e-4;
+    let numSamples = 8;
+    var aoSum = 0.0;
+    for (var i: i32 = 0; i < numSamples; i++) {
+        let t_ratio = f32(i + 1) / f32(numSamples - 1);
+        let t_real_dist = AO_EPSILON + t_ratio * (AO_RADIUS - AO_EPSILON);
+        let samplePos = pos + normal * t_real_dist;
+        let dist = sdMaterials(samplePos).dist;
+        let visibility = clamp(dist / t_real_dist, 0f, 1f);
+        aoSum += (1f - visibility) * (1f - t_ratio);
+    }
+    let aoFactor = 1f - aoSum / f32(numSamples);
+    return clamp(aoFactor, 0f, 1f);
 }
 
 struct Scene {
