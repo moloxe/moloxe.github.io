@@ -446,9 +446,9 @@ fn calcScene(uv: vec2<f32>) -> Scene {\r
     var rd = normalize(vec3<f32>(dir2d, -focalLength));\r
     rd = rotateXY(rd, spherical.z, spherical.y);\r
 \r
-    // let material = rayMarch(ro, rd);\r
+    let material = rayMarch(ro, rd);\r
     // TODO: Play with this XD\r
-    let material = rayMarchDDA(ro, rd, 0.1);\r
+    // let material = rayMarchDDA(ro, rd, 0.1);\r
 \r
     var finalPos: vec3<f32>;\r
     var finalNormal: vec3<f32>;\r
