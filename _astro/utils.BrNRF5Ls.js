@@ -1,0 +1,6 @@
+const n="https://api.giphy.com/v1/gifs",c="X5WYqUT7jJRgrnbt0Vj7Rn7duWW54V5Y",h={searchGifs:async function(t,s){const e=t?n+"/search":n+"/trending",r=new URLSearchParams({api_key:c,limit:"20",q:t,lang:s}),a=await fetch(`${e}?${r}`);if(a.status===200)return(await a.json()).data;throw new Error("error searching gifs")},searchGif:async function(t){const s=t?n+"/search":n+"/trending",e=new URLSearchParams({api_key:c,limit:"1",q:t.slice(0,50),lang:"en"}),r=await fetch(`${s}?${e}`);if(r.status===200){const{data:a}=await r.json();return a[0]?.images?.downsized?.url}else throw new Error("error searching gifs")},getGifById:function(t){return`https://media.giphy.com/media/${t}/giphy.gif`}},i={GIPHY_BLOCK_DIVIDER:"$%&",getIdFromGiphyBlock(t){return t.split(i.GIPHY_BLOCK_DIVIDER)[0]},getQuoteFromGiphyBlock(t){return t.split(i.GIPHY_BLOCK_DIVIDER)[1]},formatGiphyBlock(t,s){return`${t}${i.GIPHY_BLOCK_DIVIDER}${s}`}},l={parseLiveCodeBlock(t){const s=JSON.parse(t||"{}");let e=s.html||"";const r=`<script>${s.js||""}<\/script>`,a=`<style>${s.css||""}</style>`;return e=e.replace("</body>",`${r}</body>`),e=e.replace("</head>",`${a}</head>`),e},DEFAULT_TEXT:JSON.stringify({html:`<html>
+  <head>
+  </head>
+  <body>
+  </body>
+</html>`,js:"",css:""})};export{i as G,l as L,h as a};

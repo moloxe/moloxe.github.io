@@ -1,0 +1,121 @@
+<!DOCTYPE html><html lang="es" class="overflow-hidden"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"><meta property="og:title" content="Kruskal animations"><meta name="twitter:title" content="Kruskal animations"><!-- <meta property="og:url" content={canonicalHref} /> --><meta name="generator" content="Astro v5.16.9"><meta name="robots" content="noindex, nofollow"><title>Kruskal animations</title><link rel="icon" type="image/svg+xml" href="/favicon.svg"><!-- <link rel="canonical" href={canonicalHref} /> --><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/_astro/ClientRouter.astro_astro_type_script_index_0_lang.CDGfc0hd.js"></script><link rel="stylesheet" href="/_astro/ants-test.yXysTIuy.css"></head> <body>  <div class="absolute w-0 h-0" data-astro-transition-persist="astro-bfx3ztbg-1"> <style>astro-island,astro-slot,astro-static-slot{display:contents}</style><script>(()=>{var e=async t=>{await(await t())()};(self.Astro||(self.Astro={})).load=e;window.dispatchEvent(new Event("astro:load"));})();</script><script>(()=>{var A=Object.defineProperty;var g=(i,o,a)=>o in i?A(i,o,{enumerable:!0,configurable:!0,writable:!0,value:a}):i[o]=a;var d=(i,o,a)=>g(i,typeof o!="symbol"?o+"":o,a);{let i={0:t=>m(t),1:t=>a(t),2:t=>new RegExp(t),3:t=>new Date(t),4:t=>new Map(a(t)),5:t=>new Set(a(t)),6:t=>BigInt(t),7:t=>new URL(t),8:t=>new Uint8Array(t),9:t=>new Uint16Array(t),10:t=>new Uint32Array(t),11:t=>1/0*t},o=t=>{let[l,e]=t;return l in i?i[l](e):void 0},a=t=>t.map(o),m=t=>typeof t!="object"||t===null?t:Object.fromEntries(Object.entries(t).map(([l,e])=>[l,o(e)]));class y extends HTMLElement{constructor(){super(...arguments);d(this,"Component");d(this,"hydrator");d(this,"hydrate",async()=>{var b;if(!this.hydrator||!this.isConnected)return;let e=(b=this.parentElement)==null?void 0:b.closest("astro-island[ssr]");if(e){e.addEventListener("astro:hydrate",this.hydrate,{once:!0});return}let c=this.querySelectorAll("astro-slot"),n={},h=this.querySelectorAll("template[data-astro-template]");for(let r of h){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("data-astro-template")||"default"]=r.innerHTML,r.remove())}for(let r of c){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("name")||"default"]=r.innerHTML)}let p;try{p=this.hasAttribute("props")?m(JSON.parse(this.getAttribute("props"))):{}}catch(r){let s=this.getAttribute("component-url")||"<unknown>",v=this.getAttribute("component-export");throw v&&(s+=` (export ${v})`),console.error(`[hydrate] Error parsing props for component ${s}`,this.getAttribute("props"),r),r}let u;await this.hydrator(this)(this.Component,p,n,{client:this.getAttribute("client")}),this.removeAttribute("ssr"),this.dispatchEvent(new CustomEvent("astro:hydrate"))});d(this,"unmount",()=>{this.isConnected||this.dispatchEvent(new CustomEvent("astro:unmount"))})}disconnectedCallback(){document.removeEventListener("astro:after-swap",this.unmount),document.addEventListener("astro:after-swap",this.unmount,{once:!0})}connectedCallback(){if(!this.hasAttribute("await-children")||document.readyState==="interactive"||document.readyState==="complete")this.childrenConnectedCallback();else{let e=()=>{document.removeEventListener("DOMContentLoaded",e),c.disconnect(),this.childrenConnectedCallback()},c=new MutationObserver(()=>{var n;((n=this.lastChild)==null?void 0:n.nodeType)===Node.COMMENT_NODE&&this.lastChild.nodeValue==="astro:end"&&(this.lastChild.remove(),e())});c.observe(this,{childList:!0}),document.addEventListener("DOMContentLoaded",e)}}async childrenConnectedCallback(){let e=this.getAttribute("before-hydration-url");e&&await import(e),this.start()}async start(){let e=JSON.parse(this.getAttribute("opts")),c=this.getAttribute("client");if(Astro[c]===void 0){window.addEventListener(`astro:${c}`,()=>this.start(),{once:!0});return}try{await Astro[c](async()=>{let n=this.getAttribute("renderer-url"),[h,{default:p}]=await Promise.all([import(this.getAttribute("component-url")),n?import(n):()=>()=>{}]),u=this.getAttribute("component-export")||"default";if(!u.includes("."))this.Component=h[u];else{this.Component=h;for(let f of u.split("."))this.Component=this.Component[f]}return this.hydrator=p,this.hydrate},e,this)}catch(n){console.error(`[astro-island] Error hydrating ${this.getAttribute("component-url")}`,n)}}attributeChangedCallback(){this.hydrate()}}d(y,"observedAttributes",["props"]),customElements.get("astro-island")||customElements.define("astro-island",y)}})();</script><astro-island uid="1EHrjx" prefix="s0" component-url="/_astro/index.0BedYp8Q.js" component-export="default" renderer-url="/_astro/client.BZ2AD0De.js" props="{}" ssr client="load" opts="{&quot;name&quot;:&quot;OnekoStack&quot;,&quot;value&quot;:true}" await-children><!--[--><!--]--><!--astro:end--></astro-island> </div>   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.js"></script> <div class="flex w-full h-full bg-black items-center justify-center" id="kruskal-cnv"></div> <script>function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
+function findSet(parent, u) {
+  if (parent[u] == u) return u
+  parent[u] = findSet(parent, parent[u])
+  return parent[u]
+}
+
+function unionSet(parent, rnk, u, v) {
+  u = findSet(parent, u)
+  v = findSet(parent, v)
+  if (u != v) {
+    if (rnk[u] < rnk[v]) {
+      temp = u
+      u = v
+      v = temp
+    }
+    parent[v] = u
+    if (rnk[u] == rnk[v]) rnk[u] += 1
+  }
+}
+
+function setup() {
+  const cnv = createCanvas(windowHeight, windowHeight)
+  cnv.parent('kruskal-cnv')
+}
+
+async function draw() {
+  noLoop()
+  background(255)
+
+  let n = 10
+  let node = []
+  for (let i = 0; i < n; i++) {
+    node.push([20 + random(width - 40), 20 + random(height - 40)])
+  }
+
+  let edge = []
+  let cont = 0
+  stroke(222)
+  strokeWeight(1)
+  for (let i = 0; i < n; i++) {
+    for (let j = i + 1; j < n; j++) {
+      let w = Math.sqrt(
+        (node[i][0] - node[j][0]) ** 2 + (node[i][1] - node[j][1]) ** 2
+      )
+      edge.push([w, i, j])
+      let x1 = node[edge[cont][1]][0]
+      let y1 = node[edge[cont][1]][1]
+      let x2 = node[edge[cont][2]][0]
+      let y2 = node[edge[cont][2]][1]
+      line(x1, y1, x2, y2)
+      cont++
+    }
+  }
+
+  stroke(0)
+  fill(255)
+  for (let i = 0; i < n; i++) circle(node[i][0], node[i][1], 8)
+
+  let path = []
+  {
+    let restore = []
+    let vis = []
+    let parent = []
+    let rnk = []
+    for (let i = 0; i < n; i++) {
+      parent.push(i)
+      rnk.push(0)
+      vis.push(false)
+    }
+
+    noStroke()
+    fill(255)
+    cont = 0
+    while (cont < n - 1) {
+      // 2*n
+
+      edge.sort(function (a, b) {
+        if (a[0] === b[0]) {
+          return 0
+        } else {
+          return a[0] > b[0] ? -1 : 1
+        }
+      })
+
+      let e = edge.pop()
+
+      if (findSet(parent, e[1]) != findSet(parent, e[2]) || cont >= n - 1) {
+        vis[e[1]] = vis[e[2]] = true
+        unionSet(parent, rnk, e[1], e[2])
+
+        let x1 = node[e[1]][0]
+        let y1 = node[e[1]][1]
+        let x2 = node[e[2]][0]
+        let y2 = node[e[2]][1]
+
+        stroke(200, 0, 0)
+        strokeWeight(2)
+        line(x1, y1, x2, y2)
+        strokeWeight(1)
+        stroke(0)
+        fill(255)
+        circle(x1, y1, 8)
+        circle(x2, y2, 8)
+
+        path.push([e[1], e[2]])
+        cont++
+        await sleep(100)
+      } else {
+        restore.push(e)
+      }
+    }
+  }
+
+  await sleep(2000)
+  loop()
+}
+</script>  </body></html>

@@ -1,0 +1,227 @@
+<!DOCTYPE html><html lang="es"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"><meta property="og:title" content="Splines cúbicos"><meta name="twitter:title" content="Splines cúbicos"><!-- <meta property="og:url" content={canonicalHref} /> --><meta name="generator" content="Astro v5.16.9"><title>Splines cúbicos</title><link rel="icon" type="image/svg+xml" href="/favicon.svg"><!-- <link rel="canonical" href={canonicalHref} /> --><script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/p5.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/addons/p5.dom.min.js"></script><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/_astro/ClientRouter.astro_astro_type_script_index_0_lang.CDGfc0hd.js"></script><link rel="stylesheet" href="/_astro/ants-test.yXysTIuy.css"></head> <body> <img class="absolute w-0 h-0" src="https://librecounter.org/counter.svg" loading="eager" decoding="async" referrerpolicy="unsafe-url" id="libre-counter"> <div class="absolute w-0 h-0" data-astro-transition-persist="astro-bfx3ztbg-1"> <style>astro-island,astro-slot,astro-static-slot{display:contents}</style><script>(()=>{var e=async t=>{await(await t())()};(self.Astro||(self.Astro={})).load=e;window.dispatchEvent(new Event("astro:load"));})();</script><script>(()=>{var A=Object.defineProperty;var g=(i,o,a)=>o in i?A(i,o,{enumerable:!0,configurable:!0,writable:!0,value:a}):i[o]=a;var d=(i,o,a)=>g(i,typeof o!="symbol"?o+"":o,a);{let i={0:t=>m(t),1:t=>a(t),2:t=>new RegExp(t),3:t=>new Date(t),4:t=>new Map(a(t)),5:t=>new Set(a(t)),6:t=>BigInt(t),7:t=>new URL(t),8:t=>new Uint8Array(t),9:t=>new Uint16Array(t),10:t=>new Uint32Array(t),11:t=>1/0*t},o=t=>{let[l,e]=t;return l in i?i[l](e):void 0},a=t=>t.map(o),m=t=>typeof t!="object"||t===null?t:Object.fromEntries(Object.entries(t).map(([l,e])=>[l,o(e)]));class y extends HTMLElement{constructor(){super(...arguments);d(this,"Component");d(this,"hydrator");d(this,"hydrate",async()=>{var b;if(!this.hydrator||!this.isConnected)return;let e=(b=this.parentElement)==null?void 0:b.closest("astro-island[ssr]");if(e){e.addEventListener("astro:hydrate",this.hydrate,{once:!0});return}let c=this.querySelectorAll("astro-slot"),n={},h=this.querySelectorAll("template[data-astro-template]");for(let r of h){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("data-astro-template")||"default"]=r.innerHTML,r.remove())}for(let r of c){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("name")||"default"]=r.innerHTML)}let p;try{p=this.hasAttribute("props")?m(JSON.parse(this.getAttribute("props"))):{}}catch(r){let s=this.getAttribute("component-url")||"<unknown>",v=this.getAttribute("component-export");throw v&&(s+=` (export ${v})`),console.error(`[hydrate] Error parsing props for component ${s}`,this.getAttribute("props"),r),r}let u;await this.hydrator(this)(this.Component,p,n,{client:this.getAttribute("client")}),this.removeAttribute("ssr"),this.dispatchEvent(new CustomEvent("astro:hydrate"))});d(this,"unmount",()=>{this.isConnected||this.dispatchEvent(new CustomEvent("astro:unmount"))})}disconnectedCallback(){document.removeEventListener("astro:after-swap",this.unmount),document.addEventListener("astro:after-swap",this.unmount,{once:!0})}connectedCallback(){if(!this.hasAttribute("await-children")||document.readyState==="interactive"||document.readyState==="complete")this.childrenConnectedCallback();else{let e=()=>{document.removeEventListener("DOMContentLoaded",e),c.disconnect(),this.childrenConnectedCallback()},c=new MutationObserver(()=>{var n;((n=this.lastChild)==null?void 0:n.nodeType)===Node.COMMENT_NODE&&this.lastChild.nodeValue==="astro:end"&&(this.lastChild.remove(),e())});c.observe(this,{childList:!0}),document.addEventListener("DOMContentLoaded",e)}}async childrenConnectedCallback(){let e=this.getAttribute("before-hydration-url");e&&await import(e),this.start()}async start(){let e=JSON.parse(this.getAttribute("opts")),c=this.getAttribute("client");if(Astro[c]===void 0){window.addEventListener(`astro:${c}`,()=>this.start(),{once:!0});return}try{await Astro[c](async()=>{let n=this.getAttribute("renderer-url"),[h,{default:p}]=await Promise.all([import(this.getAttribute("component-url")),n?import(n):()=>()=>{}]),u=this.getAttribute("component-export")||"default";if(!u.includes("."))this.Component=h[u];else{this.Component=h;for(let f of u.split("."))this.Component=this.Component[f]}return this.hydrator=p,this.hydrate},e,this)}catch(n){console.error(`[astro-island] Error hydrating ${this.getAttribute("component-url")}`,n)}}attributeChangedCallback(){this.hydrate()}}d(y,"observedAttributes",["props"]),customElements.get("astro-island")||customElements.define("astro-island",y)}})();</script><astro-island uid="1EHrjx" prefix="s0" component-url="/_astro/index.0BedYp8Q.js" component-export="default" renderer-url="/_astro/client.BZ2AD0De.js" props="{}" ssr client="load" opts="{&quot;name&quot;:&quot;OnekoStack&quot;,&quot;value&quot;:true}" await-children><!--[--><!--]--><!--astro:end--></astro-island> </div> <p class="text-sm font-mono px-4 pt-2 pb-8 text-neutral-400 leading-5 break-all max-sm:text-xs max-sm:pb-4 max-sm:px-2"> <a href="/" class="hover:text-white">Home</a>  / <a href="/lab" class="hover:text-white">lab</a>  / <a href="/lab/splines-cubicos" class="hover:text-white">splines-cubicos</a>  </p>  <div class="flex flex-col mx-auto w-fit py-8 gap-y-8"> <h1>Splines cúbicos</h1> <div class="flex w-fit" id="cnv"></div> <div class="flex flex-col gap-4" id="description"> <div class="flex items-center gap-4" id="interactive">Puntos:</div> <h2>Sistema tridiagonal</h2> <p>Parte M del SEL: Mz = f</p> <div class="font-mono overflow-x-scroll w-fit mx-auto" id="matriz"></div> <h2>F asociada</h2> <p>Parte f del SEL: Mz = f</p> <div id="arregloRes"></div> <h2>Z resultante</h2> <p>Parte z del SEL: Mz = f</p> <div id="arregloInc"></div> </div> <div class="break-words max-w-full"> <p>Basado en:</p> <ul> <li> <a href="https://www.uv.es/diaz/mn/node40.html" target="_blank">https://www.uv.es/diaz/mn/node40.html</a> </li> </ul> </div> </div> <script>let points = []
+function setup() {
+  const cnv = createCanvas(min(window.innerWidth * 0.95, 640), 420)
+  cnv.parent('cnv')
+
+  document.getElementById('matriz').style.maxWidth = `${width}px`
+
+  const inputN = createInput(8)
+  inputN.id('inputN')
+
+  const docInput = document.getElementById('inputN')
+  docInput.type = 'number'
+  docInput.min = 4
+  docInput.max = 50
+
+  const buttonN = createButton('Generar')
+  buttonN.id('buttonN')
+  buttonN.class('bg-primary px-2')
+  let docButton = document.getElementById('buttonN')
+  docButton.onclick = () => drawSpline()
+
+  inputN.parent('interactive')
+  buttonN.parent('interactive')
+
+  drawSpline()
+}
+
+function mouseClicked() {
+  let x = mouseX
+  let y = mouseY
+
+  if (x < 0 || width < x) return
+  if (y < 0 || height < y) return
+
+  for (let i = 0; i < n; i++) {
+    if (x < points[i][0]) {
+      let pos = i
+      points.splice(pos, 0, [x, y])
+      n++
+      break
+    }
+  }
+  document.getElementById('inputN').value = n
+  scubics()
+}
+
+function getZi(Matriz_A, Matriz_B) {
+  let n = Matriz_A.length
+  let s = 0,
+    q = 0
+  let C = []
+
+  let Matriz_I = []
+  for (let i = 0; i < n; i++) {
+    Matriz_I.push([])
+    for (let j = 0; j < n; j++) {
+      Matriz_I[i].push([])
+      if (i == j) Matriz_I[i][j] = 1
+      else Matriz_I[i][j] = 0
+    }
+  }
+
+  for (let k = 1; k <= n - 1; k++) {
+    C = []
+    for (let i = 0; i < n; i++) {
+      C.push([])
+      for (let j = 0; j < n; j++) {
+        C[i].push(0)
+      }
+    }
+
+    for (let i = 0; i < n; i++)
+      for (let j = 0; j < n; j++)
+        for (let z = 0; z < n; z++) {
+          C[i][j] = C[i][j] + Matriz_A[i][z] * Matriz_I[z][j]
+        }
+
+    for (let i = 0; i < n; i++)
+      for (let j = 0; j < n; j++) {
+        if (i == j) s = s + C[i][j]
+      }
+    q = s / k
+
+    for (let i = 0; i < n; i++)
+      for (let j = 0; j < n; j++) {
+        if (i == j) {
+          Matriz_I[i][j] = C[i][j] - q
+        } else {
+          Matriz_I[i][j] = C[i][j]
+        }
+      }
+    s = 0
+  }
+
+  C = []
+  for (let i = 0; i < n; i++) {
+    C.push([])
+    for (let j = 0; j < n; j++) {
+      C[i].push(0)
+    }
+  }
+
+  for (let i = 0; i < n; i++)
+    for (let j = 0; j < n; j++)
+      for (let z = 0; z < n; z++)
+        C[i][j] = C[i][j] + Matriz_A[i][z] * Matriz_I[z][j]
+  for (let i = 0; i < n; i++)
+    for (let j = 0; j < n; j++) {
+      if (i == j) s = s + C[i][j]
+    }
+
+  if (s / n != 0) {
+    for (let i = 0; i < n; i++)
+      for (let j = 0; j < n; j++) Matriz_I[i][j] = Matriz_I[i][j] / (s / n)
+  }
+
+  let Matriz_X = []
+  for (let i = 0; i < n; i++) {
+    Matriz_X.push(0)
+  }
+
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < n; j++) {
+      if (i == 0) Matriz_X[i] += Matriz_I[i][j] * Matriz_B[j]
+      else Matriz_X[i] += Matriz_I[i][j] * Matriz_B[j]
+    }
+  }
+  return Matriz_X
+}
+
+function drawSpline() {
+  n = inputN.value
+  points = []
+  for (let i = 0; i < n; i++) {
+    let x = random((i * width) / n, ((i + 1) * width) / n)
+    let y = height / 3 + random(0, height / 3)
+    points.push([x, y])
+  }
+  scubics()
+}
+
+function scubics() {
+  let h = []
+  for (let i = 0; i < n - 1; i++) h.push(points[i + 1][0] - points[i][0])
+
+  let mat = []
+  for (let i = 0; i < n - 2; i++) {
+    mat.push([])
+    for (let j = 0; j < n - 2; j++) mat[i].push(0)
+  }
+
+  mat[0][0] = 2 * (h[0] + h[1])
+  mat[0][1] = h[1]
+  for (let i = 1; i < mat.length - 1; i++) {
+    mat[i][i - 1] = h[i]
+    mat[i][i] = 2 * (h[i] + h[i + 1])
+    mat[i][i + 1] = h[i + 1]
+  }
+  mat[mat.length - 1][mat.length - 2] = h[h.length - 2]
+  mat[mat.length - 1][mat.length - 1] = 2 * (h[h.length - 2] + h[h.length - 1])
+
+  const matrizEle = document.getElementById('matriz')
+  matrizEle.innerHTML = ''
+  for (let m of mat) {
+    for (let v of m) {
+      let str = ''
+      for (let i = 0; i < 7 - v.toFixed(2).length; i++) str += '&nbsp;'
+      matrizEle.innerHTML += str
+      matrizEle.innerHTML += v.toFixed(2)
+    }
+    matrizEle.innerHTML += '<br />'
+  }
+
+  let fi = []
+  document.getElementById('arregloRes').innerHTML = ''
+  for (let i = 1; i < n - 1; i++) {
+    fi.push(
+      6 *
+        ((points[i + 1][1] - points[i][1]) / h[i] -
+          (points[i][1] - points[i - 1][1]) / h[i - 1])
+    )
+    document.getElementById('arregloRes').innerHTML +=
+      fi[i - 1].toFixed(2) + '<br />'
+  }
+
+  let temp = getZi(mat, fi)
+  let z = [0]
+  for (let t of temp) z.push(t)
+  z.push(0)
+
+  document.getElementById('arregloInc').innerHTML = ''
+  for (let t of z) {
+    document.getElementById('arregloInc').innerHTML += t.toFixed(2) + '<br>'
+  }
+  noFill()
+  clear()
+  background(0)
+  stroke(255)
+  strokeWeight(3)
+
+  beginShape()
+  for (let i = 0; i < n - 1; i++) {
+    let str = points[i][0]
+    let end = points[i + 1][0]
+
+    let A = (1 / (6 * h[i])) * (z[i + 1] - z[i])
+    let B = z[i] / 2
+    let C =
+      (-h[i] / 6) * z[i + 1] -
+      (h[i] / 3) * z[i] +
+      (1 / h[i]) * (points[i + 1][1] - points[i][1])
+    let ti = points[i][0]
+    let yi = points[i][1]
+
+    for (let x = str; x < end; x++) {
+      let y = yi + (x - ti) * (C + (x - ti) * (B + (x - ti) * A))
+      vertex(x, y)
+    }
+  }
+  endShape()
+
+  strokeWeight(2)
+  stroke(250)
+  fill(0)
+  for (let p of points) ellipse(p[0], p[1], 7, 7)
+}
+</script>  </body></html>
