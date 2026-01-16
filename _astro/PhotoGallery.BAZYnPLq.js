@@ -4,4 +4,4 @@ import{u as e}from"./jsxRuntime.module.3hPXG6Fr.js";import{d as i}from"./hooks.m
                 `,onClick:()=>c(r),children:e("img",{className:`
                     flex h-full w-full object-cover
                     transition duration-300 ease-in-out scale-110 hover:scale-100
-                  `,draggable:!1,src:a,alt:a+" option to select"})},a))})}),e("img",{className:"absolute z-0 top-0 flex h-full w-full aspect-[4/3] object-cover blur-lg",src:l[o],alt:"blured cover"}),e("div",{className:"z-10 overflow-hidden",children:e("img",{className:"flex h-auto w-full aspect-[4/3] object-contain transition duration-300 ease-in-out",src:l[o],alt:"product"})})]})};export{f as default};
+                  `,draggable:!1,src:a,alt:a+" option to select"})},a))})}),e("img",{className:"absolute z-0 top-0 flex h-full w-full aspect-4/3 object-cover blur-lg",src:l[o],alt:"blured cover"}),e("div",{className:"z-10 overflow-hidden",children:e("img",{className:"flex h-auto w-full aspect-4/3 object-contain transition duration-300 ease-in-out",src:l[o],alt:"product"})})]})};export{f as default};
